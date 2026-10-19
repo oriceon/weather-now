@@ -21,7 +21,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 os.environ.setdefault("QT_QUICK_BACKEND", "software")
 os.environ.setdefault("QT_QUICK_CONTROLS_STYLE", "Basic")
 
-from PySide6.QtCore import QMetaObject, QTimer, QUrl, QtMsgType, qInstallMessageHandler
+from PySide6.QtCore import QElapsedTimer, QMetaObject, QTimer, QUrl, QtMsgType, qInstallMessageHandler
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtNetwork import QNetworkAccessManager
 from PySide6.QtQml import QQmlComponent, QQmlListReference, QQmlNetworkAccessManagerFactory, qmlRegisterSingletonType, qmlRegisterType
@@ -224,6 +224,30 @@ def build_config(engine, arguments, configuration):
     return page
 
 
+def record_frames(view, out, count, interval, done):
+    """
+    Saves `count` screenshots, one every `interval` milliseconds, as out-0000.png, out-0001.png…,
+    and in out-times.txt the millisecond each was taken at, for an animation with the real timing.
+    """
+    stem = str(Path(out).with_suffix(""))
+    clock = QElapsedTimer()
+    times = []
+
+    def grab():
+        view.grabWindow().save(f"{stem}-{len(times):04d}.png")
+        times.append(clock.elapsed())
+
+        if len(times) < count:
+            # Aimed at the next tick of the timeline, so that slow frames do not stretch it.
+            QTimer.singleShot(max(0, interval * len(times) - clock.elapsed()), grab)
+        else:
+            Path(f"{stem}-times.txt").write_text("".join(f"{time}\n" for time in times))
+            done()
+
+    clock.start()
+    grab()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("what", choices=["stage", "applet", "config"])
@@ -250,6 +274,8 @@ def main():
     parser.add_argument("--locality", default="Constanța")
     parser.add_argument("--compact", action="store_true", help="applet: show the panel representation")
     parser.add_argument("--page", type=int, default=0)
+    parser.add_argument("--frames", type=int, default=0, metavar="COUNT", help="save COUNT screenshots instead of one, as OUT-0000.png…, with their times in OUT-times.txt")
+    parser.add_argument("--frame-interval", type=int, default=66, metavar="MS", help="milliseconds between those screenshots")
     parser.add_argument("--expect-motion", action="store_true", help="fail unless the animated scene and an icon are moving")
     parser.add_argument("--forbid-host", action="append", default=[], metavar="HOST", help="fail if HOST, or a subdomain of it, is asked for anything")
     parser.add_argument("--expect-host", action="append", default=[], metavar="HOST", help="fail unless HOST, or a subdomain of it, is asked for something")
@@ -304,6 +330,9 @@ def main():
     content.heightChanged.connect(fit)
     view.show()
     fit()
+
+    def frames():
+        record_frames(view, arguments.out, arguments.frames, arguments.frame_interval, shoot)
 
     def shoot():
         saved = view.grabWindow().save(arguments.out)
@@ -372,7 +401,7 @@ def main():
     if arguments.search:
         QTimer.singleShot(500, search_place)
     else:
-        QTimer.singleShot(arguments.wait, watch_motion if arguments.expect_motion else shoot)
+        QTimer.singleShot(arguments.wait, watch_motion if arguments.expect_motion else frames if arguments.frames else shoot)
     application.exec()
 
     if arguments.forbid_host or arguments.expect_host:

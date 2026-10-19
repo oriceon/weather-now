@@ -2,9 +2,7 @@
 
 A weather widget for Plasma 6 with an animated sky that follows the current weather: rain, snow, fog, thunder, drifting clouds, the sun and the moon.
 
-| Today | Rain | Days |
-|---|---|---|
-| ![Today](store/weather-now-today.png) | ![Rain](store/weather-now-rain.png) | ![Days](store/weather-now-days.png) |
+![The sky of the Today tab: clear, partly cloudy, rain, thunderstorm, snow and a clear night](store/weather-now-sky.webp)
 
 ## Tabs
 
@@ -13,6 +11,8 @@ A weather widget for Plasma 6 with an animated sky that follows the current weat
 - **Rain**: when and how hard it will rain, over 48 hours or the next 2 hours
 - **Days**: 16 days ahead, grouped by week, starting with the first day of the week you choose
 - **Details**: wind and gusts, humidity, pressure, cloud cover, UV, sunrise and sunset, moon phase
+
+![A tour of the tabs: Today, Hours, Rain, Days and Details](store/weather-now-tour.webp)
 
 ## Also
 
@@ -65,7 +65,7 @@ python viewer.py applet out.png --forbid-host meteoromania.ro  # fails if that s
 python viewer.py config out.png --page 1                 # a page of the settings
 ```
 
-`tools/build-icons.mjs` builds `package/contents/icons` from the Meteocons packages: the animations are drawn frame by frame with Skia into film strips the widget plays.
+`tools/build-icons.mjs` builds `package/contents/icons` from the Meteocons packages: the animations are drawn frame by frame with Skia into film strips the widget plays. `tools/store/animations.sh` remakes the animations of this page from the viewer; it needs Pillow (`pip install pillow`).
 
 ## Credits and licence
 
