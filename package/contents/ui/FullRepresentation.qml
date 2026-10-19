@@ -62,6 +62,28 @@ Item {
     }
     readonly property string tabId: tabIds[Math.min(currentTab, tabIds.length - 1)]
     readonly property var activeAlerts: ready ? Alerts.activeAlerts(alerts, forecast.current.time) : []
+    /**
+     * Who the warnings on screen come from, as links: the service that issued them, named as the
+     * MeteoAlarm terms want, and MeteoAlarm when they came through it. Empty while there are none.
+     */
+    readonly property string alertsSource: {
+        if (activeAlerts.length === 0) {
+            return "";
+        }
+
+        const issuer = activeAlerts[0].issuer;
+        const site = Alerts.issuerSite(issuer);
+        const service = site !== "" ? `<a href="${site}">${issuer}</a>` : issuer;
+
+        // Nowcasting alone comes from the service itself, without MeteoAlarm.
+        if (!activeAlerts.some(alert => alert.source === "meteoalarm")) {
+            return service;
+        }
+
+        const meteoalarm = '<a href="https://www.meteoalarm.org">MeteoAlarm</a>';
+
+        return service !== "" ? I18n.t(language, "header.sourceAlerts", { issuer: service, site: meteoalarm }) : meteoalarm;
+    }
 
     signal refreshRequested()
     /** A place of parseGeocode() in code/openmeteo.mjs, picked at the first-run prompt. */
@@ -191,10 +213,7 @@ Item {
                 textFormat: Text.StyledText
                 text: [
                     I18n.t(full.language, "header.source", { forecast: '<a href="https://open-meteo.com/">Open-Meteo</a>' }),
-                    // Nowcasting alone comes from ANM, without MeteoAlarm.
-                    full.activeAlerts.length === 0 ? "" : full.activeAlerts.some(alert => alert.source === "meteoalarm")
-                        ? I18n.t(full.language, "header.sourceAlerts", { issuer: '<a href="https://www.meteoromania.ro/">ANM</a>', site: '<a href="https://www.meteoalarm.org">MeteoAlarm</a>' })
-                        : '<a href="https://www.meteoromania.ro/">ANM</a>',
+                    full.alertsSource,
                 ].filter(part => part !== "").join(" · ")
 
                 onLinkActivated: link => Qt.openUrlExternally(link)

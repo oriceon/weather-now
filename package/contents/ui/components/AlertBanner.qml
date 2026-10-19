@@ -110,7 +110,7 @@ Rectangle {
             banner.title,
             banner.credit,
             banner.body,
-            I18n.t(banner.language, `alert.source.${banner.alert.source}`),
+            I18n.t(banner.language, `alert.source.${banner.alert.source}`, { issuer: banner.alert.issuer }),
             banner.alert.source === "meteoalarm" ? Alerts.meteoalarmDisclaimer(banner.language) : "",
             // The MeteoAlarm terms require the original wording, after the translation if there is one.
             banner.alert.source === "meteoalarm" ? Alerts.METEOALARM_DISCLAIMER : "",

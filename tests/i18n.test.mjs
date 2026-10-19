@@ -29,6 +29,20 @@ test('an unsupported setting behaves like auto', () => {
     assert.equal(resolveLanguage('de', ['en-US']), 'en');
 });
 
+test('no text names a national weather service: the name depends on the country', () => {
+    // The service that issued a warning comes with the warning itself (`issuer` in alerts.mjs).
+    for (const language of Object.keys(STRINGS)) {
+        for (const [key, text] of Object.entries(STRINGS[language])) {
+            assert.doesNotMatch(text, /\bANM\b/, `${language}.${key}`);
+        }
+    }
+});
+
+test('the source of a warning names the service that issued it', () => {
+    assert.equal(t('ro', 'alert.source.meteoalarm', { issuer: 'DWD' }), 'Sursă: DWD, prin MeteoAlarm');
+    assert.equal(t('en', 'alert.source.anm', { issuer: 'ANM' }), 'Source: ANM');
+});
+
 test('t returns the text in the requested language', () => {
     assert.equal(t('ro', 'tab.today'), 'Azi');
     assert.equal(t('en', 'tab.today'), 'Today');

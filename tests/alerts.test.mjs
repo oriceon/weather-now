@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { METEOALARM_DISCLAIMER, NOWCASTING_ALLOWED, activeAlerts, meteoalarmDisclaimer, alertInterval, alertIssued, alertTitle, alertsOn, feedUrl, leadAlert, normalizeRegion, nowcastUrl, parseCap, parseFeed, parseNowcast, worstLevel } from '../package/contents/code/alerts.mjs';
+import { METEOALARM_DISCLAIMER, NOWCASTING_ALLOWED, activeAlerts, issuerSite, meteoalarmDisclaimer, alertInterval, alertIssued, alertTitle, alertsOn, feedUrl, leadAlert, normalizeRegion, nowcastUrl, parseCap, parseFeed, parseNowcast, worstLevel } from '../package/contents/code/alerts.mjs';
 
 const fixture = (name) => readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8');
 
@@ -56,6 +56,12 @@ test('warnings are available for Romania only', () => {
     assert.equal(feedUrl('DE'), '');
     assert.equal(nowcastUrl('DE'), '');
     assert.equal(feedUrl(undefined), '');
+});
+
+test('the site of the service that issued a warning, for the link in the footer', () => {
+    assert.equal(issuerSite('ANM'), 'https://www.meteoromania.ro/');
+    assert.equal(issuerSite('DWD'), '');
+    assert.equal(issuerSite(''), '');
 });
 
 test('nowcasting stays switched off until ANM gives its written consent', () => {

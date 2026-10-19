@@ -15,6 +15,8 @@ const METEOALARM_FEEDS = { RO: 'romania' };
  * require its name to be shown with warnings that concern a single country.
  */
 const ISSUERS = { RO: 'ANM' };
+/** Service => its website, linked from the source line of the widget. */
+const ISSUER_SITES = { ANM: 'https://www.meteoromania.ro/' };
 
 /** The MeteoAlarm terms require every redistributor to publish this, word for word. */
 export const METEOALARM_DISCLAIMER = 'Time delays between this website and the www.meteoalarm.org website are possible. For the most up-to-date awareness information as published by the participating National Meteorological and Hydrological Services, please refer to www.meteoalarm.org.';
@@ -127,6 +129,11 @@ export function feedUrl(countryCode) {
     const country = METEOALARM_FEEDS[String(countryCode || '').toUpperCase()];
 
     return country ? `https://feeds.meteoalarm.org/feeds/meteoalarm-legacy-atom-${country}` : '';
+}
+
+/** The website of the service that issued a warning; empty when it is not known. */
+export function issuerSite(issuer) {
+    return ISSUER_SITES[issuer] || '';
 }
 
 export function nowcastUrl(countryCode) {
