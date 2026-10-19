@@ -1,0 +1,395 @@
+export const LANGUAGES = ['ro', 'en'];
+
+const FALLBACK_LANGUAGE = 'en';
+
+const DAYS_SHORT = {
+    ro: ['Dum', 'Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm'],
+    en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+};
+
+const DAYS_LONG = {
+    ro: ['duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă'],
+    en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+};
+
+const MONTHS_LONG = {
+    ro: ['ianuarie', 'februarie', 'martie', 'aprilie', 'mai', 'iunie', 'iulie', 'august', 'septembrie', 'octombrie', 'noiembrie', 'decembrie'],
+    en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+};
+
+const MONTHS_SHORT = {
+    ro: ['ian.', 'feb.', 'mar.', 'apr.', 'mai', 'iun.', 'iul.', 'aug.', 'sept.', 'oct.', 'nov.', 'dec.'],
+    en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+};
+
+const COMPASS = {
+    ro: ['N', 'NE', 'E', 'SE', 'S', 'SV', 'V', 'NV'],
+    en: ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'],
+};
+
+export const STRINGS = {
+    ro: {
+        'tab.today': 'Azi',
+        'tab.hours': 'Ore',
+        'tab.rain': 'Ploaie',
+        'tab.days': 'Zile',
+        'tab.details': 'Detalii',
+        'day.todayWord': 'azi',
+        'week.this': 'Săptămâna aceasta',
+        'week.next': 'Săptămâna viitoare',
+        'day.tomorrow': 'mâine',
+        'summary.none': 'Fără precipitații în următoarele 48 de ore',
+        'summary.rain.noun': 'Ploaie',
+        'summary.snow.noun': 'Ninsoare',
+        'summary.rain.now': 'Plouă acum',
+        'summary.snow.now': 'Ninge acum',
+        'summary.until': '{now}, până în jurul orei {end}',
+        'summary.noBreak': '{now}, fără pauză în următoarele 48 de ore',
+        'summary.from': '{noun} de la {start}',
+        'summary.between': '{noun} între {start} și {end}',
+        'summary.fromDay': '{noun} {day}, de la {start}',
+        'summary.betweenDay': '{noun} {day}, între {start} și {end}',
+        'summary.onDay': '{day}',
+        'rain.next48': '48 de ore',
+        'rain.next2': '2 ore',
+        'rain.probability': 'probabilitate',
+        'rain.peak': 'cel mult {amount} pe oră',
+        'rain.peakQuarter': 'cel mult {amount} în 15 minute',
+        'details.wind': 'Vânt',
+        'details.gusts': 'Rafale',
+        'details.humidity': 'Umiditate',
+        'details.pressure': 'Presiune',
+        'details.uv': 'Indice UV',
+        'details.clouds': 'Nebulozitate',
+        'details.sun': 'Soare',
+        'details.moon': 'Lună',
+        'uv.low': 'Scăzut',
+        'uv.moderate': 'Moderat',
+        'uv.high': 'Ridicat',
+        'uv.veryHigh': 'Foarte ridicat',
+        'uv.extreme': 'Extrem',
+        'moon.new': 'Lună nouă',
+        'moon.waxingCrescent': 'Seceră în creștere',
+        'moon.firstQuarter': 'Primul pătrar',
+        'moon.waxingGibbous': 'Lună în creștere',
+        'moon.full': 'Lună plină',
+        'moon.waningGibbous': 'Lună în descreștere',
+        'moon.lastQuarter': 'Ultimul pătrar',
+        'moon.waningCrescent': 'Seceră în descreștere',
+        'alert.level.yellow': 'Cod galben',
+        'alert.level.orange': 'Cod portocaliu',
+        'alert.level.red': 'Cod roșu',
+        'alert.kind.wind': 'vânt',
+        'alert.kind.snow': 'ninsoare și polei',
+        'alert.kind.thunderstorm': 'furtuni',
+        'alert.kind.fog': 'ceață',
+        'alert.kind.heat': 'caniculă',
+        'alert.kind.cold': 'ger',
+        'alert.kind.coastal': 'fenomene costiere',
+        'alert.kind.fire': 'incendii de vegetație',
+        'alert.kind.avalanche': 'avalanșe',
+        'alert.kind.rain': 'ploi',
+        'alert.kind.flood': 'inundații',
+        'alert.kind.rainFlood': 'ploi și inundații',
+        'alert.kind.nowcast': 'nowcasting',
+        'alert.kind.other': 'fenomene meteo',
+        'alert.until': 'până la {time}',
+        'alert.untilDay': 'până {day} la {time}',
+        'alert.sameDay': '{day}, {start} – {end}',
+        'alert.span': '{startDay} {start} – {endDay} {end}',
+        'alert.issued': 'emisă {day}, {time}',
+        'alert.openSite': 'Clic pentru a deschide {site}',
+        'alert.disclaimer': 'Între datele de aici și site-ul www.meteoalarm.org pot exista întârzieri. Pentru cele mai noi informații de avertizare, așa cum le publică serviciile naționale de meteorologie și hidrologie participante, consultă www.meteoalarm.org.',
+        'alert.source.meteoalarm': 'Sursă: ANM, prin MeteoAlarm',
+        'alert.source.anm': 'Sursă: ANM',
+        'alert.close': 'Închide',
+        'today.feelsLike': 'Se simte ca {temp}',
+        'today.wind': 'Vânt',
+        'today.humidity': 'Umiditate',
+        'today.precipitation': 'Precipitații',
+        'header.updated': 'Actualizat la {time}',
+        'header.refresh': 'Actualizează',
+        'header.source': 'Sursă: {forecast}',
+        'header.sourceAlerts': '{issuer}, prin {site}',
+        'state.loading': 'Se încarcă prognoza…',
+        'state.noLocation': 'Alege o localitate',
+        'welcome.title': 'Pentru ce localitate vrei prognoza?',
+        'welcome.hint': 'Caut-o și alege-o din listă. O poți schimba oricând din setări.',
+        'state.error': 'Prognoza nu a putut fi încărcată',
+        'state.retry': 'Încearcă din nou',
+        'condition.clear': 'Senin',
+        'condition.mainlyClear': 'Predominant senin',
+        'condition.partlyCloudy': 'Parțial noros',
+        'condition.overcast': 'Înnorat',
+        'condition.fog': 'Ceață',
+        'condition.rimeFog': 'Ceață cu chiciură',
+        'condition.drizzleLight': 'Burniță slabă',
+        'condition.drizzle': 'Burniță',
+        'condition.drizzleDense': 'Burniță deasă',
+        'condition.freezingDrizzle': 'Burniță înghețată',
+        'condition.rainLight': 'Ploaie slabă',
+        'condition.rain': 'Ploaie',
+        'condition.rainHeavy': 'Ploaie puternică',
+        'condition.freezingRain': 'Ploaie înghețată',
+        'condition.snowLight': 'Ninsoare slabă',
+        'condition.snow': 'Ninsoare',
+        'condition.snowHeavy': 'Ninsoare puternică',
+        'condition.snowGrains': 'Ninsoare grăunțoasă',
+        'condition.showersLight': 'Averse slabe',
+        'condition.showers': 'Averse',
+        'condition.showersHeavy': 'Averse torențiale',
+        'condition.snowShowersLight': 'Averse slabe de ninsoare',
+        'condition.snowShowers': 'Averse de ninsoare',
+        'condition.thunderstorm': 'Furtună',
+        'condition.thunderstormHail': 'Furtună cu grindină',
+        'condition.unknown': 'Fără date',
+        'config.location': 'Locație',
+        'config.appearance': 'Aspect',
+        'config.units': 'Unități și actualizare',
+        'config.currentLocation': 'Locație curentă:',
+        'config.noLocation': 'Nicio localitate aleasă',
+        'config.searchLabel': 'Schimbă locația:',
+        'config.searchPlaceholder': 'Numele localității',
+        'config.search': 'Caută',
+        'config.searching': 'Se caută…',
+        'config.noResults': 'Nicio localitate găsită',
+        'config.searchFailed': 'Căutarea nu a reușit. Verifică legătura la internet.',
+        'config.language': 'Limbă:',
+        'config.languageHint': '„Auto” folosește limba interfeței Plasma; engleza, dacă aceea nu e nici română, nici engleză.',
+        'config.county': 'Județ:',
+        'config.firstDay': 'Prima zi a săptămânii:',
+        'config.firstDayAuto': 'Cea din setările regionale',
+        'config.monday': 'Luni',
+        'config.sunday': 'Duminică',
+        'config.fontSize': 'Mărimea textului:',
+        'config.fontFamily': 'Font:',
+        'config.icons': 'Iconițe:',
+        'config.iconsMeteocons': 'Meteocons (animate)',
+        'config.iconsTheme': 'Cele ale temei Plasma',
+        'config.animations': 'Animații:',
+        'config.animationsFull': 'Complete',
+        'config.animationsReduced': 'Reduse (mai puține elemente în mișcare)',
+        'config.animationsOff': 'Oprite (imagini fixe)',
+        'config.tabs': 'Taburi afișate:',
+        'config.alerts': 'Atenționări meteo:',
+        'config.alertsEnabled': 'Arată codurile ANM pentru județul meu, prin MeteoAlarm',
+        'config.alertsHint': 'Codurile galben, portocaliu și roșu, date pe județ, cu ore sau zile înainte.',
+        'config.alertsUnavailable': 'Disponibile deocamdată doar pentru localități din România.',
+        'config.nowcastingEnabled': 'Arată atenționările imediate ANM (nowcasting) pentru localitatea mea',
+        'config.nowcastingHint': 'Pe termen scurt, doar cele care numesc localitatea. Se iau direct de pe www.meteoromania.ro, la fiecare 5 minute.',
+        'config.nowcastingPending': 'Indisponibil deocamdată: termenii www.meteoromania.ro cer acordul scris al ANM, care încă nu a venit.',
+        'config.temperature': 'Temperatură:',
+        'config.wind': 'Vânt:',
+        'config.refresh': 'Actualizare la fiecare:',
+    },
+    en: {
+        'tab.today': 'Today',
+        'tab.hours': 'Hours',
+        'tab.rain': 'Rain',
+        'tab.days': 'Days',
+        'tab.details': 'Details',
+        'day.todayWord': 'today',
+        'week.this': 'This week',
+        'week.next': 'Next week',
+        'day.tomorrow': 'tomorrow',
+        'summary.none': 'No precipitation in the next 48 hours',
+        'summary.rain.noun': 'Rain',
+        'summary.snow.noun': 'Snow',
+        'summary.rain.now': 'Raining now',
+        'summary.snow.now': 'Snowing now',
+        'summary.until': '{now}, until around {end}',
+        'summary.noBreak': '{now}, without a break in the next 48 hours',
+        'summary.from': '{noun} from {start}',
+        'summary.between': '{noun} between {start} and {end}',
+        'summary.fromDay': '{noun} {day}, from {start}',
+        'summary.betweenDay': '{noun} {day}, between {start} and {end}',
+        'summary.onDay': 'on {day}',
+        'rain.next48': '48 hours',
+        'rain.next2': '2 hours',
+        'rain.probability': 'chance',
+        'rain.peak': 'at most {amount} per hour',
+        'rain.peakQuarter': 'at most {amount} in 15 minutes',
+        'details.wind': 'Wind',
+        'details.gusts': 'Gusts',
+        'details.humidity': 'Humidity',
+        'details.pressure': 'Pressure',
+        'details.uv': 'UV index',
+        'details.clouds': 'Cloud cover',
+        'details.sun': 'Sun',
+        'details.moon': 'Moon',
+        'uv.low': 'Low',
+        'uv.moderate': 'Moderate',
+        'uv.high': 'High',
+        'uv.veryHigh': 'Very high',
+        'uv.extreme': 'Extreme',
+        'moon.new': 'New moon',
+        'moon.waxingCrescent': 'Waxing crescent',
+        'moon.firstQuarter': 'First quarter',
+        'moon.waxingGibbous': 'Waxing gibbous',
+        'moon.full': 'Full moon',
+        'moon.waningGibbous': 'Waning gibbous',
+        'moon.lastQuarter': 'Last quarter',
+        'moon.waningCrescent': 'Waning crescent',
+        'alert.level.yellow': 'Yellow warning',
+        'alert.level.orange': 'Orange warning',
+        'alert.level.red': 'Red warning',
+        'alert.kind.wind': 'wind',
+        'alert.kind.snow': 'snow and ice',
+        'alert.kind.thunderstorm': 'thunderstorms',
+        'alert.kind.fog': 'fog',
+        'alert.kind.heat': 'extreme heat',
+        'alert.kind.cold': 'extreme cold',
+        'alert.kind.coastal': 'coastal event',
+        'alert.kind.fire': 'wildfire',
+        'alert.kind.avalanche': 'avalanches',
+        'alert.kind.rain': 'rain',
+        'alert.kind.flood': 'flooding',
+        'alert.kind.rainFlood': 'rain and flooding',
+        'alert.kind.nowcast': 'nowcasting',
+        'alert.kind.other': 'weather',
+        'alert.until': 'until {time}',
+        'alert.untilDay': 'until {day} {time}',
+        'alert.sameDay': '{day}, {start} – {end}',
+        'alert.span': '{startDay} {start} – {endDay} {end}',
+        'alert.issued': 'issued {day}, {time}',
+        'alert.openSite': 'Click to open {site}',
+        // The original wording; see meteoalarmDisclaimer().
+        'alert.disclaimer': '',
+        'alert.source.meteoalarm': 'Source: ANM, via MeteoAlarm',
+        'alert.source.anm': 'Source: ANM',
+        'alert.close': 'Close',
+        'today.feelsLike': 'Feels like {temp}',
+        'today.wind': 'Wind',
+        'today.humidity': 'Humidity',
+        'today.precipitation': 'Precipitation',
+        'header.updated': 'Updated at {time}',
+        'header.refresh': 'Refresh',
+        'header.source': 'Source: {forecast}',
+        'header.sourceAlerts': '{issuer}, via {site}',
+        'state.loading': 'Loading the forecast…',
+        'state.noLocation': 'Choose a place',
+        'welcome.title': 'Which place do you want the forecast for?',
+        'welcome.hint': 'Search for it and pick it from the list. You can change it at any time in the settings.',
+        'state.error': 'The forecast could not be loaded',
+        'state.retry': 'Try again',
+        'condition.clear': 'Clear sky',
+        'condition.mainlyClear': 'Mainly clear',
+        'condition.partlyCloudy': 'Partly cloudy',
+        'condition.overcast': 'Overcast',
+        'condition.fog': 'Fog',
+        'condition.rimeFog': 'Freezing fog',
+        'condition.drizzleLight': 'Light drizzle',
+        'condition.drizzle': 'Drizzle',
+        'condition.drizzleDense': 'Dense drizzle',
+        'condition.freezingDrizzle': 'Freezing drizzle',
+        'condition.rainLight': 'Light rain',
+        'condition.rain': 'Rain',
+        'condition.rainHeavy': 'Heavy rain',
+        'condition.freezingRain': 'Freezing rain',
+        'condition.snowLight': 'Light snow',
+        'condition.snow': 'Snow',
+        'condition.snowHeavy': 'Heavy snow',
+        'condition.snowGrains': 'Snow grains',
+        'condition.showersLight': 'Light showers',
+        'condition.showers': 'Showers',
+        'condition.showersHeavy': 'Violent showers',
+        'condition.snowShowersLight': 'Light snow showers',
+        'condition.snowShowers': 'Snow showers',
+        'condition.thunderstorm': 'Thunderstorm',
+        'condition.thunderstormHail': 'Thunderstorm with hail',
+        'condition.unknown': 'No data',
+        'config.location': 'Location',
+        'config.appearance': 'Appearance',
+        'config.units': 'Units and updates',
+        'config.currentLocation': 'Current location:',
+        'config.noLocation': 'No place chosen',
+        'config.searchLabel': 'Change location:',
+        'config.searchPlaceholder': 'Name of the place',
+        'config.search': 'Search',
+        'config.searching': 'Searching…',
+        'config.noResults': 'No place found',
+        'config.searchFailed': 'The search failed. Check your internet connection.',
+        'config.language': 'Language:',
+        'config.languageHint': '“Auto” uses the language of the Plasma interface; English when that is neither Romanian nor English.',
+        'config.county': 'County:',
+        'config.firstDay': 'First day of the week:',
+        'config.firstDayAuto': 'The one in the regional settings',
+        'config.monday': 'Monday',
+        'config.sunday': 'Sunday',
+        'config.fontSize': 'Text size:',
+        'config.fontFamily': 'Font:',
+        'config.icons': 'Icons:',
+        'config.iconsMeteocons': 'Meteocons (animated)',
+        'config.iconsTheme': 'Those of the Plasma theme',
+        'config.animations': 'Animations:',
+        'config.animationsFull': 'Full',
+        'config.animationsReduced': 'Reduced (fewer moving elements)',
+        'config.animationsOff': 'Off (still pictures)',
+        'config.tabs': 'Tabs shown:',
+        'config.alerts': 'Weather warnings:',
+        'config.alertsEnabled': 'Show the ANM warnings for my county, via MeteoAlarm',
+        'config.alertsHint': 'Yellow, orange and red codes, issued per county, hours or days ahead.',
+        'config.alertsUnavailable': 'Available only for places in Romania, for now.',
+        'config.nowcastingEnabled': 'Show the immediate ANM warnings (nowcasting) for my place',
+        'config.nowcastingHint': 'Short-term, only those that name the place. Taken straight from www.meteoromania.ro, every 5 minutes.',
+        'config.nowcastingPending': 'Not available yet: the terms of www.meteoromania.ro require the written consent of ANM, which has not come yet.',
+        'config.temperature': 'Temperature:',
+        'config.wind': 'Wind:',
+        'config.refresh': 'Update every:',
+    },
+};
+
+function supported(language) {
+    return LANGUAGES.includes(language) ? language : FALLBACK_LANGUAGE;
+}
+
+/**
+ * Picks the language of the widget. "auto" follows the language of the Plasma interface,
+ * `uiLanguages` being the system's list of them in order of preference ("en-US", "ro_RO"…):
+ * the first one the widget speaks, else English. The regional formats do not count.
+ */
+export function resolveLanguage(setting, uiLanguages) {
+    if (LANGUAGES.includes(setting)) {
+        return setting;
+    }
+
+    for (const tag of uiLanguages || []) {
+        const language = String(tag).slice(0, 2).toLowerCase();
+
+        if (LANGUAGES.includes(language)) {
+            return language;
+        }
+    }
+
+    return FALLBACK_LANGUAGE;
+}
+
+export function t(language, key, parameters) {
+    const text = STRINGS[supported(language)][key];
+
+    if (text === undefined) {
+        return key;
+    }
+
+    return text.replace(/\{(\w+)\}/g, (placeholder, name) => (parameters && name in parameters ? parameters[name] : placeholder));
+}
+
+export function dayShort(language, dayIndex) {
+    return DAYS_SHORT[supported(language)][dayIndex];
+}
+
+export function dayLong(language, dayIndex) {
+    return DAYS_LONG[supported(language)][dayIndex];
+}
+
+export function monthLong(language, month) {
+    return MONTHS_LONG[supported(language)][month - 1];
+}
+
+export function monthShort(language, month) {
+    return MONTHS_SHORT[supported(language)][month - 1];
+}
+
+export function compass(degrees, language) {
+    return COMPASS[supported(language)][Math.round(degrees / 45) % 8];
+}

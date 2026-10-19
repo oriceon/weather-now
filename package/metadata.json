@@ -1,0 +1,20 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Valentin Ivașcu",
+                "Email": "oriceon@gmail.com"
+            }
+        ],
+        "Category": "Environment and Weather",
+        "Description": "Weather with an animated sky, hourly rain, a calendar of the coming weeks and official warnings",
+        "Description[ro]": "Vremea cu cer animat, ploaia pe ore, calendarul săptămânilor următoare și atenționările oficiale",
+        "Icon": "weather-clear",
+        "Id": "ro.oriceon.weather",
+        "License": "GPL-2.0-or-later",
+        "Name": "Weather Now",
+        "Version": "1.0.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+
+    <group name="General">
+        <entry name="locationName" type="String">
+            <label>Empty until the user picks a place; the widget asks for one while it is.</label>
+            <default></default>
+        </entry>
+        <entry name="latitude" type="Double">
+            <default>0</default>
+        </entry>
+        <entry name="longitude" type="Double">
+            <default>0</default>
+        </entry>
+        <entry name="region" type="String">
+            <label>First-level administrative area of the place (the county, in Romania); official warnings are issued for it.</label>
+            <default></default>
+        </entry>
+        <entry name="countryCode" type="String">
+            <default></default>
+        </entry>
+        <entry name="showAlerts" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="showNowcasting" type="Bool">
+            <label>The immediate warnings of ANM, from its own website; nothing is asked of that website while this is off.</label>
+            <default>false</default>
+        </entry>
+        <entry name="language" type="String">
+            <label>auto, ro or en</label>
+            <default>auto</default>
+        </entry>
+        <entry name="firstDayOfWeek" type="Int">
+            <label>0 Sunday … 6 Saturday; -1 follows the regional settings of the system.</label>
+            <default>-1</default>
+        </entry>
+        <entry name="fontScale" type="Int">
+            <label>Size of the text, in percent of the font of the Plasma theme.</label>
+            <default>110</default>
+        </entry>
+        <entry name="fontFamily" type="String">
+            <label>Empty for the font of the Plasma theme.</label>
+            <default></default>
+        </entry>
+        <entry name="iconSet" type="String">
+            <label>meteocons or breeze (the icons of the Plasma theme)</label>
+            <default>meteocons</default>
+        </entry>
+        <entry name="animations" type="String">
+            <label>full, reduced or off</label>
+            <default>full</default>
+        </entry>
+        <entry name="hiddenTabs" type="StringList">
+            <label>Ids of the tabs that are turned off: today, hours, rain, days, details.</label>
+            <default></default>
+        </entry>
+        <entry name="temperatureUnit" type="String">
+            <default>celsius</default>
+        </entry>
+        <entry name="windUnit" type="String">
+            <default>kmh</default>
+        </entry>
+        <entry name="refreshMinutes" type="Int">
+            <default>30</default>
+        </entry>
+    </group>
+</kcfg>

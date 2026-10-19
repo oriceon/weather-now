@@ -1,0 +1,7 @@
+# Working notes, kept locally.
+DEVELOPMENT.ro.md
+# Screenshots of the QML viewer and Python caches.
+tests/qml/out/
+__pycache__/
+# Built packages are attached to the GitHub releases instead.
+*.plasmoid

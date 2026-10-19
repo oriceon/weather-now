@@ -1,0 +1,1127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:cap="urn:oasis:names:tc:emergency:cap:1.2">
+  <link rel="hub" href="https://pubsubhubbub.appspot.com/"/>
+  <link type="application/atom+xml" rel="self" href="https://feeds.meteoalarm.org/feeds/meteoalarm-legacy-atom-romania"/>
+  <link type="text/html" rel="alternate" href="https://meteoalarm.org"/>
+  <rights>Copyright © 2026 MeteoAlarm.Org. Licensed under terms equivalent to CC BY 4.0, with additional requirements for redistributing outlined in our Terms and Conditions.</rights>
+  <generator>MeteoAlarm Producer Server</generator>
+  <logo>https://feeds.meteoalarm.org/images/logo.svg</logo>
+  <author>
+    <name>meteoalarm.org</name>
+    <uri>https://meteoalarm.org</uri>
+    <email>meteoalarm@geosphere.at</email>
+  </author>
+  <id>tag:meteoalarm.org,2021-02-19:RO</id>
+  <title>MeteoAlarm - Alerting Europe for Extreme Weather</title>
+  <updated>2026-10-13T14:05:12.900010Z</updated>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO226</value>
+    </cap:geocode>
+    <link title="Vrancea" href="https://meteoalarm.org?geocode=EMMA_ID:RO032" hreflang="en"/>
+    <cap:areaDesc>Vrancea</cap:areaDesc>
+    <cap:event>awareness_type=1, awareness_level=2</cap:event>
+    <cap:sent>2026-10-13T07:01:17+00:00</cap:sent>
+    <cap:expires>2026-10-14T15:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-13T06:56:00+00:00</cap:effective>
+    <cap:onset>2026-10-14T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610130956.010e8bbbd653bfcd</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-13T07:01:17Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a?index_info=1&amp;index_area=7&amp;index_geocode=0</id>
+    <title>Yellow Wind Warning issued for Romania - Vrancea</title>
+    <updated>2026-10-13T07:01:17Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO225</value>
+    </cap:geocode>
+    <link title="Tulcea" href="https://meteoalarm.org?geocode=EMMA_ID:RO009" hreflang="en"/>
+    <cap:areaDesc>Tulcea</cap:areaDesc>
+    <cap:event>awareness_type=1, awareness_level=2</cap:event>
+    <cap:sent>2026-10-13T07:01:17+00:00</cap:sent>
+    <cap:expires>2026-10-14T15:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-13T06:56:00+00:00</cap:effective>
+    <cap:onset>2026-10-14T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610130956.010e8bbbd653bfcd</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-13T07:01:17Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a?index_info=1&amp;index_area=6&amp;index_geocode=0</id>
+    <title>Yellow Wind Warning issued for Romania - Tulcea</title>
+    <updated>2026-10-13T07:01:17Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO315</value>
+    </cap:geocode>
+    <link title="Ialomița" href="https://meteoalarm.org?geocode=EMMA_ID:RO012" hreflang="en"/>
+    <cap:areaDesc>Ialomița</cap:areaDesc>
+    <cap:event>awareness_type=1, awareness_level=2</cap:event>
+    <cap:sent>2026-10-13T07:01:17+00:00</cap:sent>
+    <cap:expires>2026-10-14T15:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-13T06:56:00+00:00</cap:effective>
+    <cap:onset>2026-10-14T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610130956.010e8bbbd653bfcd</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-13T07:01:17Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a?index_info=1&amp;index_area=5&amp;index_geocode=0</id>
+    <title>Yellow Wind Warning issued for Romania - Ialomița</title>
+    <updated>2026-10-13T07:01:17Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO224</value>
+    </cap:geocode>
+    <link title="Galați" href="https://meteoalarm.org?geocode=EMMA_ID:RO008" hreflang="en"/>
+    <cap:areaDesc>Galați</cap:areaDesc>
+    <cap:event>awareness_type=1, awareness_level=2</cap:event>
+    <cap:sent>2026-10-13T07:01:17+00:00</cap:sent>
+    <cap:expires>2026-10-14T15:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-13T06:56:00+00:00</cap:effective>
+    <cap:onset>2026-10-14T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610130956.010e8bbbd653bfcd</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-13T07:01:17Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a?index_info=1&amp;index_area=4&amp;index_geocode=0</id>
+    <title>Yellow Wind Warning issued for Romania - Galați</title>
+    <updated>2026-10-13T07:01:17Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO223</value>
+    </cap:geocode>
+    <link title="Constanța" href="https://meteoalarm.org?geocode=EMMA_ID:RO010" hreflang="en"/>
+    <cap:areaDesc>Constanța</cap:areaDesc>
+    <cap:event>awareness_type=1, awareness_level=2</cap:event>
+    <cap:sent>2026-10-13T07:01:17+00:00</cap:sent>
+    <cap:expires>2026-10-14T15:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-13T06:56:00+00:00</cap:effective>
+    <cap:onset>2026-10-14T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610130956.010e8bbbd653bfcd</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-13T07:01:17Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a?index_info=1&amp;index_area=3&amp;index_geocode=0</id>
+    <title>Yellow Wind Warning issued for Romania - Constanța</title>
+    <updated>2026-10-13T07:01:17Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO312</value>
+    </cap:geocode>
+    <link title="Călărași" href="https://meteoalarm.org?geocode=EMMA_ID:RO011" hreflang="en"/>
+    <cap:areaDesc>Călărași</cap:areaDesc>
+    <cap:event>awareness_type=1, awareness_level=2</cap:event>
+    <cap:sent>2026-10-13T07:01:17+00:00</cap:sent>
+    <cap:expires>2026-10-14T15:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-13T06:56:00+00:00</cap:effective>
+    <cap:onset>2026-10-14T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610130956.010e8bbbd653bfcd</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-13T07:01:17Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a?index_info=1&amp;index_area=2&amp;index_geocode=0</id>
+    <title>Yellow Wind Warning issued for Romania - Călărași</title>
+    <updated>2026-10-13T07:01:17Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO222</value>
+    </cap:geocode>
+    <link title="Buzău" href="https://meteoalarm.org?geocode=EMMA_ID:RO031" hreflang="en"/>
+    <cap:areaDesc>Buzău</cap:areaDesc>
+    <cap:event>awareness_type=1, awareness_level=2</cap:event>
+    <cap:sent>2026-10-13T07:01:17+00:00</cap:sent>
+    <cap:expires>2026-10-14T15:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-13T06:56:00+00:00</cap:effective>
+    <cap:onset>2026-10-14T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610130956.010e8bbbd653bfcd</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-13T07:01:17Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a?index_info=1&amp;index_area=1&amp;index_geocode=0</id>
+    <title>Yellow Wind Warning issued for Romania - Buzău</title>
+    <updated>2026-10-13T07:01:17Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO221</value>
+    </cap:geocode>
+    <link title="Brăila" href="https://meteoalarm.org?geocode=EMMA_ID:RO013" hreflang="en"/>
+    <cap:areaDesc>Brăila</cap:areaDesc>
+    <cap:event>awareness_type=1, awareness_level=2</cap:event>
+    <cap:sent>2026-10-13T07:01:17+00:00</cap:sent>
+    <cap:expires>2026-10-14T15:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-13T06:56:00+00:00</cap:effective>
+    <cap:onset>2026-10-14T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610130956.010e8bbbd653bfcd</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-13T07:01:17Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/36933e02-8245-4ea3-8b74-ae381f5e549a?index_info=1&amp;index_area=0&amp;index_geocode=0</id>
+    <title>Yellow Wind Warning issued for Romania - Brăila</title>
+    <updated>2026-10-13T07:01:17Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO225</value>
+    </cap:geocode>
+    <link title="Tulcea" href="https://meteoalarm.org?geocode=EMMA_ID:RO009" hreflang="en"/>
+    <cap:areaDesc>Tulcea</cap:areaDesc>
+    <cap:event>awareness_type=1, awareness_level=2</cap:event>
+    <cap:sent>2026-10-13T07:01:15+00:00</cap:sent>
+    <cap:expires>2026-10-14T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-13T06:56:00+00:00</cap:effective>
+    <cap:onset>2026-10-13T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610130956.24820946f5034947</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/e26814e8-1689-447a-88eb-5860a8fd2ba6"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-13T07:01:15Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/e26814e8-1689-447a-88eb-5860a8fd2ba6?index_info=1&amp;index_area=1&amp;index_geocode=0</id>
+    <title>Yellow Wind Warning issued for Romania - Tulcea</title>
+    <updated>2026-10-13T07:01:15Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO223</value>
+    </cap:geocode>
+    <link title="Constanța" href="https://meteoalarm.org?geocode=EMMA_ID:RO010" hreflang="en"/>
+    <cap:areaDesc>Constanța</cap:areaDesc>
+    <cap:event>awareness_type=1, awareness_level=2</cap:event>
+    <cap:sent>2026-10-13T07:01:15+00:00</cap:sent>
+    <cap:expires>2026-10-14T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-13T06:56:00+00:00</cap:effective>
+    <cap:onset>2026-10-13T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610130956.24820946f5034947</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/e26814e8-1689-447a-88eb-5860a8fd2ba6"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-13T07:01:15Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/e26814e8-1689-447a-88eb-5860a8fd2ba6?index_info=1&amp;index_area=0&amp;index_geocode=0</id>
+    <title>Yellow Wind Warning issued for Romania - Constanța</title>
+    <updated>2026-10-13T07:01:15Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO226</value>
+    </cap:geocode>
+    <link title="Vrancea" href="https://meteoalarm.org?geocode=EMMA_ID:RO032" hreflang="en"/>
+    <cap:areaDesc>Vrancea</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:27+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.cdd21dc013feb7e4</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/52eb20d0-721e-4da8-9aa3-78ebdfab6a8b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:27Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/52eb20d0-721e-4da8-9aa3-78ebdfab6a8b?index_info=1&amp;index_area=3&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Vrancea</title>
+    <updated>2026-10-12T07:00:27Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO123</value>
+    </cap:geocode>
+    <link title="Covasna" href="https://meteoalarm.org?geocode=EMMA_ID:RO033" hreflang="en"/>
+    <cap:areaDesc>Covasna</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:27+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.cdd21dc013feb7e4</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/52eb20d0-721e-4da8-9aa3-78ebdfab6a8b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:27Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/52eb20d0-721e-4da8-9aa3-78ebdfab6a8b?index_info=1&amp;index_area=2&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Covasna</title>
+    <updated>2026-10-12T07:00:27Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO222</value>
+    </cap:geocode>
+    <link title="Buzău" href="https://meteoalarm.org?geocode=EMMA_ID:RO031" hreflang="en"/>
+    <cap:areaDesc>Buzău</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:27+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.cdd21dc013feb7e4</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/52eb20d0-721e-4da8-9aa3-78ebdfab6a8b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:27Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/52eb20d0-721e-4da8-9aa3-78ebdfab6a8b?index_info=1&amp;index_area=1&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Buzău</title>
+    <updated>2026-10-12T07:00:27Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO122</value>
+    </cap:geocode>
+    <link title="Brașov" href="https://meteoalarm.org?geocode=EMMA_ID:RO034" hreflang="en"/>
+    <cap:areaDesc>Brașov</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:27+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.cdd21dc013feb7e4</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/52eb20d0-721e-4da8-9aa3-78ebdfab6a8b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:27Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/52eb20d0-721e-4da8-9aa3-78ebdfab6a8b?index_info=1&amp;index_area=0&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Brașov</title>
+    <updated>2026-10-12T07:00:27Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO415</value>
+    </cap:geocode>
+    <link title="Vâlcea" href="https://meteoalarm.org?geocode=EMMA_ID:RO037" hreflang="en"/>
+    <cap:areaDesc>Vâlcea</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:25+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.b9194e3bf33501c5</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:25Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32?index_info=1&amp;index_area=8&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Vâlcea</title>
+    <updated>2026-10-12T07:00:25Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO317</value>
+    </cap:geocode>
+    <link title="Teleorman" href="https://meteoalarm.org?geocode=EMMA_ID:RO025" hreflang="en"/>
+    <cap:areaDesc>Teleorman</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:25+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.b9194e3bf33501c5</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:25Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32?index_info=1&amp;index_area=7&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Teleorman</title>
+    <updated>2026-10-12T07:00:25Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO316</value>
+    </cap:geocode>
+    <link title="Prahova" href="https://meteoalarm.org?geocode=EMMA_ID:RO030" hreflang="en"/>
+    <cap:areaDesc>Prahova</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:25+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.b9194e3bf33501c5</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:25Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32?index_info=1&amp;index_area=6&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Prahova</title>
+    <updated>2026-10-12T07:00:25Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO414</value>
+    </cap:geocode>
+    <link title="Olt" href="https://meteoalarm.org?geocode=EMMA_ID:RO035" hreflang="en"/>
+    <cap:areaDesc>Olt</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:25+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.b9194e3bf33501c5</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:25Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32?index_info=1&amp;index_area=5&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Olt</title>
+    <updated>2026-10-12T07:00:25Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO322</value>
+    </cap:geocode>
+    <link title="Ilfov" href="https://meteoalarm.org?geocode=EMMA_ID:RO028" hreflang="en"/>
+    <cap:areaDesc>Ilfov</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:25+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.b9194e3bf33501c5</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:25Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32?index_info=1&amp;index_area=4&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Ilfov</title>
+    <updated>2026-10-12T07:00:25Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO314</value>
+    </cap:geocode>
+    <link title="Giurgiu" href="https://meteoalarm.org?geocode=EMMA_ID:RO026" hreflang="en"/>
+    <cap:areaDesc>Giurgiu</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:25+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.b9194e3bf33501c5</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:25Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32?index_info=1&amp;index_area=3&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Giurgiu</title>
+    <updated>2026-10-12T07:00:25Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO313</value>
+    </cap:geocode>
+    <link title="Dâmbovița" href="https://meteoalarm.org?geocode=EMMA_ID:RO029" hreflang="en"/>
+    <cap:areaDesc>Dâmbovița</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:25+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.b9194e3bf33501c5</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:25Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32?index_info=1&amp;index_area=2&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Dâmbovița</title>
+    <updated>2026-10-12T07:00:25Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO321</value>
+    </cap:geocode>
+    <link title="București" href="https://meteoalarm.org?geocode=EMMA_ID:RO027" hreflang="en"/>
+    <cap:areaDesc>București</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:25+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.b9194e3bf33501c5</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:25Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32?index_info=1&amp;index_area=1&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - București</title>
+    <updated>2026-10-12T07:00:25Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO311</value>
+    </cap:geocode>
+    <link title="Argeș" href="https://meteoalarm.org?geocode=EMMA_ID:RO036" hreflang="en"/>
+    <cap:areaDesc>Argeș</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-12T07:00:25+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-12T06:55:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610120955.b9194e3bf33501c5</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-12T07:00:25Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/4afaf648-6f01-47bc-a777-11a5f54d4f32?index_info=1&amp;index_area=0&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Argeș</title>
+    <updated>2026-10-12T07:00:25Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO226</value>
+    </cap:geocode>
+    <link title="Vrancea" href="https://meteoalarm.org?geocode=EMMA_ID:RO032" hreflang="en"/>
+    <cap:areaDesc>Vrancea</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=13&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Vrancea</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO317</value>
+    </cap:geocode>
+    <link title="Teleorman" href="https://meteoalarm.org?geocode=EMMA_ID:RO025" hreflang="en"/>
+    <cap:areaDesc>Teleorman</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=12&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Teleorman</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO316</value>
+    </cap:geocode>
+    <link title="Prahova" href="https://meteoalarm.org?geocode=EMMA_ID:RO030" hreflang="en"/>
+    <cap:areaDesc>Prahova</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=11&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Prahova</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO414</value>
+    </cap:geocode>
+    <link title="Olt" href="https://meteoalarm.org?geocode=EMMA_ID:RO035" hreflang="en"/>
+    <cap:areaDesc>Olt</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=10&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Olt</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO322</value>
+    </cap:geocode>
+    <link title="Ilfov" href="https://meteoalarm.org?geocode=EMMA_ID:RO028" hreflang="en"/>
+    <cap:areaDesc>Ilfov</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=9&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Ilfov</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO315</value>
+    </cap:geocode>
+    <link title="Ialomița" href="https://meteoalarm.org?geocode=EMMA_ID:RO012" hreflang="en"/>
+    <cap:areaDesc>Ialomița</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=8&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Ialomița</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO314</value>
+    </cap:geocode>
+    <link title="Giurgiu" href="https://meteoalarm.org?geocode=EMMA_ID:RO026" hreflang="en"/>
+    <cap:areaDesc>Giurgiu</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=7&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Giurgiu</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO313</value>
+    </cap:geocode>
+    <link title="Dâmbovița" href="https://meteoalarm.org?geocode=EMMA_ID:RO029" hreflang="en"/>
+    <cap:areaDesc>Dâmbovița</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=6&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Dâmbovița</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO123</value>
+    </cap:geocode>
+    <link title="Covasna" href="https://meteoalarm.org?geocode=EMMA_ID:RO033" hreflang="en"/>
+    <cap:areaDesc>Covasna</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=5&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Covasna</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO312</value>
+    </cap:geocode>
+    <link title="Călărași" href="https://meteoalarm.org?geocode=EMMA_ID:RO011" hreflang="en"/>
+    <cap:areaDesc>Călărași</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=4&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Călărași</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO222</value>
+    </cap:geocode>
+    <link title="Buzău" href="https://meteoalarm.org?geocode=EMMA_ID:RO031" hreflang="en"/>
+    <cap:areaDesc>Buzău</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=3&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Buzău</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO321</value>
+    </cap:geocode>
+    <link title="București" href="https://meteoalarm.org?geocode=EMMA_ID:RO027" hreflang="en"/>
+    <cap:areaDesc>București</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=2&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - București</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO122</value>
+    </cap:geocode>
+    <link title="Brașov" href="https://meteoalarm.org?geocode=EMMA_ID:RO034" hreflang="en"/>
+    <cap:areaDesc>Brașov</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=1&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Brașov</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+  <entry>
+    <cap:geocode>
+      <valueName>NUTS3</valueName>
+      <value>RO311</value>
+    </cap:geocode>
+    <link title="Argeș" href="https://meteoalarm.org?geocode=EMMA_ID:RO036" hreflang="en"/>
+    <cap:areaDesc>Argeș</cap:areaDesc>
+    <cap:event>awareness_type=10, awareness_level=2</cap:event>
+    <cap:sent>2026-10-11T07:09:13+00:00</cap:sent>
+    <cap:expires>2026-10-13T07:00:00+00:00</cap:expires>
+    <cap:effective>2026-10-11T07:03:00+00:00</cap:effective>
+    <cap:onset>2026-10-12T07:00:00+00:00</cap:onset>
+    <cap:certainty>Likely</cap:certainty>
+    <cap:severity>Moderate</cap:severity>
+    <cap:urgency>Future</cap:urgency>
+    <cap:scope>Public</cap:scope>
+    <cap:message_type>Alert</cap:message_type>
+    <cap:status>Actual</cap:status>
+    <cap:identifier>2.49.0.0.642.0.RO.2610111003.135009835b48777f</cap:identifier>
+    <link type="application/cap+xml" href="https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b"/>
+    <link title="Romania" rel="related" href="https://meteoalarm.org?region=RO" hreflang="en"/>
+    <author>
+      <name>meteoalarm.org</name>
+      <uri>https://meteoalarm.org</uri>
+    </author>
+    <published>2026-10-11T07:09:13Z</published>
+    <id>https://feeds.meteoalarm.org/api/v1/warnings/feeds-romania/93182249-de00-494c-b2ab-0081607a785b?index_info=1&amp;index_area=0&amp;index_geocode=0</id>
+    <title>Yellow Rain Warning issued for Romania - Argeș</title>
+    <updated>2026-10-11T07:09:13Z</updated>
+  </entry>
+</feed>
