@@ -45,6 +45,10 @@
             <label>Empty for the font of the Plasma theme.</label>
             <default></default>
         </entry>
+        <entry name="background" type="String">
+            <label>black, theme or none (transparent)</label>
+            <default>theme</default>
+        </entry>
         <entry name="iconSet" type="String">
             <label>meteocons or breeze (the icons of the Plasma theme)</label>
             <default>meteocons</default>

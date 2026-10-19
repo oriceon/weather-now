@@ -39,6 +39,8 @@ Item {
     required property string fontFamily
     /** meteocons | breeze */
     required property string iconSet
+    /** black | theme | none */
+    required property string background
 
     /** Index into `tabIds`. */
     property int currentTab: 0
@@ -104,8 +106,22 @@ Item {
     Layout.preferredWidth: Kirigami.Units.gridUnit * 28 * roomFactor
     Layout.preferredHeight: Kirigami.Units.gridUnit * 21 * roomFactor
 
+    // On its own black background the widget takes the dark colours Plasma keeps for such places,
+    // whatever the theme: those of a light one would not read on black.
+    Kirigami.Theme.inherit: background !== "black"
+    Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
+
+    Rectangle {
+        anchors.fill: parent
+        visible: full.background === "black"
+        radius: Kirigami.Units.cornerRadius * 2
+        color: "#000000"
+    }
+
     ColumnLayout {
         anchors.fill: parent
+        // The frame of the Plasma theme brings its own margins.
+        anchors.margins: full.background === "theme" ? 0 : Kirigami.Units.largeSpacing
         spacing: Kirigami.Units.smallSpacing
 
         RowLayout {

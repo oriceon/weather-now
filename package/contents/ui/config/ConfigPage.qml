@@ -29,6 +29,8 @@ KCM.SimpleKCM {
     property int cfg_fontScaleDefault
     property string cfg_fontFamily
     property string cfg_fontFamilyDefault
+    property string cfg_background
+    property string cfg_backgroundDefault
     property string cfg_iconSet
     property string cfg_iconSetDefault
     property string cfg_animations

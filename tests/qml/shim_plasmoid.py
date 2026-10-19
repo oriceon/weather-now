@@ -29,11 +29,13 @@ class Applet(QObject):
     """What `Plasmoid.` resolves to anywhere inside the widget."""
 
     iconChanged = Signal()
+    backgroundHintsChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self._configuration = QQmlPropertyMap(self)
         self._icon = ""
+        self._backgroundHints = 1
         self.actions = []
 
     @Property(QObject, constant=True)
@@ -53,6 +55,7 @@ class Applet(QObject):
         return "ro.oriceon.weather"
 
     icon = Property(str, *accessors("icon", "iconChanged"), notify=iconChanged)
+    backgroundHints = Property(int, *accessors("backgroundHints", "backgroundHintsChanged"), notify=backgroundHintsChanged)
 
     def append_action(self, action):
         self.actions.append(action)

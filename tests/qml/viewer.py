@@ -35,7 +35,7 @@ PACKAGE = HERE.parent.parent / "package"
 FIXTURES = HERE.parent / "fixtures"
 
 QML_SHIMS = {
-    "org.kde.kirigami": ("kirigami", ["Icon", "FormLayout"], ["Units", "Theme"]),
+    "org.kde.kirigami": ("kirigami", ["Icon", "FormLayout"], ["Units"]),
     "org.kde.plasma.components": ("components", ["Label", "TabBar", "TabButton", "ToolButton", "Button", "BusyIndicator", "ToolTip", "ScrollBar", "TextField"], []),
     "org.kde.plasma.core": ("misc", ["Action", "Types"], []),
     "org.kde.kcmutils": ("misc", ["SimpleKCM"], []),
@@ -160,6 +160,7 @@ def build_stage(engine, arguments, configuration):
         "fontScale": arguments.font_scale,
         "fontFamily": arguments.font,
         "iconSet": arguments.icons,
+        "background": arguments.background,
         "region": arguments.region,
         "locality": arguments.locality,
     }
@@ -183,7 +184,7 @@ def build_applet(engine, arguments, configuration):
 
     def report():
         applet = shim_plasmoid.applet()
-        print(f"applet: icon={applet.property('icon')!r} tooltip={root.property('toolTipMainText')!r} / {root.property('toolTipSubText')!r} actions={len(applet.actions)}")
+        print(f"applet: icon={applet.property('icon')!r} tooltip={root.property('toolTipMainText')!r} / {root.property('toolTipSubText')!r} actions={len(applet.actions)} backgroundHints={applet.property('backgroundHints')}")
 
     if arguments.tab and not arguments.compact:
         item.setProperty("currentTab", arguments.tab)
@@ -255,6 +256,7 @@ def main():
     parser.add_argument("--size", default="508x346")
     parser.add_argument("--wait", type=int, default=None, help="milliseconds before the screenshot")
     parser.add_argument("--light", action="store_true", help="light colour scheme")
+    parser.add_argument("--background", default="theme", choices=["black", "theme", "none"], help="stage: the background of the widget")
     parser.add_argument("--set", action="append", default=[], metavar="KEY=VALUE", help="override a setting of the widget")
     parser.add_argument("--lang", default="ro")
     parser.add_argument("--wind", default="kmh")
@@ -316,12 +318,19 @@ def main():
     view.setSource(url(HERE / "Host.qml"))
     view.resize(width, height)
 
-    theme = view.engine().singletonInstance("org.kde.kirigami", "Theme")
-    theme.setProperty("dark", not arguments.light)
+    shim_kirigami.set_dark(not arguments.light)
 
     content = view.rootObject().findChild(QQuickItem, "content")
     item = {"stage": build_stage, "applet": build_applet, "config": build_config}[arguments.what](view.engine(), arguments, configuration)
     item.setParentItem(content)
+
+    # Plasma draws no frame around a widget that asks for no background.
+    def follow_background():
+        framed = arguments.background == "theme" if arguments.what == "stage" else shim_plasmoid.applet().property("backgroundHints") != 0
+        view.rootObject().setProperty("framed", framed)
+
+    shim_plasmoid.applet().backgroundHintsChanged.connect(follow_background)
+    follow_background()
 
     def fit():
         item.setWidth(content.width())

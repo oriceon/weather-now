@@ -24,6 +24,7 @@ Item {
     property real fontScale: 1.1
     property string fontFamily: ""
     property string iconSet: "meteocons"
+    property string background: "theme"
 
     /** Recorded warning feeds; empty ones stage a place without warnings. */
     property string alertsFeed: ""
@@ -62,6 +63,7 @@ Item {
         fontScale: stage.fontScale
         fontFamily: stage.fontFamily
         iconSet: stage.iconSet
+        background: stage.background
         currentTab: stage.tab
 
         onPlaceChosen: place => stage.chosenPlace = place

@@ -30,6 +30,8 @@ PlasmoidItem {
 
     // The logo, as in Add Widgets: Plasma shows it in the notification of a removed widget. The panel draws the weather itself.
     Plasmoid.icon: Qt.resolvedUrl("../icons/weather-now.png").toString()
+    // On the desktop the frame of the Plasma theme, unless the widget draws its own black one or none at all.
+    Plasmoid.backgroundHints: Plasmoid.configuration.background === "theme" ? PlasmaCore.Types.DefaultBackground : PlasmaCore.Types.NoBackground
     toolTipMainText: located ? Plasmoid.configuration.locationName : Plasmoid.title
     toolTipSubText: {
         if (!located) {
@@ -85,6 +87,7 @@ PlasmoidItem {
         fontScale: root.fontScale
         fontFamily: Plasmoid.configuration.fontFamily
         iconSet: Plasmoid.configuration.iconSet
+        background: Plasmoid.configuration.background
 
         onRefreshRequested: store.refresh()
         onPlaceChosen: place => root.usePlace(place)

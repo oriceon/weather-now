@@ -9,7 +9,7 @@ Tabs
 
 Also
 - English or Romanian interface; follows the language of Plasma by default
-- First day of the week, units, font, text size, icons, animation level and visible tabs are configurable
+- First day of the week, units, font, text size, background (black, the Plasma theme's or transparent), icons, animation level and visible tabs are configurable
 - Asks for your place on first start; search any place in the world
 - Official weather warnings through MeteoAlarm, with the full warning text, the service that issued it and the time of issue; for now only for Romania
 
