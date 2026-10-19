@@ -148,7 +148,7 @@ def build_stage(engine, arguments, configuration):
         return (FIXTURES / name).read_text(encoding="utf-8")
 
     properties = {
-        "fixtureJson": fixture("forecast-constanta.json"),
+        "fixtureJson": Path(arguments.forecast).read_text(encoding="utf-8") if arguments.forecast else fixture("forecast-constanta.json"),
         "currentOverridesJson": arguments.current,
         "language": arguments.lang,
         "windUnit": arguments.wind,
@@ -263,6 +263,7 @@ def main():
     parser.add_argument("--first-run", action="store_true", help="applet, config: start without a place, as a new user does")
     parser.add_argument("--search", default="", metavar="TEXT", help="at the first-run prompt: search for TEXT and pick the first place found")
     parser.add_argument("--current", default="{}", help="JSON merged into the current conditions of the fixture")
+    parser.add_argument("--forecast", default="", metavar="FILE", help="stage: an Open-Meteo answer to show instead of the recorded one")
     parser.add_argument("--first-day", type=int, default=1, help="stage: first day of the week, 0 Sunday … 6 Saturday")
     parser.add_argument("--animations", default="off", choices=["full", "reduced", "off"], help="stage: off gives a still, repeatable picture")
     parser.add_argument("--hide", action="append", default=[], metavar="TAB", help="stage: a tab that is turned off")

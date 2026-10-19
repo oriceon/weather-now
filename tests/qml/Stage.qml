@@ -51,7 +51,8 @@ Item {
         ready: stage.mode === "ready" || stage.mode === "stale"
         loading: stage.mode === "loading"
         failed: stage.mode === "failed" || stage.mode === "stale"
-        updatedAt: new Date(2026, 9, 13, 17, 0)
+        // The time of the forecast, which is when it was fetched.
+        updatedAt: new Date(stage.forecast.current.time)
         language: stage.language
         locationName: stage.locality
         windUnit: stage.windUnit
