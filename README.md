@@ -28,7 +28,7 @@ Immediate warnings (nowcasting) are prepared in the code but switched off: their
 From a release, with the `.plasmoid` file from the [releases page](https://github.com/oriceon/weather-now/releases):
 
 ```bash
-kpackagetool6 --type Plasma/Applet --install weather-now-1.0.1.plasmoid
+kpackagetool6 --type Plasma/Applet --install weather-now-1.0.2.plasmoid
 ```
 
 From this repository:

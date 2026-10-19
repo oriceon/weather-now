@@ -10,11 +10,11 @@
         "Category": "Environment and Weather",
         "Description": "Weather with an animated sky, hourly rain, a calendar of the coming weeks and official warnings",
         "Description[ro]": "Vremea cu cer animat, ploaia pe ore, calendarul săptămânilor următoare și atenționările oficiale",
-        "Icon": "weather-clear",
+        "Icon": "/icons/weather-now.png",
         "Id": "ro.oriceon.weather",
         "License": "GPL-2.0-or-later",
         "Name": "Weather Now",
-        "Version": "1.0.1"
+        "Version": "1.0.2"
     },
     "X-Plasma-API-Minimum-Version": "6.0"
 }
