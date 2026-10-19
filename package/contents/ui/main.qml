@@ -28,7 +28,8 @@ PlasmoidItem {
     switchWidth: Kirigami.Units.gridUnit * 20 * Math.max(1, fontScale)
     switchHeight: Kirigami.Units.gridUnit * 18 * Math.max(1, fontScale)
 
-    Plasmoid.icon: store.iconName
+    // The logo, as in Add Widgets: Plasma shows it in the notification of a removed widget. The panel draws the weather itself.
+    Plasmoid.icon: Qt.resolvedUrl("../icons/weather-now.png").toString()
     toolTipMainText: located ? Plasmoid.configuration.locationName : Plasmoid.title
     toolTipSubText: {
         if (!located) {

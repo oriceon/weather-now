@@ -2,7 +2,6 @@ import QtQuick
 
 import "../code/alerts.mjs" as Alerts
 import "../code/openmeteo.mjs" as OpenMeteo
-import "../code/wmo.mjs" as Wmo
 
 /**
  * Loads the forecast from Open-Meteo and the official warnings for the place, and keeps them fresh.
@@ -48,7 +47,6 @@ QtObject {
     })
     /** False while the forecast on hand is for another place or unit than the configured one. */
     readonly property bool ready: forecast !== null && loadedUrl === requestUrl
-    readonly property string iconName: ready ? Wmo.iconName(forecast.current.conditionCode, forecast.current.isDay) : "weather-none-available"
 
     /** Warnings per county, as the feed lists them: without their text, which comes from `warningTexts`. */
     property var countyWarnings: []
