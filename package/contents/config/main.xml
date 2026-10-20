@@ -49,6 +49,12 @@
             <label>black, theme or none (transparent)</label>
             <default>theme</default>
         </entry>
+        <entry name="backgroundTransparency" type="Int">
+            <label>How transparent the transparent background is, in percent: 0 is the background of the Plasma theme, 100 is none at all.</label>
+            <default>100</default>
+            <min>0</min>
+            <max>100</max>
+        </entry>
         <entry name="iconSet" type="String">
             <label>meteocons or breeze (the icons of the Plasma theme)</label>
             <default>meteocons</default>

@@ -17,7 +17,7 @@ A weather widget for Plasma 6 with an animated sky that follows the current weat
 ## Also
 
 - English or Romanian interface; follows the Plasma language by default
-- First day of the week, units, font, text size, background (black, the Plasma theme's or transparent), icons (Meteocons or the Plasma theme's), animation level and visible tabs are configurable
+- First day of the week, units, font, text size, background (black, the Plasma theme's or transparent, as much as you like), icons (Meteocons or the Plasma theme's), animation level and visible tabs are configurable
 - Asks for your place on first start; search any place in the world
 - Official weather warnings, through MeteoAlarm, with the full warning text, the service that issued it and the time of issue; for now only for Romania
 
@@ -28,7 +28,7 @@ Immediate warnings (nowcasting) are prepared in the code but switched off: their
 From a release, with the `.plasmoid` file from the [releases page](https://github.com/oriceon/weather-now/releases):
 
 ```bash
-kpackagetool6 --type Plasma/Applet --install weather-now-1.0.4.plasmoid
+kpackagetool6 --type Plasma/Applet --install weather-now-1.0.5.plasmoid
 ```
 
 From this repository:

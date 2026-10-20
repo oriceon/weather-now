@@ -41,6 +41,8 @@ Item {
     required property string iconSet
     /** black | theme | none */
     required property string background
+    /** Percent: how much of the desktop shows through the transparent background; 100 is none at all. */
+    required property int backgroundTransparency
 
     /** Index into `tabIds`. */
     property int currentTab: 0
@@ -111,11 +113,12 @@ Item {
     Kirigami.Theme.inherit: background !== "black"
     Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
 
+    // The black background, or the colour of the Plasma theme behind the transparent one, as much as asked.
     Rectangle {
         anchors.fill: parent
-        visible: full.background === "black"
+        visible: full.background === "black" || (full.background === "none" && full.backgroundTransparency < 100)
         radius: Kirigami.Units.cornerRadius * 2
-        color: "#000000"
+        color: full.background === "black" ? "#000000" : Qt.alpha(Kirigami.Theme.backgroundColor, 1 - full.backgroundTransparency / 100)
     }
 
     ColumnLayout {

@@ -31,6 +31,8 @@ KCM.SimpleKCM {
     property string cfg_fontFamilyDefault
     property string cfg_background
     property string cfg_backgroundDefault
+    property int cfg_backgroundTransparency
+    property int cfg_backgroundTransparencyDefault
     property string cfg_iconSet
     property string cfg_iconSetDefault
     property string cfg_animations

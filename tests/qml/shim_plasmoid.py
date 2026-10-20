@@ -7,7 +7,9 @@ from PySide6.QtQuick import QQuickItem
 QML_IMPORT_NAME = "org.kde.plasma.plasmoid"
 QML_IMPORT_MAJOR_VERSION = 1
 
-HORIZONTAL_FORM_FACTOR = 2
+#: PlasmaCore.Types.FormFactor: where the widget is, a panel unless a run says otherwise.
+FORM_FACTORS = {"planar": 0, "horizontal": 2, "vertical": 3}
+form_factor = [FORM_FACTORS["horizontal"]]
 
 
 def accessors(name, signal_name):
@@ -44,7 +46,7 @@ class Applet(QObject):
 
     @Property(int, constant=True)
     def formFactor(self):
-        return HORIZONTAL_FORM_FACTOR
+        return form_factor[0]
 
     @Property(str, constant=True)
     def title(self):
@@ -88,6 +90,7 @@ class Plasmoid(QObject):
 class PlasmoidItem(QQuickItem):
     compactRepresentationChanged = Signal()
     fullRepresentationChanged = Signal()
+    preferredRepresentationChanged = Signal()
     switchWidthChanged = Signal()
     switchHeightChanged = Signal()
     toolTipMainTextChanged = Signal()
@@ -98,6 +101,7 @@ class PlasmoidItem(QQuickItem):
         super().__init__(parent)
         self._compactRepresentation = None
         self._fullRepresentation = None
+        self._preferredRepresentation = None
         self._switchWidth = 0.0
         self._switchHeight = 0.0
         self._toolTipMainText = ""
@@ -106,6 +110,7 @@ class PlasmoidItem(QQuickItem):
 
     compactRepresentation = Property(QQmlComponent, *accessors("compactRepresentation", "compactRepresentationChanged"), notify=compactRepresentationChanged)
     fullRepresentation = Property(QQmlComponent, *accessors("fullRepresentation", "fullRepresentationChanged"), notify=fullRepresentationChanged)
+    preferredRepresentation = Property(QQmlComponent, *accessors("preferredRepresentation", "preferredRepresentationChanged"), notify=preferredRepresentationChanged)
     switchWidth = Property(float, *accessors("switchWidth", "switchWidthChanged"), notify=switchWidthChanged)
     switchHeight = Property(float, *accessors("switchHeight", "switchHeightChanged"), notify=switchHeightChanged)
     toolTipMainText = Property(str, *accessors("toolTipMainText", "toolTipMainTextChanged"), notify=toolTipMainTextChanged)

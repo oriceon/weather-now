@@ -24,9 +24,10 @@ PlasmoidItem {
         ? Alerts.activeAlerts(store.alerts, store.forecast.current.time).map(warning => [Alerts.alertTitle(warning, language), warning.issuer].filter(part => part !== "").join(" · "))
         : []
 
-    // The minimum size of the full representation: anything smaller shows the compact one.
-    switchWidth: Kirigami.Units.gridUnit * 20 * Math.max(1, fontScale)
-    switchHeight: Kirigami.Units.gridUnit * 18 * Math.max(1, fontScale)
+    // On the desktop the widget is always shown whole, and Plasma keeps it at least as big as that
+    // needs; in a panel it is the icon that opens it. With switch sizes, a desktop widget smaller
+    // than them, even one at its own minimum, which was the same size, turned into an oversized icon.
+    preferredRepresentation: Plasmoid.formFactor === PlasmaCore.Types.Horizontal || Plasmoid.formFactor === PlasmaCore.Types.Vertical ? compactRepresentation : fullRepresentation
 
     // The logo, as in Add Widgets: Plasma shows it in the notification of a removed widget. The panel draws the weather itself.
     Plasmoid.icon: Qt.resolvedUrl("../icons/weather-now.png").toString()
@@ -88,6 +89,7 @@ PlasmoidItem {
         fontFamily: Plasmoid.configuration.fontFamily
         iconSet: Plasmoid.configuration.iconSet
         background: Plasmoid.configuration.background
+        backgroundTransparency: Plasmoid.configuration.backgroundTransparency
 
         onRefreshRequested: store.refresh()
         onPlaceChosen: place => root.usePlace(place)

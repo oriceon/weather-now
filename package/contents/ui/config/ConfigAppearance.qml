@@ -149,6 +149,37 @@ ConfigPage {
             }
         }
 
+        RowLayout {
+            Kirigami.FormData.label: I18n.t(page.language, "config.backgroundTransparency")
+            visible: page.cfg_background === "none"
+            spacing: Kirigami.Units.smallSpacing
+
+            QQC2.Slider {
+                id: transparency
+
+                Layout.preferredWidth: Kirigami.Units.gridUnit * 10
+                from: 0
+                to: 100
+                stepSize: 5
+                snapMode: QQC2.Slider.SnapAlways
+                value: page.cfg_backgroundTransparency
+
+                onMoved: page.cfg_backgroundTransparency = Math.round(value)
+            }
+
+            QQC2.Label {
+                // As wide as the widest value, so that the slider does not move under the mouse.
+                Layout.minimumWidth: widest.advanceWidth
+                text: `${Math.round(transparency.value)}%`
+
+                TextMetrics {
+                    id: widest
+
+                    text: "100%"
+                }
+            }
+        }
+
         ColumnLayout {
             Kirigami.FormData.label: I18n.t(page.language, "config.icons")
             Kirigami.FormData.buddyFor: iconsMeteocons

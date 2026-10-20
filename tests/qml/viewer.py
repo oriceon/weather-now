@@ -26,6 +26,7 @@ from PySide6.QtGui import QGuiApplication
 from PySide6.QtNetwork import QNetworkAccessManager
 from PySide6.QtQml import QQmlComponent, QQmlListReference, QQmlNetworkAccessManagerFactory, qmlRegisterSingletonType, qmlRegisterType
 from PySide6.QtQuick import QQuickItem, QQuickView
+from shiboken6 import getCppPointer
 
 import shim_kirigami  # noqa: F401 - importing registers the QML types
 import shim_plasmoid
@@ -161,6 +162,7 @@ def build_stage(engine, arguments, configuration):
         "fontFamily": arguments.font,
         "iconSet": arguments.icons,
         "background": arguments.background,
+        "backgroundTransparency": arguments.transparency,
         "region": arguments.region,
         "locality": arguments.locality,
     }
@@ -184,7 +186,10 @@ def build_applet(engine, arguments, configuration):
 
     def report():
         applet = shim_plasmoid.applet()
-        print(f"applet: icon={applet.property('icon')!r} tooltip={root.property('toolTipMainText')!r} / {root.property('toolTipSubText')!r} actions={len(applet.actions)} backgroundHints={applet.property('backgroundHints')}")
+        # What Plasma shows where switch sizes are not set: the representation the widget prefers.
+        preferred = root.property("preferredRepresentation")
+        shown = "none" if preferred is None else "full" if getCppPointer(preferred) == getCppPointer(root.property("fullRepresentation")) else "compact"
+        print(f"applet: icon={applet.property('icon')!r} tooltip={root.property('toolTipMainText')!r} / {root.property('toolTipSubText')!r} actions={len(applet.actions)} backgroundHints={applet.property('backgroundHints')} shown={shown}")
 
     if arguments.tab and not arguments.compact:
         item.setProperty("currentTab", arguments.tab)
@@ -257,6 +262,7 @@ def main():
     parser.add_argument("--wait", type=int, default=None, help="milliseconds before the screenshot")
     parser.add_argument("--light", action="store_true", help="light colour scheme")
     parser.add_argument("--background", default="theme", choices=["black", "theme", "none"], help="stage: the background of the widget")
+    parser.add_argument("--transparency", type=int, default=100, help="stage: percent of transparency of the transparent background")
     parser.add_argument("--set", action="append", default=[], metavar="KEY=VALUE", help="override a setting of the widget")
     parser.add_argument("--lang", default="ro")
     parser.add_argument("--wind", default="kmh")
@@ -276,6 +282,7 @@ def main():
     parser.add_argument("--region", default="Constanța")
     parser.add_argument("--locality", default="Constanța")
     parser.add_argument("--compact", action="store_true", help="applet: show the panel representation")
+    parser.add_argument("--form-factor", default="horizontal", choices=list(shim_plasmoid.FORM_FACTORS), help="applet: where the widget is: planar is the desktop")
     parser.add_argument("--page", type=int, default=0)
     parser.add_argument("--frames", type=int, default=0, metavar="COUNT", help="save COUNT screenshots instead of one, as OUT-0000.png…, with their times in OUT-times.txt")
     parser.add_argument("--frame-interval", type=int, default=66, metavar="MS", help="milliseconds between those screenshots")
@@ -319,6 +326,7 @@ def main():
     view.resize(width, height)
 
     shim_kirigami.set_dark(not arguments.light)
+    shim_plasmoid.form_factor[0] = shim_plasmoid.FORM_FACTORS[arguments.form_factor]
 
     content = view.rootObject().findChild(QQuickItem, "content")
     item = {"stage": build_stage, "applet": build_applet, "config": build_config}[arguments.what](view.engine(), arguments, configuration)
