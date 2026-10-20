@@ -18,6 +18,8 @@ Item {
     /** The parsed forecast, see parseForecast() in code/openmeteo.mjs. */
     required property var forecast
     required property string language
+    /** mm | inch */
+    required property string precipitationUnit
     required property var typography
 
     /** False: the next 48 hours, hour by hour. True: the next 2 hours, in quarters of an hour. */
@@ -104,7 +106,7 @@ Item {
                 relativeSize: 0.9
                 opacity: 0.75
                 visible: tab.peak > 0
-                text: I18n.t(tab.language, tab.quarters ? "rain.peakQuarter" : "rain.peak", { amount: Format.millimetres(tab.peak, tab.language) })
+                text: I18n.t(tab.language, tab.quarters ? "rain.peakQuarter" : "rain.peak", { amount: Format.precipitation(tab.peak, tab.precipitationUnit, tab.language) })
             }
 
             Row {
@@ -246,7 +248,7 @@ Item {
             elide: Text.ElideRight
             opacity: 0.85
             text: tab.comingDays
-                .map(day => `${I18n.dayShort(tab.language, Dates.weekday(day.date))} ${Format.millimetres(day.precipitationSum, tab.language)}`)
+                .map(day => `${I18n.dayShort(tab.language, Dates.weekday(day.date))} ${Format.precipitation(day.precipitationSum, tab.precipitationUnit, tab.language)}`)
                 .join("   ·   ")
         }
     }

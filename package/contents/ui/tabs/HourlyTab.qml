@@ -17,6 +17,8 @@ Item {
     /** `hourly` of the parsed forecast. */
     required property var hours
     required property string language
+    /** mm | inch */
+    required property string precipitationUnit
     required property var typography
     required property var iconStyle
 
@@ -182,7 +184,7 @@ Item {
                         relativeSize: 0.85
                         visible: column.modelData.precipitation > 0
                         color: Kirigami.Theme.linkColor
-                        text: Format.number(column.modelData.precipitation, 1, tab.language)
+                        text: Format.precipitationNumber(column.modelData.precipitation, tab.precipitationUnit, tab.language)
                     }
                 }
             }

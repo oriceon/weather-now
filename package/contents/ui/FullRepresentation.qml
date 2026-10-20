@@ -27,6 +27,8 @@ Item {
     required property string language
     required property string locationName
     required property string windUnit
+    /** mm | inch */
+    required property string precipitationUnit
     /** 0 Sunday … 6 Saturday. */
     required property int firstDayOfWeek
     /** full | reduced | off */
@@ -251,6 +253,7 @@ Item {
             forecast: full.forecast
             alerts: full.activeAlerts
             language: full.language
+            precipitationUnit: full.precipitationUnit
             windUnit: full.windUnit
             animations: full.animations
             typography: full.typography
@@ -264,6 +267,7 @@ Item {
         Tabs.HourlyTab {
             hours: full.forecast.hourly
             language: full.language
+            precipitationUnit: full.precipitationUnit
             typography: full.typography
             iconStyle: full.iconStyle
         }
@@ -275,6 +279,7 @@ Item {
         Tabs.RainTab {
             forecast: full.forecast
             language: full.language
+            precipitationUnit: full.precipitationUnit
             typography: full.typography
         }
     }

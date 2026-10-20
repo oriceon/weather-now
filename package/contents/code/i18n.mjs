@@ -189,6 +189,7 @@ export const STRINGS = {
         'config.nowcastingPending': 'Indisponibil deocamdată: sursa lor cere un acord scris, care încă nu a venit.',
         'config.temperature': 'Temperatură:',
         'config.wind': 'Vânt:',
+        'config.precipitation': 'Precipitații:',
         'config.refresh': 'Actualizare la fiecare:',
     },
     en: {
@@ -353,6 +354,7 @@ export const STRINGS = {
         'config.nowcastingPending': 'Not available yet: their source requires a written consent, which has not come yet.',
         'config.temperature': 'Temperature:',
         'config.wind': 'Wind:',
+        'config.precipitation': 'Precipitation:',
         'config.refresh': 'Update every:',
     },
 };

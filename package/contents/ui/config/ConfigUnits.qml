@@ -12,6 +12,7 @@ ConfigPage {
 
     readonly property var temperatureValues: ["celsius", "fahrenheit"]
     readonly property var windValues: ["kmh", "ms", "mph"]
+    readonly property var precipitationValues: ["mm", "inch"]
     readonly property var refreshValues: [15, 30, 60]
 
     Kirigami.FormLayout {
@@ -29,6 +30,14 @@ ConfigPage {
             currentIndex: page.windValues.indexOf(page.cfg_windUnit)
 
             onActivated: index => page.cfg_windUnit = page.windValues[index]
+        }
+
+        QQC2.ComboBox {
+            Kirigami.FormData.label: I18n.t(page.language, "config.precipitation")
+            model: ["mm", "in"]
+            currentIndex: page.precipitationValues.indexOf(page.cfg_precipitationUnit)
+
+            onActivated: index => page.cfg_precipitationUnit = page.precipitationValues[index]
         }
 
         QQC2.ComboBox {

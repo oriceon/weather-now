@@ -153,6 +153,7 @@ def build_stage(engine, arguments, configuration):
         "currentOverridesJson": arguments.current,
         "language": arguments.lang,
         "windUnit": arguments.wind,
+        "precipitationUnit": arguments.precipitation,
         "tab": arguments.tab,
         "mode": arguments.mode,
         "firstDayOfWeek": arguments.first_day,
@@ -266,6 +267,7 @@ def main():
     parser.add_argument("--set", action="append", default=[], metavar="KEY=VALUE", help="override a setting of the widget")
     parser.add_argument("--lang", default="ro")
     parser.add_argument("--wind", default="kmh")
+    parser.add_argument("--precipitation", default="mm", choices=["mm", "inch"], help="stage: the unit of rain and snow")
     parser.add_argument("--tab", type=int, default=0)
     parser.add_argument("--mode", default="ready", choices=["ready", "loading", "failed", "stale", "welcome"])
     parser.add_argument("--first-run", action="store_true", help="applet, config: start without a place, as a new user does")

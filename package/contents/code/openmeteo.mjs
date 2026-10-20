@@ -119,6 +119,7 @@ export function forecastUrl({ latitude, longitude, temperatureUnit, windUnit }) 
         forecast_minutely_15: FORECAST_QUARTERS,
         temperature_unit: temperatureUnit,
         wind_speed_unit: windUnit,
+        // The amounts stay in mm, which the conditions and the sky count in; inches are only shown (format.mjs).
         precipitation_unit: 'mm',
     })}`;
 }

@@ -70,6 +70,10 @@
         <entry name="temperatureUnit" type="String">
             <default>celsius</default>
         </entry>
+        <entry name="precipitationUnit" type="String">
+            <label>mm or inch</label>
+            <default>mm</default>
+        </entry>
         <entry name="windUnit" type="String">
             <default>kmh</default>
         </entry>

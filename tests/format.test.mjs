@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { millimetres, number, percent, pressure, sentenceCase, temperature, temperatureUnit, uvKey, wind } from '../package/contents/code/format.mjs';
+import { millimetres, number, percent, precipitation, precipitationNumber, pressure, sentenceCase, temperature, temperatureUnit, uvKey, wind } from '../package/contents/code/format.mjs';
 
 test('temperature rounds to whole degrees', () => {
     assert.equal(temperature(12.6), '13°');
@@ -67,4 +67,23 @@ test('uvKey names the exposure category of a UV index', () => {
     for (const [index, want] of cases) {
         assert.equal(uvKey(index), want, `index ${index}`);
     }
+});
+
+test('precipitation is shown in mm, or in inches to a hundredth', () => {
+    assert.equal(precipitation(11.2, 'mm', 'ro'), '11,2 mm');
+    assert.equal(precipitation(11.2, 'inch', 'ro'), '0,44 in');
+    assert.equal(precipitation(25.4, 'inch', 'en'), '1.00 in');
+    assert.equal(precipitation(0, 'inch', 'en'), '0 in');
+    assert.equal(precipitation(null, 'inch', 'en'), '–');
+});
+
+// A drizzle of 0.1 mm is 0.004 inches: "0" would read as dry.
+test('an amount too small for a hundredth of an inch is less than 0.01, not 0', () => {
+    assert.equal(precipitation(0.1, 'inch', 'en'), '<0.01 in');
+    assert.equal(precipitationNumber(0.1, 'inch', 'ro'), '<0,01');
+});
+
+test('the hours show the amount without its unit, to a tenth of a mm or a hundredth of an inch', () => {
+    assert.equal(precipitationNumber(1.04, 'mm', 'ro'), '1,0');
+    assert.equal(precipitationNumber(2.54, 'inch', 'en'), '0.10');
 });

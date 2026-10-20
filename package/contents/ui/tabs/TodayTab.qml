@@ -22,6 +22,8 @@ Item {
     required property var alerts
     required property string language
     required property string windUnit
+    /** mm | inch */
+    required property string precipitationUnit
     /** full | reduced | off */
     required property string animations
     required property var typography
@@ -252,7 +254,7 @@ Item {
 
             Chip {
                 label: I18n.t(tab.language, "today.precipitation")
-                value: Format.millimetres(tab.today.precipitationSum, tab.language)
+                value: Format.precipitation(tab.today.precipitationSum, tab.precipitationUnit, tab.language)
             }
         }
     }

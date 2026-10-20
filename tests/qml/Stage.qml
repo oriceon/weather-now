@@ -13,6 +13,7 @@ Item {
     property string currentOverridesJson: "{}"
     property string language: "ro"
     property string windUnit: "kmh"
+    property string precipitationUnit: "mm"
     property int tab: 0
     /** ready | loading | failed | stale (failed refresh, old forecast still shown) | welcome (no place chosen yet) */
     property string mode: "ready"
@@ -58,6 +59,7 @@ Item {
         language: stage.language
         locationName: stage.locality
         windUnit: stage.windUnit
+        precipitationUnit: stage.precipitationUnit
         firstDayOfWeek: stage.firstDayOfWeek
         animations: stage.animations
         hiddenTabs: stage.hiddenTabs

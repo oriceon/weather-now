@@ -82,6 +82,7 @@ PlasmoidItem {
         language: root.language
         locationName: Plasmoid.configuration.locationName
         windUnit: Plasmoid.configuration.windUnit
+        precipitationUnit: Plasmoid.configuration.precipitationUnit
         firstDayOfWeek: Dates.resolveFirstDay(Plasmoid.configuration.firstDayOfWeek, Qt.locale().firstDayOfWeek)
         animations: Plasmoid.configuration.animations
         hiddenTabs: Plasmoid.configuration.hiddenTabs

@@ -1,6 +1,7 @@
 const MISSING = '–';
 
 const DECIMAL_SEPARATOR = { ro: ',' };
+const MM_PER_INCH = 25.4;
 
 function isMissing(value) {
     return value === null || value === undefined || Number.isNaN(value);
@@ -50,6 +51,38 @@ export function millimetres(value, language) {
     const tenths = Math.round(value * 10) / 10;
 
     return `${number(tenths, Number.isInteger(tenths) ? 0 : 1, language)} mm`;
+}
+
+/**
+ * An amount of rain or melted snow, which the forecast gives in mm, as a number in `unit` without
+ * the unit: mm to a tenth, inches to a hundredth. An amount too small for a hundredth of an inch
+ * is "<0.01", not 0, so that it does not read as dry.
+ */
+export function precipitationNumber(value, unit, language) {
+    if (isMissing(value)) {
+        return MISSING;
+    }
+
+    if (unit !== 'inch') {
+        return number(value, 1, language);
+    }
+
+    const hundredths = Math.round(value / MM_PER_INCH * 100) / 100;
+
+    if (hundredths === 0 && value > 0) {
+        return `<${number(0.01, 2, language)}`;
+    }
+
+    return number(hundredths, hundredths === 0 ? 0 : 2, language);
+}
+
+/** The same amount with its unit: mm, or inches. */
+export function precipitation(value, unit, language) {
+    if (unit !== 'inch') {
+        return millimetres(value, language);
+    }
+
+    return isMissing(value) ? MISSING : `${precipitationNumber(value, unit, language)} in`;
 }
 
 export function pressure(value) {

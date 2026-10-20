@@ -41,6 +41,8 @@ KCM.SimpleKCM {
     property var cfg_hiddenTabsDefault: []
     property string cfg_temperatureUnit
     property string cfg_temperatureUnitDefault
+    property string cfg_precipitationUnit
+    property string cfg_precipitationUnitDefault
     property string cfg_windUnit
     property string cfg_windUnitDefault
     property int cfg_refreshMinutes
