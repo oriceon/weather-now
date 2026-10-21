@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { useClock } from '../package/contents/code/dates.mjs';
 import { parseForecast } from '../package/contents/code/openmeteo.mjs';
 import { rainSentence, rainSummary, upcomingStart } from '../package/contents/code/rain.mjs';
 
@@ -141,3 +142,13 @@ test('the panel tells nothing while it rains or when no rain comes', () => {
     assert.equal(upcomingStart(rainSummary(hours([0, 0, 0])), NOW), '');
 });
 
+
+test('rainSentence tells the hours as the clock of the user writes them', () => {
+    useClock(true);
+
+    try {
+        assert.equal(rainSentence(rainSummary(hours([0, 1, 1.5, 0.1, 0])), NOW, 'en'), 'Rain between 6 PM and 9 PM');
+    } finally {
+        useClock(false);
+    }
+});

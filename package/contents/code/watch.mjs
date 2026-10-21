@@ -1,5 +1,6 @@
 // Decides what is worth a desktop notification: news, told once, not a state repeated with every refresh.
 
+import { timeShown } from './dates.mjs';
 import { precipitationKind } from './wmo.mjs';
 
 /**
@@ -69,7 +70,7 @@ export function watch(state, reading, settings) {
     if (settings.notifyRain && next.rainSoon && !state.rainSoon) {
         const hour = (reading.hourly || [])[0];
 
-        events.push({ kind: 'rain', at: comingQuarter.time.slice(11, 16), snow: hour ? precipitationKind(hour.weatherCode) === 'snow' : false });
+        events.push({ kind: 'rain', at: timeShown(comingQuarter.time), snow: hour ? precipitationKind(hour.weatherCode) === 'snow' : false });
     }
 
     const time = String(reading.now).slice(11, 16);

@@ -244,7 +244,7 @@ Item {
                         relativeSize: 0.85
                         visible: tab.isLabelled(point.modelData.time) && point.index > 0
                         opacity: 0.75
-                        text: tab.quarters ? Dates.timeLabel(point.modelData.time) : Dates.timeLabel(point.modelData.time).slice(0, 2)
+                        text: tab.quarters ? Dates.timeShown(point.modelData.time) : Dates.hourShown(point.modelData.time)
                     }
                 }
             }
@@ -265,7 +265,7 @@ Item {
                 visible: point !== null
                 font.weight: Font.DemiBold
                 text: point === null ? "" : [
-                    `${I18n.dayShort(tab.language, Dates.weekday(point.time))} ${Dates.timeLabel(point.time)}`,
+                    `${I18n.dayShort(tab.language, Dates.weekday(point.time))} ${Dates.timeShown(point.time)}`,
                     Format.precipitation(point.amount, tab.precipitationUnit, tab.language),
                     point.chance >= 0 ? `${Format.percent(point.chance)} ${I18n.t(tab.language, "rain.probability")}` : "",
                 ].filter(part => part !== "").join(" · ")

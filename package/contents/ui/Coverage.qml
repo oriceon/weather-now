@@ -2,8 +2,10 @@ import QtQuick
 import org.kde.taskmanager as TaskManager
 
 /**
- * Whether a window fills the screen of the wallpaper: maximized or full screen, on the current
- * desktop and activity, and not minimized. The wallpaper stands still meanwhile, as nobody sees it.
+ * Whether a window fills the screen of the item it is loaded in: maximized or full screen, on the
+ * current desktop and activity, and not minimized. The wallpaper, and the widget on the desktop,
+ * stand still meanwhile, as nobody sees them. Loaded on its own, through a Loader: where the task
+ * manager of Plasma is missing, as on the lock screen, nothing ever counts as covered.
  */
 Item {
     id: coverage

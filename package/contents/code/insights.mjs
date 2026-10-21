@@ -2,6 +2,7 @@
 // gusts, frost, heat, strong sun, fog, a wide swing of the temperature. Drawn from rules, not from a
 // model: what they say can be checked against the forecast, and reads the same in every language.
 
+import { timeShown } from './dates.mjs';
 import { temperature, wind } from './format.mjs';
 import { t } from './i18n.mjs';
 import { toKmh } from './scene.mjs';
@@ -19,7 +20,7 @@ const FROST_CELSIUS = 0;
 const HEAT_CELSIUS = 30;
 const WIDE_SWING_CELSIUS = 12;
 
-const clock = (hour) => hour.time.slice(11, 16);
+const clock = (hour) => timeShown(hour.time);
 
 /**
  * What stands out, the most pressing first, at most `most` of them, each as a sentence.

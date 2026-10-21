@@ -1,4 +1,4 @@
-import { addDays, dateOf, dayWord, timeLabel } from './dates.mjs';
+import { addDays, dateOf, dayWord, timeShown } from './dates.mjs';
 import { t } from './i18n.mjs';
 import { precipitationKind } from './wmo.mjs';
 
@@ -45,8 +45,8 @@ export function rainSentence(summary, nowIso, language) {
     }
 
     const what = summary.snow ? 'snow' : 'rain';
-    const start = timeLabel(summary.start);
-    const end = summary.end ? timeLabel(summary.end) : '';
+    const start = timeShown(summary.start);
+    const end = summary.end ? timeShown(summary.end) : '';
 
     if (summary.kind === 'now') {
         const now = t(language, `summary.${what}.now`);
@@ -81,6 +81,6 @@ export function upcomingStart(summary, nowIso) {
 
     const ahead = (Date.parse(`${summary.start}:00Z`) - Date.parse(`${String(nowIso).slice(0, 16)}:00Z`)) / 3600000;
 
-    return ahead <= PANEL_HOURS ? timeLabel(summary.start) : '';
+    return ahead <= PANEL_HOURS ? timeShown(summary.start) : '';
 }
 

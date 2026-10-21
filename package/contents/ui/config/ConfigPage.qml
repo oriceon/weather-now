@@ -1,12 +1,57 @@
 import QtQuick
 import org.kde.kcmutils as KCM
+import org.kde.plasma.plasmoid
 
 /**
  * A page of the settings dialog. Plasma hands every setting of config/main.xml, and its default, to
  * every page, and writes them all back from the page on Apply. A page without one of them gets a
- * line in the journal. Each page changes the ones it shows; the others go back as they came.
+ * line in the journal. Each page changes the ones it shows; the others are taken afresh from the
+ * widget just before, see saveConfig().
  */
 KCM.SimpleKCM {
+    id: page
+
+    /** Each setting as the page was given it, as JSON, by name. */
+    property var given: ({})
+
+    /**
+     * Called by Plasma before it writes the settings back from this page. A setting the page did not
+     * change is taken from the widget, which may have changed it while the dialog was open: the place
+     * switched from the title, the tiles moved, or the day the summary of the morning was sent, which
+     * went out again after a restart when Apply put back the day before.
+     */
+    function saveConfig(): void {
+        try {
+            Object.keys(given).forEach(key => {
+                if (JSON.stringify(page[`cfg_${key}`]) === given[key]) {
+                    page[`cfg_${key}`] = Plasmoid.configuration[key];
+                }
+            });
+        } catch (error) {
+            // Without the settings of the widget at hand, the page writes back what it was given, as before.
+            console.warn("Weather Now: the settings could not be taken afresh:", String(error.message || error));
+        }
+    }
+
+    function remember(): void {
+        const snapshot = {};
+
+        try {
+            Plasmoid.configuration.keys().forEach(key => {
+                if (page[`cfg_${key}`] !== undefined) {
+                    snapshot[key] = JSON.stringify(page[`cfg_${key}`]);
+                }
+            });
+        } catch (error) {
+            console.warn("Weather Now: the settings of the widget are not at hand:", String(error.message || error));
+        }
+
+        given = snapshot;
+    }
+
+    // A moment later, once the settings have been handed to the page however its host does it.
+    Component.onCompleted: Qt.callLater(page.remember)
+
     property string cfg_locationName
     property string cfg_locationNameDefault
     property real cfg_latitude

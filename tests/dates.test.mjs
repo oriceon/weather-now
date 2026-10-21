@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { addDays, addMinutes, calendarWeeks, clockText, dateOf, dateRange, dayOfMonth, dayWord, firstOfMonth, fullDate, localNow, resolveFirstDay, timeLabel, weekStart, weekTitle, weekday, weekdayOrder } from '../package/contents/code/dates.mjs';
+import { addDays, addMinutes, calendarWeeks, clockShown, clockText, hourShown, timeShown, useClock, dateOf, dateRange, dayOfMonth, dayWord, firstOfMonth, fullDate, localNow, resolveFirstDay, timeLabel, weekStart, weekTitle, weekday, weekdayOrder } from '../package/contents/code/dates.mjs';
 
 test('weekday returns the Date#getDay index of an ISO date', () => {
     assert.equal(weekday('2026-10-13'), 2);
@@ -190,4 +190,25 @@ test('the clock tells the time of the place, to the second, in 24 or 12 hours', 
     assert.equal(clockText(10800, true, ['AM', 'PM'], now), '4:45:09 PM');
     assert.equal(clockText(-13 * 3600, true, ['a.m.', 'p.m.'], now), '12:45:09 a.m.');
     assert.equal(clockText(-13 * 3600 - 2700, false, ['AM', 'PM'], now), '00:00:09');
+});
+
+// Where the regional settings keep twelve hours, as in the United States, every time follows them.
+test('the times read as the clock of the user writes them, in 24 hours or in 12', () => {
+    assert.equal(clockShown('17:05'), '17:05');
+    assert.equal(hourShown('2026-10-13T18:00'), '18');
+
+    useClock(true, ['AM', 'PM']);
+
+    try {
+        assert.equal(clockShown('17:05'), '5:05 PM');
+        assert.equal(clockShown('17:00'), '5 PM');
+        assert.equal(clockShown('00:30'), '12:30 AM');
+        assert.equal(clockShown('12:00'), '12 PM');
+        assert.equal(clockShown('24:00'), '12 AM');
+        assert.equal(timeShown('2026-10-13T06:42'), '6:42 AM');
+        assert.equal(hourShown('2026-10-13T18:00'), '6 PM');
+        assert.equal(clockText(10800, undefined, undefined, Date.UTC(2026, 9, 21, 13, 45, 9)), '4:45:09 PM');
+    } finally {
+        useClock(false);
+    }
 });

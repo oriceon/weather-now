@@ -27,8 +27,57 @@ export function dateOf(iso) {
     return String(iso).slice(0, 10);
 }
 
+/** "2026-10-13T17:05" as "17:05": the time of the day, in 24 hours, to compare or to read further. */
 export function timeLabel(iso) {
     return String(iso).slice(11, 16);
+}
+
+/**
+ * How the clock of the user writes the time: in 24 hours, or in 12 with the names of the halves of
+ * the day, as the regional settings of the computer have it. Qt is at hand in a module that runs in
+ * Plasma, already as it loads, so that every text, bound before any setting could be passed down,
+ * follows them; in the tests, 24 hours, unless useClock() says otherwise.
+ */
+const clockStyle = (() => {
+    try {
+        const locale = Qt.locale();
+
+        // Its short format of the time, "h:mm AP" or "HH:mm"; 1 is Locale.ShortFormat.
+        return { twelveHour: /a/i.test(locale.timeFormat(1)), dayHalves: [locale.amText, locale.pmText] };
+    } catch (error) {
+        return { twelveHour: false, dayHalves: ['AM', 'PM'] };
+    }
+})();
+
+/** For the tests: the clock in 12 hours, with these names of the halves of the day, or in 24. */
+export function useClock(twelveHour, dayHalves = ['AM', 'PM']) {
+    clockStyle.twelveHour = twelveHour;
+    clockStyle.dayHalves = dayHalves;
+}
+
+/**
+ * "17:05" as the clock of the user writes it: "17:05", or "5:05 PM", and a whole hour "5 PM", as the
+ * columns of hours read best; "24:00", the end of a day, is midnight, "12 AM".
+ */
+export function clockShown(time) {
+    if (!clockStyle.twelveHour) {
+        return time;
+    }
+
+    const hours = Number(time.slice(0, 2)) % 24;
+    const minutes = time.slice(3, 5);
+
+    return `${hours % 12 || 12}${minutes === '00' ? '' : `:${minutes}`} ${clockStyle.dayHalves[hours < 12 ? 0 : 1]}`;
+}
+
+/** The time of an ISO moment, as the clock of the user writes it; see clockShown(). */
+export function timeShown(iso) {
+    return clockShown(timeLabel(iso));
+}
+
+/** The hour alone, for the scale of a chart: "18", or "6 PM". */
+export function hourShown(iso) {
+    return clockStyle.twelveHour ? clockShown(`${timeLabel(iso).slice(0, 2)}:00`) : timeLabel(iso).slice(0, 2);
 }
 
 export function dayOfMonth(iso) {
@@ -152,7 +201,7 @@ export function weekTitle(week, index, language) {
  * The clock of the place, "16:45:09", or "4:45:09 PM" where the regional settings keep twelve hours,
  * `dayHalves` naming the two halves of the day, from the clock of the computer and the offset of the place.
  */
-export function clockText(utcOffsetSeconds, twelveHour, dayHalves = ['AM', 'PM'], now = Date.now()) {
+export function clockText(utcOffsetSeconds, twelveHour = clockStyle.twelveHour, dayHalves = clockStyle.dayHalves, now = Date.now()) {
     const time = new Date(now + utcOffsetSeconds * 1000).toISOString().slice(11, 19);
 
     if (!twelveHour) {

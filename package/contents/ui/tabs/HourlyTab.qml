@@ -184,7 +184,7 @@ Item {
                     color: Qt.alpha(Kirigami.Theme.textColor, (modelData.isDay ? 0 : 0.06) + (columnHover.hovered ? 0.1 : 0))
                     Accessible.role: Accessible.StaticText
                     Accessible.name: [
-                        I18n.t(tab.language, "a11y.hour", { time: Dates.timeLabel(modelData.time), condition: I18n.t(tab.language, Wmo.conditionKey(modelData.conditionCode)), temperature: Format.temperature(modelData.temperature) }),
+                        I18n.t(tab.language, "a11y.hour", { time: Dates.timeShown(modelData.time), condition: I18n.t(tab.language, Wmo.conditionKey(modelData.conditionCode)), temperature: Format.temperature(modelData.temperature) }),
                         modelData.precipitationProbability >= tab.notablePrecipitationChance ? I18n.t(tab.language, "a11y.chance", { value: Format.percent(modelData.precipitationProbability) }) : "",
                     ].filter(part => part !== "").join(", ")
 
@@ -222,7 +222,7 @@ Item {
                         y: tab.lineHeight
                         typography: tab.typography
                         opacity: 0.8
-                        text: Dates.timeLabel(column.modelData.time)
+                        text: Dates.timeShown(column.modelData.time)
                     }
 
                     Components.WeatherIcon {
@@ -336,7 +336,7 @@ Item {
                         typography: tab.typography
                         relativeSize: 0.8
                         color: tab.sunColour
-                        text: Dates.timeLabel(sunMark.modelData.time)
+                        text: Dates.timeShown(sunMark.modelData.time)
                     }
                 }
             }

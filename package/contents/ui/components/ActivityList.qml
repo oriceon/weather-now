@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 
+import "../../code/dates.mjs" as Dates
 import "../../code/activities.mjs" as Activities
 import "../../code/i18n.mjs" as I18n
 import "." as Components
@@ -89,7 +90,7 @@ Item {
                     opacity: 0.8
                     text: row.outlook.rating === "poor"
                         ? I18n.t(list.language, "activity.notToday")
-                        : `${row.outlook.start}–${row.outlook.end}`
+                        : `${Dates.clockShown(row.outlook.start)}–${Dates.clockShown(row.outlook.end)}`
                 }
             }
         }

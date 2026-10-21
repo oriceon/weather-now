@@ -30,6 +30,8 @@ Item {
     required property string windUnit
     required property string temperatureUnit
     required property string animations
+    /** A window fills the screen over the widget: the sky stands still. */
+    property bool covered: false
     required property var typography
     required property var iconStyle
     required property string landscape
@@ -64,7 +66,7 @@ Item {
         landscapeHeight: view.landscapeHeight
         latitude: view.latitude
         aurora: view.aurora !== null ? view.aurora.sight : "none"
-        running: view.Window.window !== null && view.Window.window.visible
+        running: !view.covered && view.Window.window !== null && view.Window.window.visible
     }
 
     component Ink: Components.Label {
@@ -195,7 +197,7 @@ Item {
                             Layout.alignment: Qt.AlignHCenter
                             relativeSize: 0.85
                             opacity: 0.85
-                            text: view.mode === "band" ? Dates.timeLabel(entry.modelData.time) : I18n.dayShort(view.language, Dates.weekday(entry.modelData.date))
+                            text: view.mode === "band" ? Dates.timeShown(entry.modelData.time) : I18n.dayShort(view.language, Dates.weekday(entry.modelData.date))
                         }
 
                         Components.WeatherIcon {

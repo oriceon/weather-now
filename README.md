@@ -28,7 +28,8 @@ Everything lights up under the mouse, and the instruments play again.
 - A summary of the day in the morning, as a notification at the time you choose
 - In a panel: the weather, the temperature and, when rain is coming within 12 hours, when it starts; its tooltip shows the next hours and days
 - Keyboard: Ctrl+Tab between the tabs, Enter on a day, Ctrl and the arrows to move a tile, Delete to close it; screen readers get a name for everything
-- Stands still when the Plasma animation speed is set to "Instant"
+- Times in 24 or 12 hours, as your regional settings write them
+- Stands still when the Plasma animation speed is set to "Instant", and on the desktop while a window fills the screen
 - An animated wallpaper too, with the same sky and landscapes; it stands still while a window fills the screen. On the lock screen, which may not fetch anything, it shows the sky of the hour, without the weather
 
 Immediate warnings (nowcasting) are prepared in the code but switched off: their source requires a written consent, which has not come yet. Until it does, the widget asks nothing of that source and the option cannot be turned on.
@@ -38,7 +39,7 @@ Immediate warnings (nowcasting) are prepared in the code but switched off: their
 From a release, with the `.plasmoid` file from the [releases page](https://github.com/oriceon/weather-now/releases):
 
 ```bash
-kpackagetool6 --type Plasma/Applet --install weather-now-2.0.0.plasmoid
+kpackagetool6 --type Plasma/Applet --install weather-now-2.1.0.plasmoid
 ```
 
 From this repository:

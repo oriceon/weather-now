@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents
 
+import "../../code/dates.mjs" as Dates
 import "../../code/i18n.mjs" as I18n
 import "../../code/links.mjs" as Links
 import "../../code/radar.mjs" as Radar
@@ -636,7 +637,7 @@ Item {
 
                 font.family: map.typography.family
                 font.pointSize: map.typography.size
-                text: `00:00 · ${I18n.t(map.language, "radar.latest")}`
+                text: `${Dates.clockShown("12:55")} · ${I18n.t(map.language, "radar.latest")}`
             }
         }
     }

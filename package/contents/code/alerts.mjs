@@ -1,4 +1,4 @@
-import { dateOf, dayWord, timeLabel } from './dates.mjs';
+import { dateOf, dayWord, timeShown } from './dates.mjs';
 import { t } from './i18n.mjs';
 import { webAddress } from './links.mjs';
 
@@ -472,8 +472,8 @@ export function alertTitle(alert, language) {
 
 /** "până mâine la 10:00" for a warning in force, "mâine, 10:00 – 18:00" for one to come. */
 export function alertInterval(alert, nowIso, language) {
-    const start = timeLabel(alert.onset);
-    const end = timeLabel(alert.expires);
+    const start = timeShown(alert.onset);
+    const end = timeShown(alert.expires);
     const endDay = dayWord(alert.expires, nowIso, language);
 
     if (alert.onset <= nowIso) {
@@ -526,5 +526,5 @@ export function alertIssued(alert, nowIso, language) {
         return '';
     }
 
-    return t(language, 'alert.issued', { day: dayWord(alert.issued, nowIso, language), time: timeLabel(alert.issued) });
+    return t(language, 'alert.issued', { day: dayWord(alert.issued, nowIso, language), time: timeShown(alert.issued) });
 }

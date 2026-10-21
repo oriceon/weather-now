@@ -36,7 +36,7 @@ Item {
             relativeSize: 0.85
             color: bars.ink
             opacity: 0.85
-            text: bars.first !== null ? Dates.timeLabel(bars.first.time) : ""
+            text: bars.first !== null ? Dates.timeShown(bars.first.time) : ""
         }
 
         Row {
@@ -71,7 +71,7 @@ Item {
             relativeSize: 0.85
             color: bars.ink
             opacity: 0.85
-            text: bars.quarters.length > 0 ? Dates.timeLabel(new Date(Date.parse(`${bars.quarters[bars.quarters.length - 1].time}:00Z`) + 15 * 60000).toISOString()) : ""
+            text: bars.quarters.length > 0 ? Dates.timeShown(Dates.addMinutes(bars.quarters[bars.quarters.length - 1].time, 15)) : ""
         }
     }
 }

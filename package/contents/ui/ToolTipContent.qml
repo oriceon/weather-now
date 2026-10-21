@@ -162,7 +162,7 @@ Item {
                         Small {
                             Layout.alignment: Qt.AlignHCenter
                             opacity: 0.75
-                            text: Dates.timeLabel(hour.modelData.time)
+                            text: Dates.timeShown(hour.modelData.time)
                         }
 
                         Components.WeatherIcon {

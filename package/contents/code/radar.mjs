@@ -5,6 +5,8 @@
 // asks to be acknowledged, and its borders and names are drawn from OpenStreetMap, credited as such.
 // Nothing is asked of either until the radar is opened.
 
+import { timeShown } from './dates.mjs';
+
 export const RADAR_INDEX_URL = 'https://api.rainviewer.com/public/weather-maps.json';
 const GIBS = 'https://gibs.earthdata.nasa.gov/wmts/epsg3857/best';
 
@@ -149,5 +151,5 @@ export function tileKeys(tiles) {
 
 /** The wall-clock time of an image (seconds since 1970) at the place, HH:MM. */
 export function frameClock(time, utcOffsetSeconds) {
-    return new Date((time + utcOffsetSeconds) * 1000).toISOString().slice(11, 16);
+    return timeShown(new Date((time + utcOffsetSeconds) * 1000).toISOString());
 }

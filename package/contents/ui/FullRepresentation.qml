@@ -53,6 +53,8 @@ Item {
     required property int firstDayOfWeek
     /** full | reduced | off */
     required property string animations
+    /** A window fills the screen over the widget on the desktop: the sky and the icons stand still. */
+    property bool covered: false
     /** Ids of the tabs the user turned off. */
     required property var hiddenTabs
     /** Size of the text relative to the font of the Plasma theme. */
@@ -118,6 +120,7 @@ Item {
     readonly property var iconStyle: ({
         set: iconSet,
         animated: iconSet === "meteocons" && animations === "full",
+        paused: covered,
     })
     /** Bigger text needs a bigger widget. */
     readonly property real roomFactor: Math.max(1, fontScale)
@@ -272,6 +275,7 @@ Item {
         active: full.compactView
 
         sourceComponent: CompactView {
+            covered: full.covered
             mode: full.sizeMode
             forecast: full.forecast
             language: full.language
@@ -396,7 +400,7 @@ Item {
                 visible: full.ready
                 color: full.failed ? Kirigami.Theme.neutralTextColor : Kirigami.Theme.textColor
                 opacity: full.failed ? 1 : 0.7
-                text: I18n.t(full.language, "header.updated", { time: Qt.formatTime(full.updatedAt, "HH:mm") })
+                text: I18n.t(full.language, "header.updated", { time: Qt.formatTime(full.updatedAt, Qt.locale().timeFormat(Locale.ShortFormat)) })
 
                 // In the colour of a warning, the forecast is an old one: why, under the mouse.
                 HoverHandler {
@@ -592,6 +596,7 @@ Item {
         id: todayTab
 
         Tabs.TodayTab {
+            covered: full.covered
             shown: full.tabId === "today"
             aurora: full.aurora
             minutely: full.minutely

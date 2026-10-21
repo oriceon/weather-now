@@ -20,7 +20,8 @@ Also
 - A summary of the day in the morning, as a notification
 - In a panel: the weather, the temperature and, when rain is coming within 12 hours, when it starts; its tooltip shows the next hours and days
 - Keyboard and screen readers: Ctrl+Tab between the tabs, Enter on a day, Ctrl and the arrows to move a tile
-- Stands still when the Plasma animation speed is set to "Instant"
+- Times in 24 or 12 hours, as your regional settings write them
+- Stands still when the Plasma animation speed is set to "Instant", and on the desktop while a window fills the screen
 - An animated wallpaper with the same sky and landscapes, in a package of its own (see the source code)
 
 Privacy

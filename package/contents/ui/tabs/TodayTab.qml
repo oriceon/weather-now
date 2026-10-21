@@ -54,6 +54,8 @@ Item {
     required property int glassTransparency
     /** Whether the tab is the one on show; behind another, it stays drawn but stands still. */
     property bool shown: true
+    /** A window fills the screen over the widget: nothing moves, as nobody sees it. */
+    property bool covered: false
 
     readonly property var current: forecast.current
     readonly property var today: forecast.today
@@ -105,22 +107,28 @@ Item {
         Layout.preferredWidth: 1
         implicitHeight: chipText.implicitHeight + Kirigami.Units.smallSpacing * 2
         radius: Kirigami.Units.cornerRadius * 2
-        // Over snow that has settled, white would not carry the white text. Under the mouse, a shade brighter.
-        // Dark glass: white text reads on it over the whitest cloud passing behind. Under the mouse, a shade lighter.
-        color: Qt.rgba(0.04, 0.08, 0.16, chipHover.hovered ? tab.glassAlpha * 0.75 : tab.glassAlpha)
+        // Dark glass: white text reads on it over the whitest cloud passing behind.
+        color: Qt.rgba(0.04, 0.08, 0.16, tab.glassAlpha)
         border.width: 1
         border.color: Qt.rgba(1, 1, 1, 0.22)
         Accessible.role: Accessible.StaticText
         Accessible.name: `${label}: ${value}`
 
-        Behavior on color {
-            ColorAnimation {
-                duration: Kirigami.Units.shortDuration
-            }
-        }
-
         HoverHandler {
             id: chipHover
+        }
+
+        // Under the mouse, lit as the hours below are: only a lighter glass did not show.
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
+            color: Qt.rgba(1, 1, 1, chipHover.hovered ? 0.14 : 0)
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Kirigami.Units.shortDuration
+                }
+            }
         }
 
         ColumnLayout {
@@ -171,7 +179,7 @@ Item {
         // Nothing moves while the widget is not on screen. `Window.window` is the window the tab is in, null before
         // it is placed in one; the attached `Window` itself has no `visible`.
         // Kept while another tab is shown, it stands still meanwhile.
-        running: tab.shown && tab.visible && tab.Window.window !== null && tab.Window.window.visible
+        running: tab.shown && tab.visible && !tab.covered && tab.Window.window !== null && tab.Window.window.visible
         // The mouse tilts the sky: each layer shifts by its depth.
         tiltX: pointer.hovered && tab.moving ? (pointer.point.position.x / Math.max(1, tab.width) - 0.5) * 2 : 0
         tiltY: pointer.hovered && tab.moving ? (pointer.point.position.y / Math.max(1, tab.height) - 0.5) * 2 : 0
@@ -222,6 +230,35 @@ Item {
     }
 
     ColumnLayout {
+        id: column
+
+        /**
+         * The room the column has left over, apart from its spacers and `balance`: measured from the
+         * heights the rows ask for, not from those they got, which depend on it.
+         */
+        readonly property real spare: {
+            let asked = dayLine.implicitHeight;
+            let rows = 1;
+
+            for (let index = 0; index < children.length; index++) {
+                const row = children[index];
+
+                // These first, before anything of them is read: they are laid out by this very room. The
+                // spacers by name: a layout, as the block of the temperature, fills the height as well.
+                if (row !== balance && row !== topRow && row !== roomAbove && row !== roomBelow && row.visible) {
+                    asked += row.implicitHeight;
+                    rows++;
+                }
+            }
+
+            return height - asked - spacing * Math.max(0, rows - 1);
+        }
+        /**
+         * Under the day, the clock takes a line of its own, and as much room from below the
+         * temperature, which so stays where it was; short of room for both, it goes beside the day.
+         */
+        readonly property bool clockUnder: spare >= 2 * clockMetrics.height + spacing
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -230,16 +267,30 @@ Item {
         anchors.bottomMargin: Kirigami.Units.smallSpacing
         spacing: Kirigami.Units.smallSpacing
 
+        FontMetrics {
+            id: clockMetrics
+
+            font.family: tab.typography.family
+            font.pointSize: tab.typography.size * 1.6
+        }
+
         RowLayout {
+            id: topRow
+
             Layout.fillWidth: true
             spacing: Kirigami.Units.largeSpacing
 
-            ColumnLayout {
+            GridLayout {
                 Layout.fillWidth: true
-                spacing: 0
+                columns: column.clockUnder ? 1 : 2
+                columnSpacing: Kirigami.Units.largeSpacing
+                rowSpacing: 0
 
                 Components.Label {
-                    Layout.fillWidth: true
+                    id: dayLine
+
+                    // Beside it, the clock follows the day closely, not at the far end of the line.
+                    Layout.fillWidth: column.clockUnder || !clock.visible
                     typography: tab.typography
                     relativeSize: 1.1
                     elide: Text.ElideRight
@@ -263,7 +314,7 @@ Item {
                     function tick(): void {
                         const offset = tab.forecast.utcOffsetSeconds;
 
-                        time = Dates.clockText(offset, /a/i.test(Qt.locale().timeFormat(Locale.ShortFormat)), [Qt.locale().amText, Qt.locale().pmText]);
+                        time = Dates.clockText(offset);
                         placeNow = Dates.localNow(offset);
                         elsewhere = offset !== -new Date().getTimezoneOffset() * 60;
                     }
@@ -273,7 +324,7 @@ Item {
 
                     Components.Label {
                         typography: tab.typography
-                        relativeSize: 1.6
+                        relativeSize: column.clockUnder ? 1.6 : 1.1
                         font.weight: Font.DemiBold
                         // Figures of one width: the seconds do not shake the line as they change.
                         font.features: { "tnum": 1 }
@@ -301,7 +352,7 @@ Item {
                         interval: 1000
                         repeat: true
                         triggeredOnStart: true
-                        running: clock.visible && tab.shown && tab.Window.window !== null && tab.Window.window.visible
+                        running: clock.visible && tab.shown && !tab.covered && tab.Window.window !== null && tab.Window.window.visible
 
                         onTriggered: {
                             clock.tick();
@@ -343,6 +394,8 @@ Item {
         }
 
         Item {
+            id: roomAbove
+
             Layout.fillHeight: true
         }
 
@@ -426,13 +479,18 @@ Item {
         }
 
         // The clock takes its room from above the temperature; this takes as much from below, so
-        // that the temperature stays where it was, the clock shown or not.
+        // that the temperature stays where it was, the clock shown or not. Only out of room to spare:
+        // with a warning and the rain to come as well, it pushed the rain onto the hours.
         Item {
-            Layout.preferredHeight: Math.max(0, clock.implicitHeight - parent.spacing)
-            visible: clock.visible
+            id: balance
+
+            Layout.preferredHeight: Math.max(0, clock.implicitHeight - column.spacing)
+            visible: clock.visible && column.clockUnder
         }
 
         Item {
+            id: roomBelow
+
             Layout.fillHeight: true
         }
 
@@ -596,7 +654,7 @@ Item {
                     radius: Kirigami.Units.cornerRadius
                     color: Qt.rgba(1, 1, 1, hourHover.hovered ? 0.14 : 0)
                     Accessible.role: Accessible.StaticText
-                    Accessible.name: I18n.t(tab.language, "a11y.hour", { time: Dates.timeLabel(modelData.time), condition: I18n.t(tab.language, Wmo.conditionKey(modelData.conditionCode)), temperature: Format.temperature(modelData.temperature) })
+                    Accessible.name: I18n.t(tab.language, "a11y.hour", { time: Dates.timeShown(modelData.time), condition: I18n.t(tab.language, Wmo.conditionKey(modelData.conditionCode)), temperature: Format.temperature(modelData.temperature) })
 
                     Behavior on color {
                         ColorAnimation {
@@ -620,7 +678,7 @@ Item {
                             relativeSize: 0.9
                             color: tab.ink
                             opacity: 0.85
-                            text: Dates.timeLabel(hour.modelData.time)
+                            text: Dates.timeShown(hour.modelData.time)
                         }
 
                         Components.WeatherIcon {

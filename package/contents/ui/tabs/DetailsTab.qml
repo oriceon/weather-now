@@ -746,8 +746,8 @@ Item {
 
                 const now = Dates.timeLabel(tab.current.time);
                 const advice = now < tab.uvWindow.from
-                    ? I18n.t(tab.language, "uv.protectBetween", { start: tab.uvWindow.from, end: tab.uvWindow.until })
-                    : I18n.t(tab.language, "uv.protectUntil", { time: tab.uvWindow.until });
+                    ? I18n.t(tab.language, "uv.protectBetween", { start: Dates.clockShown(tab.uvWindow.from), end: Dates.clockShown(tab.uvWindow.until) })
+                    : I18n.t(tab.language, "uv.protectUntil", { time: Dates.clockShown(tab.uvWindow.until) });
 
                 return `${band} · ${advice}`;
             }
@@ -767,7 +767,7 @@ Item {
             symbol: "cloudy"
             label: I18n.t(tab.language, "details.clouds")
             value: Format.percent(tab.current.cloudCover)
-            note: tab.cloudsTurn !== null ? I18n.t(tab.language, `clouds.${tab.cloudsTurn.kind}`, { time: tab.cloudsTurn.time }) : ""
+            note: tab.cloudsTurn !== null ? I18n.t(tab.language, `clouds.${tab.cloudsTurn.kind}`, { time: Dates.clockShown(tab.cloudsTurn.time) }) : ""
         }
     }
 
@@ -793,7 +793,7 @@ Item {
         Tile {
             symbol: "clear-day"
             label: I18n.t(tab.language, "details.sun")
-            value: `↑ ${Dates.timeLabel(tab.today.sunrise)}  ↓ ${Dates.timeLabel(tab.today.sunset)}`
+            value: `↑ ${Dates.timeShown(tab.today.sunrise)}  ↓ ${Dates.timeShown(tab.today.sunset)}`
             // By day, how long until sunset; by night, how long the day is.
             note: tab.daylightLeft > 0
                 ? I18n.t(tab.language, "details.daylightLeft", { time: Format.duration(tab.daylightLeft) })
@@ -818,7 +818,7 @@ Item {
             label: I18n.t(tab.language, "details.moon")
             value: Format.percent(tab.moon.illumination * 100)
             // The phase, and when the moon rises and sets today.
-            note: [I18n.t(tab.language, tab.moon.key), `↑ ${tab.moonTimes.rise || "–"}  ↓ ${tab.moonTimes.set || "–"}`].join("\n")
+            note: [I18n.t(tab.language, tab.moon.key), `↑ ${tab.moonTimes.rise ? Dates.clockShown(tab.moonTimes.rise) : "–"}  ↓ ${tab.moonTimes.set ? Dates.clockShown(tab.moonTimes.set) : "–"}`].join("\n")
             instrumentWidth: Math.min(width * 0.8, height * 0.9, Kirigami.Units.gridUnit * 8)
             instrumentHeight: instrumentWidth * 0.5
 

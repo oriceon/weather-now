@@ -36,6 +36,8 @@ PlasmoidItem {
         : []
     /** Plasma's own speed of animations, at "Instant", stops the widget too, whatever its settings say. */
     readonly property string animations: Kirigami.Units.longDuration > 0 ? Plasmoid.configuration.animations : "off"
+    /** On the desktop, a window that fills the screen hides the widget: nothing moves meanwhile, see Coverage.qml. */
+    readonly property bool covered: coverage.item !== null && coverage.item.covered
     /** The aurora tonight, see auroraOutlook() in code/aurora.mjs; null without a Kp for the night. */
     readonly property var aurora: {
         if (!store.ready || store.kpForecast.length === 0) {
@@ -272,6 +274,7 @@ PlasmoidItem {
         temperatureUnit: Plasmoid.configuration.temperatureUnit
         firstDayOfWeek: Dates.resolveFirstDay(Plasmoid.configuration.firstDayOfWeek, Qt.locale().firstDayOfWeek)
         animations: root.animations
+        covered: root.covered
         hiddenTabs: Plasmoid.configuration.hiddenTabs
         fontScale: root.fontScale
         fontFamily: root.fontFamily
@@ -324,6 +327,14 @@ PlasmoidItem {
     }
 
     // Loaded on its own: without the notification module, only the notifications are lost.
+    // Only on the desktop, where windows can cover the widget, and only while something moves.
+    Loader {
+        id: coverage
+
+        active: Plasmoid.formFactor === PlasmaCore.Types.Planar && root.animations !== "off"
+        source: "Coverage.qml"
+    }
+
     Loader {
         id: notifierLoader
 

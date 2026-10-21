@@ -11,7 +11,7 @@ Item {
     /** A condition code of the parsed forecast; anything else shows the "not available" icon of the theme. */
     required property var code
     property bool isDay: true
-    /** `{ set, animated }`, see `iconStyle` in FullRepresentation. */
+    /** `{ set, animated, paused }`, see `iconStyle` in FullRepresentation. */
     required property var iconStyle
     property bool animated: iconStyle.animated
 
@@ -105,7 +105,7 @@ Item {
             NumberAnimation on current {
                 // Nothing moves while the widget is not on screen, nor in a tab kept out of sight; see the
                 // note in TodayTab about `Window.window`. `visible` reads false while a parent is hidden.
-                running: frames.loaded && frames.visible && frames.Window.window !== null && frames.Window.window.visible
+                running: frames.loaded && frames.visible && !icon.iconStyle.paused && frames.Window.window !== null && frames.Window.window.visible
                 from: 0
                 to: Meteocons.SHEET.frames - 1
                 duration: Meteocons.SHEET.seconds * 1000
