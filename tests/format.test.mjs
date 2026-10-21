@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { millimetres, number, percent, precipitation, precipitationNumber, pressure, sentenceCase, temperature, temperatureUnit, uvKey, wind } from '../package/contents/code/format.mjs';
+import { distance, millimetres, number, percent, precipitation, precipitationNumber, pressure, sentenceCase, temperature, temperatureUnit, uvKey, wind } from '../package/contents/code/format.mjs';
 
 test('temperature rounds to whole degrees', () => {
     assert.equal(temperature(12.6), '13°');
@@ -34,6 +34,11 @@ test('wind shows whole km/h and one decimal for m/s', () => {
     assert.equal(wind(4.72, 'ms', 'ro'), '4,7 m/s');
     assert.equal(wind(4.72, 'ms', 'en'), '4.7 m/s');
     assert.equal(wind(10.6, 'mph', 'en'), '11 mph');
+});
+
+test('wind can be shown in knots, written kn or kt as sailors and pilots are used to', () => {
+    assert.equal(wind(9.4, 'kn', 'en'), '9 kn');
+    assert.equal(wind(9.4, 'kt', 'en'), '9 kt');
 });
 
 test('percent rounds and shows a dash while there is no value', () => {
@@ -86,4 +91,13 @@ test('an amount too small for a hundredth of an inch is less than 0.01, not 0', 
 test('the hours show the amount without its unit, to a tenth of a mm or a hundredth of an inch', () => {
     assert.equal(precipitationNumber(1.04, 'mm', 'ro'), '1,0');
     assert.equal(precipitationNumber(2.54, 'inch', 'en'), '0.10');
+});
+
+test('distance gives how far one sees in km, or in miles beside inches of rain', () => {
+    assert.equal(distance(24140, 'mm', 'ro'), '24 km');
+    assert.equal(distance(800, 'mm', 'ro'), '0,8 km');
+    assert.equal(distance(5300, 'mm', 'en'), '5.3 km');
+    assert.equal(distance(1000, 'mm', 'de'), '1 km');
+    assert.equal(distance(10000, 'inch', 'en'), '6.2 mi');
+    assert.equal(distance(null, 'mm', 'en'), '–');
 });

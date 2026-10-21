@@ -6,6 +6,8 @@ Canvas {
 
     /** Position in the lunar cycle: 0 new moon, 0.5 full moon, see moonPhase() in code/moon.mjs. */
     property real phase: 0.5
+    /** Seen from the southern hemisphere, the moon is turned over: a waxing one is lit on the left. */
+    property bool south: false
 
     /** The terminator is an ellipse; a polyline of this many steps is round enough. */
     readonly property int terminatorSteps: 24
@@ -30,7 +32,7 @@ Canvas {
         context.fill();
 
         // The lit part: the limb on one side, the terminator back. A waning moon is the mirror image.
-        const mirror = phase > 0.5 ? -1 : 1;
+        const mirror = (phase > 0.5 ? -1 : 1) * (south ? -1 : 1);
         const bulge = Math.cos(2 * Math.PI * phase);
 
         context.fillStyle = "rgba(246, 243, 228, 1)";
@@ -53,4 +55,5 @@ Canvas {
     }
     onWidthChanged: requestPaint()
     onPhaseChanged: requestPaint()
+    onSouthChanged: requestPaint()
 }

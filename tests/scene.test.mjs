@@ -41,6 +41,8 @@ test('toKmh converts the wind units the widget can be set to', () => {
     assert.equal(toKmh(17, 'kmh'), 17);
     assert.equal(toKmh(10, 'ms'), 36);
     assert.ok(Math.abs(toKmh(10, 'mph') - 16.09) < 0.01);
+    assert.ok(Math.abs(toKmh(10, 'kn') - 18.52) < 0.01);
+    assert.ok(Math.abs(toKmh(10, 'kt') - 18.52) < 0.01);
 });
 
 test('celestial tracks the sun from sunrise (0) to sunset (1)', () => {
@@ -137,7 +139,8 @@ test('fog is drawn only for fog', () => {
 });
 
 test('stars come out on a clear night and stay behind an overcast one', () => {
-    assert.ok(scene({ isDay: false }).stars > 20);
+    assert.ok(scene({ isDay: false, moonIllumination: 0 }).stars > 300);
+    assert.ok(scene({ isDay: false }).twinkles > 20);
     assert.equal(scene({ isDay: false, weatherCode: OVERCAST }).stars, 0);
     assert.ok(scene({ isDay: false, weatherCode: PARTLY_CLOUDY }).stars < scene({ isDay: false }).stars);
     assert.ok(scene({ isDay: false, weatherCode: PARTLY_CLOUDY }).stars > 0);
@@ -165,4 +168,68 @@ test('the reduced quality draws about half of everything that moves', () => {
     assert.ok(reduced.rain > 0);
     assert.ok(reduced.rain <= full.rain / 2 + 1);
     assert.ok(reduced.clouds < full.clouds);
+});
+
+test('a rainbow shows after rain showers, by day, with the sun low', () => {
+    assert.equal(scene({ weatherCode: 81, sunProgress: 0.15 }).rainbow, true);
+    assert.equal(scene({ weatherCode: 81, sunProgress: 0.5 }).rainbow, false);
+    assert.equal(scene({ weatherCode: 81, sunProgress: 0.85, isDay: false }).rainbow, false);
+    assert.equal(scene({ weatherCode: 85, sunProgress: 0.15 }).rainbow, false);
+});
+
+test('a clear night has shooting stars, and the Milky Way while the moon is dim', () => {
+    assert.equal(scene({ isDay: false }).shootingStars, true);
+    assert.equal(scene({ isDay: false, quality: 'reduced' }).shootingStars, false);
+    assert.equal(scene({ isDay: false, moonIllumination: 0.1 }).milkyWay, true);
+    assert.equal(scene({ isDay: false, moonIllumination: 0.9 }).milkyWay, false);
+    assert.equal(scene({ isDay: false, weatherCode: 3, moonIllumination: 0.1 }).milkyWay, false);
+});
+
+test('a strong wind shows as streaks, and as leaves where no snow falls', () => {
+    assert.equal(scene({ windKmh: 20 }).streaks, 0);
+    assert.ok(scene({ windKmh: 45 }).streaks > scene({ windKmh: 32 }).streaks);
+    assert.ok(scene({ windKmh: 45 }).leaves > 0);
+    assert.equal(scene({ windKmh: 45, weatherCode: 73 }).leaves, 0);
+});
+
+test('frost covers the edges below freezing, and heat haze rises in the heat of the day', () => {
+    assert.equal(scene({ celsius: -3 }).frost, true);
+    assert.equal(scene({ celsius: 4 }).frost, false);
+    assert.equal(scene({ celsius: 33 }).heat, true);
+    assert.equal(scene({ celsius: 33, isDay: false }).heat, false);
+});
+
+test('falling snow piles up, the more the harder it falls', () => {
+    assert.equal(scene({ weatherCode: CLEAR }).snowCover, 0);
+    assert.ok(scene({ weatherCode: 75 }).snowCover > scene({ weatherCode: 71 }).snowCover);
+});
+
+test('the aurora is painted at night, through a clear or a broken sky, as high as it can be seen', () => {
+    const night = { isDay: false, windKmh: 5, quality: 'full' };
+
+    assert.equal(sceneFor({ ...night, weatherCode: 0, aurora: 'overhead' }).aurora, 'overhead');
+    assert.equal(sceneFor({ ...night, weatherCode: 2, aurora: 'horizon' }).aurora, 'horizon');
+    assert.equal(sceneFor({ ...night, weatherCode: 3, aurora: 'overhead' }).aurora, 'none');
+    assert.equal(sceneFor({ ...night, weatherCode: 61, aurora: 'overhead' }).aurora, 'none');
+    assert.equal(sceneFor({ ...night, weatherCode: 0, aurora: 'camera' }).aurora, 'none');
+    assert.equal(sceneFor({ isDay: true, windKmh: 5, quality: 'full', weatherCode: 0, aurora: 'overhead' }).aurora, 'none');
+    assert.equal(sceneFor({ ...night, weatherCode: 0 }).aurora, 'none');
+});
+
+test('a bright moon washes out the faint stars', () => {
+    assert.ok(scene({ isDay: false, moonIllumination: 1 }).stars < scene({ isDay: false, moonIllumination: 0 }).stars * 0.6);
+});
+
+test('an overcast sky, and one that rains or snows, is covered by a deck of cloud; a broken one is not', () => {
+    assert.equal(scene({ weatherCode: OVERCAST }).deck, 1);
+    assert.ok(scene({ weatherCode: 63 }).deck > 0.5);
+    assert.equal(scene({ weatherCode: PARTLY_CLOUDY }).deck, 0);
+    assert.equal(scene({ weatherCode: CLEAR }).deck, 0);
+});
+
+test('rain runs down the glass, the more the harder it falls; nothing else does', () => {
+    assert.ok(scene({ weatherCode: 65 }).glassDrops > scene({ weatherCode: 61 }).glassDrops);
+    assert.ok(scene({ weatherCode: 61 }).glassDrops >= 4);
+    assert.equal(scene({ weatherCode: 73 }).glassDrops, 0);
+    assert.equal(scene({ weatherCode: CLEAR }).glassDrops, 0);
 });

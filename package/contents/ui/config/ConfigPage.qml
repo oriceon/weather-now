@@ -19,6 +19,14 @@ KCM.SimpleKCM {
     property string cfg_countryCodeDefault
     property bool cfg_showAlerts
     property bool cfg_showAlertsDefault
+    property bool cfg_showAirQuality
+    property bool cfg_showAirQualityDefault
+    property bool cfg_notifyAlerts
+    property bool cfg_notifyAlertsDefault
+    property bool cfg_notifyRain
+    property bool cfg_notifyRainDefault
+    property bool cfg_notifyFrost
+    property bool cfg_notifyFrostDefault
     property bool cfg_showNowcasting
     property bool cfg_showNowcastingDefault
     property string cfg_language
@@ -33,10 +41,38 @@ KCM.SimpleKCM {
     property string cfg_backgroundDefault
     property int cfg_backgroundTransparency
     property int cfg_backgroundTransparencyDefault
+    property bool cfg_showRainInPanel
+    property bool cfg_showRainInPanelDefault
     property string cfg_iconSet
     property string cfg_iconSetDefault
     property string cfg_animations
     property string cfg_animationsDefault
+    property var cfg_savedPlaces: []
+    property var cfg_savedPlacesDefault: []
+    property bool cfg_notifyMorning
+    property bool cfg_notifyMorningDefault
+    property string cfg_morningTime
+    property string cfg_morningTimeDefault
+    property var cfg_morningParts: []
+    property var cfg_morningPartsDefault: []
+    property string cfg_morningTold
+    property string cfg_morningToldDefault
+    property var cfg_todayParts: []
+    property var cfg_todayPartsDefault: []
+    property int cfg_todayGlass
+    property int cfg_todayGlassDefault
+    property string cfg_landscape
+    property string cfg_landscapeDefault
+    property int cfg_landscapeHeight
+    property int cfg_landscapeHeightDefault
+    property var cfg_activities: []
+    property var cfg_activitiesDefault: []
+    property var cfg_detailsOrder: []
+    property var cfg_detailsOrderDefault: []
+    property var cfg_hiddenTiles: []
+    property var cfg_hiddenTilesDefault: []
+    property string cfg_frostTold
+    property string cfg_frostToldDefault
     property var cfg_hiddenTabs: []
     property var cfg_hiddenTabsDefault: []
     property string cfg_temperatureUnit

@@ -12,10 +12,17 @@ Exits with 1 when QML reported an error or a warning, so a broken binding does n
 """
 
 import argparse
+import ctypes
+import json
 import os
 import sys
 import xml.etree.ElementTree as ElementTree
 from pathlib import Path
+
+# No core dump if Qt crashes: in a container that shares the kernel of the desktop, the dump goes to
+# the crash handler of the desktop, which reports a crash of its own Python on the screen.
+PR_SET_DUMPABLE = 4
+ctypes.CDLL(None, use_errno=True).prctl(PR_SET_DUMPABLE, 0, 0, 0, 0)
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 os.environ.setdefault("QT_QUICK_BACKEND", "software")
@@ -23,7 +30,7 @@ os.environ.setdefault("QT_QUICK_CONTROLS_STYLE", "Basic")
 
 from PySide6.QtCore import QElapsedTimer, QMetaObject, QTimer, QUrl, QtMsgType, qInstallMessageHandler
 from PySide6.QtGui import QGuiApplication
-from PySide6.QtNetwork import QNetworkAccessManager
+from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from PySide6.QtQml import QQmlComponent, QQmlListReference, QQmlNetworkAccessManagerFactory, qmlRegisterSingletonType, qmlRegisterType
 from PySide6.QtQuick import QQuickItem, QQuickView
 from shiboken6 import getCppPointer
@@ -33,14 +40,17 @@ import shim_plasmoid
 
 HERE = Path(__file__).resolve().parent
 PACKAGE = HERE.parent.parent / "package"
+WALLPAPER = HERE.parent.parent / "wallpaper" / "package"
 FIXTURES = HERE.parent / "fixtures"
 
 QML_SHIMS = {
     "org.kde.kirigami": ("kirigami", ["Icon", "FormLayout"], ["Units"]),
-    "org.kde.plasma.components": ("components", ["Label", "TabBar", "TabButton", "ToolButton", "Button", "BusyIndicator", "ToolTip", "ScrollBar", "TextField"], []),
+    "org.kde.plasma.components": ("components", ["Label", "TabBar", "TabButton", "ToolButton", "Button", "BusyIndicator", "ToolTip", "ScrollBar", "TextField", "Slider"], []),
     "org.kde.plasma.core": ("misc", ["Action", "Types"], []),
     "org.kde.kcmutils": ("misc", ["SimpleKCM"], []),
     "org.kde.plasma.configuration": ("misc", ["ConfigModel", "ConfigCategory"], []),
+    "org.kde.notification": ("misc", ["Notification"], []),
+    "org.kde.taskmanager": ("taskmanager", ["TasksModel", "VirtualDesktopInfo", "ActivityInfo"], []),
 }
 
 #: The place the widget is given, so that a run does not start at the first-run prompt unless asked to.
@@ -53,11 +63,16 @@ applet_root = []
 components = []
 #: Every address the QML engine sent a request to, in order.
 requested = []
+#: Hosts whose requests fail at once, so that a recorded answer stays on screen.
+offline = set()
 
 
 class RecordingAccessManager(QNetworkAccessManager):
     def createRequest(self, operation, request, data=None):
         requested.append(request.url())
+
+        if request.url().host() in offline:
+            request = QNetworkRequest(QUrl("http://127.0.0.1:9/"))
 
         return super().createRequest(operation, request, data)
 
@@ -92,8 +107,8 @@ def register_qml_shims():
             qmlRegisterSingletonType(url(HERE / "shims" / folder / f"{name}.qml"), module, 1, 0, name)
 
 
-def config_defaults():
-    """The defaults of contents/config/main.xml, as Plasma would hand them to the widget."""
+def config_defaults(package=PACKAGE):
+    """The defaults of contents/config/main.xml, as Plasma would hand them to the widget, or to the wallpaper."""
     namespace = {"kcfg": "http://www.kde.org/standards/kcfg/1.0"}
     casts = {
         "String": lambda text: text or "",
@@ -102,7 +117,7 @@ def config_defaults():
         "Bool": lambda text: text == "true",
         "StringList": lambda text: [item for item in (text or "").split(",") if item],
     }
-    entries = ElementTree.parse(PACKAGE / "contents/config/main.xml").getroot().iterfind(".//kcfg:entry", namespace)
+    entries = ElementTree.parse(package / "contents/config/main.xml").getroot().iterfind(".//kcfg:entry", namespace)
 
     return {entry.get("name"): casts[entry.get("type")](entry.findtext("kcfg:default", namespaces=namespace)) for entry in entries}
 
@@ -138,8 +153,11 @@ def motion(root):
     scenes = [item for item in visual_tree(root) if has_property(item, "fallClock")]
     films = [item for item in visual_tree(root) if has_property(item, "current") and has_property(item, "loaded") and item.property("loaded")]
 
+    # The aurora sways by a clock of its own, on a clear night that has nothing that drifts or falls.
+    auroras = [item for item in visual_tree(root) if has_property(item, "sight") and has_property(item, "phase") and item.property("opacity") > 0]
+
     return {
-        "scene": [(scene.property("fallClock"), scene.property("driftClock")) for scene in scenes],
+        "scene": [(scene.property("fallClock"), scene.property("driftClock")) for scene in scenes] + [aurora.property("phase") for aurora in auroras],
         "icons": [film.property("current") for film in films],
     }
 
@@ -163,6 +181,16 @@ def build_stage(engine, arguments, configuration):
         "fontFamily": arguments.font,
         "iconSet": arguments.icons,
         "background": arguments.background,
+        "places": [{"name": name, "latitude": 45.0 + index, "longitude": 25.0, "region": "", "countryCode": "RO"} for index, name in enumerate(filter(None, arguments.places.split(",")))],
+        "picker": arguments.picker,
+        "airQualityJson": fixture("airquality-spring.json") if arguments.pollen else fixture("airquality-constanta.json") if arguments.air else "",
+        "auroraSight": arguments.aurora,
+        "detailsOrder": list(filter(None, arguments.details_order.split(","))),
+        "hiddenTiles": arguments.hide_tile,
+        "landscape": arguments.landscape,
+        "landscapeHeight": arguments.landscape_height,
+        "todayParts": arguments.today.split(","),
+        "todayGlass": arguments.glass,
         "backgroundTransparency": arguments.transparency,
         "region": arguments.region,
         "locality": arguments.locality,
@@ -179,6 +207,12 @@ def build_stage(engine, arguments, configuration):
 def build_applet(engine, arguments, configuration):
     root = create(QQmlComponent(engine, url(PACKAGE / "contents/ui/main.qml")))
     applet_root.append(root)
+
+    # The tooltip of the panel, on its own.
+    if arguments.tooltip:
+        QTimer.singleShot(max(0, arguments.wait - 100), lambda: print(f"tooltip: {root.property('toolTipItem').property('implicitWidth')}x{root.property('toolTipItem').property('implicitHeight')}"))
+
+        return root.property("toolTipItem")
     representation = root.property("compactRepresentation" if arguments.compact else "fullRepresentation")
     item = create(representation, context=representation.creationContext())
 
@@ -200,22 +234,15 @@ def build_applet(engine, arguments, configuration):
     return item
 
 
-def build_config(engine, arguments, configuration):
-    model = create(QQmlComponent(engine, url(PACKAGE / "contents/config/config.qml")))
-    categories = QQmlListReference(model, "categories")
-    names = [categories.at(index).property("name") for index in range(categories.count())]
-    category = categories.at(arguments.page)
-    page = create(QQmlComponent(engine, url(PACKAGE / "contents/ui" / category.property("source"))))
-    defaults = config_defaults()
-
-    print(f"config: pages={names} showing={category.property('name')!r} icon={category.property('icon')!r}")
-
-    # Plasma 6.7 hands every setting and its default to every page. Whatever a page lacks ends up in
-    # the journal as "Setting initial properties failed", which the Qt of the viewer does not report.
+def hand_settings(page, source, configuration, defaults):
+    """
+    Plasma 6.7 hands every setting and its default to every page. Whatever a page lacks ends up in
+    the journal as "Setting initial properties failed", which the Qt of the viewer does not report.
+    """
     for key, value in configuration.items():
         for name, given in ((f"cfg_{key}", value), (f"cfg_{key}Default", defaults[key])):
             if page.metaObject().indexOfProperty(name) < 0:
-                problems.append(f"{category.property('source')} does not have a property called {name}")
+                problems.append(f"{source} does not have a property called {name}")
                 print(f"[qml] {problems[-1]}", file=sys.stderr)
                 continue
 
@@ -223,10 +250,71 @@ def build_config(engine, arguments, configuration):
 
             # Apply writes every setting back from the page, so one the page does not touch must survive the trip.
             if page.property(name) != given:
-                problems.append(f"{category.property('source')} gives {name} back as {page.property(name)!r}, not {given!r}")
+                problems.append(f"{source} gives {name} back as {page.property(name)!r}, not {given!r}")
                 print(f"[qml] {problems[-1]}", file=sys.stderr)
 
+
+def build_config(engine, arguments, configuration):
+    model = create(QQmlComponent(engine, url(PACKAGE / "contents/config/config.qml")))
+    categories = QQmlListReference(model, "categories")
+    names = [categories.at(index).property("name") for index in range(categories.count())]
+    category = categories.at(arguments.page)
+    page = create(QQmlComponent(engine, url(PACKAGE / "contents/ui" / category.property("source"))))
+
+    print(f"config: pages={names} showing={category.property('name')!r} icon={category.property('icon')!r}")
+    hand_settings(page, category.property("source"), configuration, config_defaults())
     model.setParent(page)
+
+    return page
+
+
+def build_wallpaper(engine, arguments, configuration):
+    """
+    The wallpaper, with the weather of Open-Meteo; with --forecast or --current, with a recorded
+    answer instead, at the time of its conditions.
+    """
+    recorded = bool(arguments.forecast) or arguments.current != "{}"
+
+    # Before the wallpaper asks, so that its own request fails and leaves the recorded answer alone.
+    if recorded:
+        offline.add("api.open-meteo.com")
+
+    width, height = (int(side) for side in arguments.size.split("x"))
+    # As Plasma makes it: at the size of the screen from the start.
+    item = create(QQmlComponent(engine, url(WALLPAPER / "contents/ui/main.qml")), {"width": width, "height": height})
+
+    if recorded:
+        reader = QQmlComponent(engine)
+        reader.setData(
+            b"""import QtQuick
+import "contents/code/openmeteo.mjs" as OpenMeteo
+
+QtObject {
+    property var target
+    property string answer
+    property string overrides
+
+    Component.onCompleted: {
+        const forecast = OpenMeteo.parseForecast(JSON.parse(answer));
+
+        Object.assign(forecast.current, JSON.parse(overrides));
+        target.forecast = forecast;
+        target.now = forecast.current.time;
+    }
+}
+""",
+            url(WALLPAPER / "reader.qml"),
+        )
+        answer = Path(arguments.forecast).read_text(encoding="utf-8") if arguments.forecast else (FIXTURES / "forecast-constanta.json").read_text(encoding="utf-8")
+        create(reader, {"target": item, "answer": answer, "overrides": arguments.current}).setParent(item)
+
+    return item
+
+
+def build_wallpaper_config(engine, arguments, configuration):
+    page = create(QQmlComponent(engine, url(WALLPAPER / "contents/ui/config.qml")))
+
+    hand_settings(page, "config.qml", configuration, config_defaults(WALLPAPER))
 
     return page
 
@@ -257,13 +345,35 @@ def record_frames(view, out, count, interval, done):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("what", choices=["stage", "applet", "config"])
+    parser.add_argument("what", choices=["stage", "applet", "config", "wallpaper", "wallpaper-config"], help="wallpaper, wallpaper-config: run wallpaper/sync.sh first")
     parser.add_argument("out")
     parser.add_argument("--size", default="508x346")
     parser.add_argument("--wait", type=int, default=None, help="milliseconds before the screenshot")
     parser.add_argument("--light", action="store_true", help="light colour scheme")
     parser.add_argument("--background", default="theme", choices=["black", "theme", "none"], help="stage: the background of the widget")
     parser.add_argument("--transparency", type=int, default=100, help="stage: percent of transparency of the transparent background")
+    parser.add_argument("--air", action="store_true", help="stage: show the recorded air quality")
+    parser.add_argument("--pollen", action="store_true", help="stage: an air of spring, with the pollen of four days")
+    parser.add_argument("--places", default="", help="stage: other places kept, by name, separated by commas")
+    parser.add_argument("--picker", action="store_true", help="stage: the list of the other places hangs open")
+    parser.add_argument("--aurora", default="none", choices=["none", "overhead", "horizon", "camera"], help="stage: how the aurora can be seen tonight, with a Kp of 6.33")
+    parser.add_argument("--details-order", default="", metavar="TILES", help="stage: the tiles of the Details tab, by id, separated by commas")
+    parser.add_argument("--glass", type=int, default=62, help="stage: percent of transparency of the glass of the Today tab")
+    parser.add_argument("--today", default="hours,insights,rain,yesterday", metavar="PARTS", help="stage: what the Today tab shows, separated by commas")
+    parser.add_argument("--landscape", default="none", choices=["none", "hills", "city", "sea", "poppies", "lake", "village"], help="stage: the land under the sky of the Today tab")
+    parser.add_argument("--landscape-height", type=int, default=55, help="stage: percent of the height of the Today tab the land takes")
+    parser.add_argument("--hide-tile", action="append", default=[], metavar="TILE", help="stage: a tile of the Details tab that is turned off")
+    parser.add_argument("--tooltip", action="store_true", help="applet: show the tooltip of the panel")
+    parser.add_argument("--drag", default="", metavar="X1,Y1:X2,Y2", help="press at the first point of the window and move to the second, 1.2 s before the screenshot")
+    parser.add_argument("--hide-class", action="append", default=[], metavar="TYPE", help="with --resize-steps: hide every item of this QML type first, to find which one makes the resize slow")
+    parser.add_argument("--resize-steps", type=int, default=0, metavar="COUNT", help="after --wait, shrink the window by a tenth in COUNT steps a frame apart, as Plasma does entering edit mode, and print how long each took")
+    parser.add_argument("--trace-paint", action="store_true", help="print every time a Canvas paints, with the milliseconds since the start")
+    parser.add_argument("--switch-frames", action="store_true", help="stage: go to the Hours tab and back to Today, then save --frames screenshots from the moment of the switch")
+    parser.add_argument("--switch-to", type=int, default=-1, metavar="TAB", help="with --switch-frames: go from Today to this tab instead, and save the screenshots from then")
+    parser.add_argument("--switch-via", type=int, default=1, metavar="TAB", help="with --switch-frames: the tab to go to before coming back to Today")
+    parser.add_argument("--time-switch", action="store_true", help="stage: time switches from the Hours tab back to the Today tab")
+    parser.add_argument("--drop", action="store_true", help="with --drag, let go at the end")
+    parser.add_argument("--item-set", action="append", default=[], metavar="NAME=VALUE", help="set a property on every item that has it, halfway through --wait")
     parser.add_argument("--set", action="append", default=[], metavar="KEY=VALUE", help="override a setting of the widget")
     parser.add_argument("--lang", default="ro")
     parser.add_argument("--wind", default="kmh")
@@ -290,6 +400,7 @@ def main():
     parser.add_argument("--frame-interval", type=int, default=66, metavar="MS", help="milliseconds between those screenshots")
     parser.add_argument("--expect-motion", action="store_true", help="fail unless the animated scene and an icon are moving")
     parser.add_argument("--forbid-host", action="append", default=[], metavar="HOST", help="fail if HOST, or a subdomain of it, is asked for anything")
+    parser.add_argument("--count-host", action="append", default=[], metavar="HOST", help="print how many requests went to HOST, or a subdomain of it")
     parser.add_argument("--expect-host", action="append", default=[], metavar="HOST", help="fail unless HOST, or a subdomain of it, is asked for something")
     arguments = parser.parse_args()
 
@@ -300,10 +411,11 @@ def main():
     application = QGuiApplication(sys.argv[:1])
     register_qml_shims()
 
-    configuration = config_defaults()
+    wallpaper = arguments.what.startswith("wallpaper")
+    configuration = config_defaults(WALLPAPER if wallpaper else PACKAGE)
 
     if not arguments.first_run:
-        configuration.update(PLACE)
+        configuration.update({key: value for key, value in PLACE.items() if key in configuration})
 
     for assignment in arguments.set:
         key, value = assignment.split("=", 1)
@@ -313,10 +425,16 @@ def main():
         if isinstance(given, bool):
             configuration[key] = value == "true"
         else:
-            configuration[key] = value.split(",") if isinstance(given, list) else type(given)(value)
+            # A list is given as words separated by commas, or as JSON when its items hold commas themselves.
+            if isinstance(given, list):
+                configuration[key] = json.loads(value) if value.startswith("[") else value.split(",")
+            else:
+                configuration[key] = type(given)(value)
+
+    settings = shim_plasmoid.wallpaper_configuration() if wallpaper else shim_plasmoid.applet().property("configuration")
 
     for key, value in configuration.items():
-        shim_plasmoid.applet().property("configuration").insert(key, value)
+        settings.insert(key, value)
 
     width, height = (int(side) for side in arguments.size.split("x"))
     view = QQuickView()
@@ -331,7 +449,13 @@ def main():
     shim_plasmoid.form_factor[0] = shim_plasmoid.FORM_FACTORS[arguments.form_factor]
 
     content = view.rootObject().findChild(QQuickItem, "content")
-    item = {"stage": build_stage, "applet": build_applet, "config": build_config}[arguments.what](view.engine(), arguments, configuration)
+    builders = {"stage": build_stage, "applet": build_applet, "config": build_config, "wallpaper": build_wallpaper, "wallpaper-config": build_wallpaper_config}
+    item = builders[arguments.what](view.engine(), arguments, configuration)
+
+    # A wallpaper has the whole screen, without the frame of a widget.
+    if arguments.what == "wallpaper":
+        content = view.rootObject()
+
     item.setParentItem(content)
 
     # Plasma draws no frame around a widget that asks for no background.
@@ -418,6 +542,152 @@ def main():
 
         QTimer.singleShot(4000, pick)
 
+    # Sets a property on every item that has it, once the view is built: a day opened, a tile under the mouse.
+    def poke():
+        for assignment in arguments.item_set:
+            name, value = assignment.split("=", 1)
+            value = {"true": True, "false": False}.get(value, value)
+            touched = [item for item in visual_tree(item_root[0]) if has_property(item, name)]
+
+            for target in touched:
+                target.setProperty(name, value)
+
+            print(f"item-set: {name}={value!r} on {len(touched)} items")
+
+    item_root = [item]
+
+    if arguments.item_set:
+        QTimer.singleShot(max(0, arguments.wait // 2), poke)
+
+    # Presses at the first point and moves to the second, as a hand on the mouse would, in time for the screenshot.
+    def drag():
+        from PySide6.QtCore import QPoint, Qt
+        from PySide6.QtTest import QTest
+
+        (x1, y1), (x2, y2) = [tuple(int(value) for value in point.split(",")) for point in arguments.drag.split(":")]
+        steps = 15
+
+        QTest.mousePress(view, Qt.MouseButton.LeftButton, Qt.KeyboardModifier.NoModifier, QPoint(x1, y1))
+
+        def step(index):
+            point = QPoint(x1 + (x2 - x1) * index // steps, y1 + (y2 - y1) * index // steps)
+            QTest.mouseMove(view, point)
+
+            if index < steps:
+                QTimer.singleShot(30, lambda: step(index + 1))
+            elif arguments.drop:
+                QTest.mouseRelease(view, Qt.MouseButton.LeftButton, Qt.KeyboardModifier.NoModifier, point)
+
+        QTimer.singleShot(30, lambda: step(1))
+
+    if arguments.drag:
+        QTimer.singleShot(max(0, arguments.wait - 1200), drag)
+
+    # How long a switch from the Hours tab back to the Today tab takes, to the first frame shown.
+    def time_switch():
+        clock = QElapsedTimer()
+        times = []
+        full = next(candidate for candidate in visual_tree(item) if has_property(candidate, "currentTab"))
+
+        away = []
+
+        for attempt in range(4):
+            clock.start()
+            full.setProperty("currentTab", 1)
+            view.grabWindow()
+            away.append(clock.elapsed())
+            clock.start()
+            full.setProperty("currentTab", 0)
+
+            # A canvas paints a frame or two after it is made: the switch is over once they have.
+            for frame in range(4):
+                view.grabWindow()
+
+            times.append(clock.elapsed())
+
+        print(f"switch to Today: {times} ms")
+        print(f"switch away from Today: {away} ms")
+
+    if arguments.time_switch:
+        QTimer.singleShot(max(0, arguments.wait - 600), time_switch)
+
+    if arguments.trace_paint:
+        from PySide6.QtCore import QObject as Object, SIGNAL
+
+        started = QElapsedTimer()
+        started.start()
+        traced = set()
+
+        def trace():
+            for candidate in visual_tree(item):
+                if candidate.metaObject().indexOfSignal("painted()") >= 0 and id(candidate) not in traced:
+                    traced.add(id(candidate))
+                    chain = []
+                    ancestor = candidate
+
+                    while ancestor is not None and len(chain) < 4:
+                        chain.append(ancestor.metaObject().className().split("_QML")[0])
+                        ancestor = ancestor.parentItem()
+
+                    label = f"{'<'.join(chain)} {int(candidate.width())}x{int(candidate.height())}"
+                    Object.connect(candidate, SIGNAL("painted()"), lambda label=label: print(f"[paint] {started.elapsed():6d} ms {label}"))
+
+                    for signal in ("widthChanged()", "heightChanged()"):
+                        Object.connect(candidate, SIGNAL(signal), lambda label=label, signal=signal, candidate=candidate: print(f"[size] {started.elapsed():6d} ms {label} {signal} -> {candidate.width():.0f}x{candidate.height():.0f}"))
+
+            QTimer.singleShot(200, trace)
+
+        trace()
+
+    # Resizes as an animation does, a frame at a time, and times each frame.
+    def resize_steps():
+        for candidate in visual_tree(item):
+            if any(candidate.metaObject().className().startswith(name) for name in arguments.hide_class):
+                candidate.setProperty("visible", False)
+
+        QGuiApplication.processEvents()
+        view.grabWindow()
+        clock = QElapsedTimer()
+        started = view.width(), view.height()
+        times = []
+
+        for step in range(1, arguments.resize_steps + 1):
+            share = 1 - 0.1 * step / arguments.resize_steps
+            clock.start()
+            view.resize(int(started[0] * share), int(started[1] * share))
+            resized = clock.elapsed()
+            QGuiApplication.processEvents()
+            processed = clock.elapsed()
+            view.grabWindow()
+            times.append(clock.elapsed())
+            print(f"resize step {step}: resize {resized} ms, events {processed - resized} ms, frame {clock.elapsed() - processed} ms")
+
+        print(f"resize: {times} ms, {sum(times)} in all")
+        application.quit()
+
+    if arguments.resize_steps:
+        QTimer.singleShot(arguments.wait, resize_steps)
+        application.exec()
+        sys.exit(1 if problems else 0)
+
+    # What the Today tab looks like, frame by frame, as it comes back.
+    def switch_back():
+        full = next(candidate for candidate in visual_tree(item) if has_property(candidate, "currentTab"))
+
+        if arguments.switch_to >= 0:
+            full.setProperty("currentTab", arguments.switch_to)
+            record_frames(view, arguments.out, arguments.frames, arguments.frame_interval, application.quit)
+
+            return
+
+        full.setProperty("currentTab", arguments.switch_via)
+        QTimer.singleShot(1000, lambda: (full.setProperty("currentTab", 0), record_frames(view, arguments.out, arguments.frames, arguments.frame_interval, application.quit)))
+
+    if arguments.switch_frames:
+        QTimer.singleShot(arguments.wait, switch_back)
+        application.exec()
+        sys.exit(1 if problems else 0)
+
     if arguments.search:
         QTimer.singleShot(500, search_place)
     else:
@@ -431,6 +701,12 @@ def main():
         if asked(host):
             problems.append(f"{host} was asked for {asked(host)}")
             print(f"[network] {problems[-1]}", file=sys.stderr)
+
+    for host in arguments.count_host:
+        print(f"requests to {host}: {len(asked(host))}")
+
+        for address in asked(host):
+            print(f"  {address[:140]}")
 
     for host in arguments.expect_host:
         if not asked(host):

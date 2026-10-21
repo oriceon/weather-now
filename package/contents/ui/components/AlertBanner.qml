@@ -5,6 +5,7 @@ import org.kde.plasma.components as PlasmaComponents
 
 import "../../code/alerts.mjs" as Alerts
 import "../../code/i18n.mjs" as I18n
+import "../../code/links.mjs" as Links
 import "." as Components
 
 /** An official weather warning: colour code, phenomenon, interval and the text of the warning. */
@@ -37,11 +38,18 @@ Rectangle {
      */
     readonly property string credit: [alert.issuer, Alerts.alertIssued(alert, now, language)].filter(part => part !== "").join(" · ")
     /** Where the warning can be read at its source; the MeteoAlarm terms require the link. */
-    readonly property string site: alert.source === "meteoalarm" ? "www.meteoalarm.org" : "www.meteoromania.ro"
+    readonly property string site: ({ meteoalarm: "https://www.meteoalarm.org", public: alert.web || "https://alerts.kde.org" })[alert.source] || "https://www.meteoromania.ro"
 
     implicitHeight: content.implicitHeight + Kirigami.Units.smallSpacing * 2
     radius: Kirigami.Units.cornerRadius
-    color: palettes[alert.level][0]
+    // A shade lighter under the mouse: a click opens the warning at its source.
+    color: hover.hovered ? Qt.lighter(palettes[alert.level][0], 1.1) : palettes[alert.level][0]
+
+    Behavior on color {
+        ColorAnimation {
+            duration: Kirigami.Units.shortDuration
+        }
+    }
 
     ColumnLayout {
         id: content
@@ -101,10 +109,16 @@ Rectangle {
     }
 
     TapHandler {
-        onTapped: Qt.openUrlExternally(`https://${banner.site}`)
+        onTapped: {
+            if (Links.webAddress(banner.site) !== "") {
+                Qt.openUrlExternally(Links.webAddress(banner.site));
+            }
+        }
     }
 
     PlasmaComponents.ToolTip {
+        id: tip
+
         visible: hover.hovered
         text: [
             banner.title,
@@ -116,5 +130,20 @@ Rectangle {
             banner.alert.source === "meteoalarm" ? Alerts.METEOALARM_DISCLAIMER : "",
             I18n.t(banner.language, "alert.openSite", { site: banner.site }),
         ].filter((part, index, parts) => part !== "" && parts.indexOf(part) === index).join("\n")
+
+        // The text of the warning as the feed wrote it, read as plain text, not as markup.
+        contentItem: Item {
+            implicitWidth: Math.min(Kirigami.Units.gridUnit * 20, tipText.implicitWidth)
+            implicitHeight: tipText.implicitHeight
+
+            PlasmaComponents.Label {
+                id: tipText
+
+                width: parent.width
+                text: tip.text
+                textFormat: Text.PlainText
+                wrapMode: Text.WordWrap
+            }
+        }
     }
 }

@@ -10,28 +10,31 @@ function isWet(hour) {
 }
 
 /**
- * When the next precipitation starts and stops, for the `hourly` entries of parseForecast(),
- * the first of which is the current hour. `end` is the first dry hour after it, or null when
- * it does not stop within the forecast.
+ * When the next precipitation starts and stops, for the `hourly` entries of parseForecast(), the
+ * first of which is the current hour. Open-Meteo gives the precipitation of an hour at its end:
+ * the entry of 18:00 holds what falls from 17:00 to 18:00. So the entry of the current hour holds
+ * the hour gone by, the next one the hour under way, and a wet entry means rain from the hour
+ * before it. `end` is when the last wet hour ends, or null when it does not stop within the forecast.
  */
 export function rainSummary(hourly) {
-    const first = hourly.findIndex(isWet);
+    const ahead = hourly.slice(1);
+    const first = ahead.findIndex(isWet);
 
     if (first === -1) {
         return { kind: 'none', snow: false, start: null, end: null };
     }
 
-    let afterLast = first + 1;
+    let last = first;
 
-    while (afterLast < hourly.length && isWet(hourly[afterLast])) {
-        afterLast++;
+    while (last + 1 < ahead.length && isWet(ahead[last + 1])) {
+        last++;
     }
 
     return {
         kind: first === 0 ? 'now' : 'later',
-        snow: precipitationKind(hourly[first].weatherCode) === 'snow',
+        snow: precipitationKind(ahead[first].weatherCode) === 'snow',
         start: hourly[first].time,
-        end: afterLast < hourly.length ? hourly[afterLast].time : null,
+        end: last + 1 < ahead.length ? ahead[last].time : null,
     };
 }
 
@@ -63,3 +66,21 @@ export function rainSentence(summary, nowIso, language) {
 
     return summary.end ? t(language, 'summary.betweenDay', { noun, day, start, end }) : t(language, 'summary.fromDay', { noun, day, start });
 }
+
+/** The panel tells of rain no further ahead than this. */
+const PANEL_HOURS = 12;
+
+/**
+ * When the next rain or snow starts, as "18:00", for the panel; empty while it is already falling,
+ * when it is further ahead than half a day, and when none is coming.
+ */
+export function upcomingStart(summary, nowIso) {
+    if (summary.kind !== 'later') {
+        return '';
+    }
+
+    const ahead = (Date.parse(`${summary.start}:00Z`) - Date.parse(`${String(nowIso).slice(0, 16)}:00Z`)) / 3600000;
+
+    return ahead <= PANEL_HOURS ? timeLabel(summary.start) : '';
+}
+

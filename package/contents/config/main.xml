@@ -22,15 +22,51 @@
         <entry name="countryCode" type="String">
             <default></default>
         </entry>
+        <entry name="savedPlaces" type="StringList">
+            <label>The other places kept, to switch to from the header: each as JSON, { name, latitude, longitude, region, countryCode }.</label>
+            <default></default>
+        </entry>
         <entry name="showAlerts" type="Bool">
             <default>true</default>
+        </entry>
+        <entry name="showAirQuality" type="Bool">
+            <label>Air quality and pollen, from the CAMS forecasts through Open-Meteo.</label>
+            <default>true</default>
+        </entry>
+        <entry name="notifyAlerts" type="Bool">
+            <label>A desktop notification for every new official warning.</label>
+            <default>true</default>
+        </entry>
+        <entry name="notifyRain" type="Bool">
+            <label>A desktop notification when rain or snow is about to start, within half an hour.</label>
+            <default>false</default>
+        </entry>
+        <entry name="notifyFrost" type="Bool">
+            <label>A desktop notification in the evening when the night brings frost.</label>
+            <default>false</default>
+        </entry>
+        <entry name="notifyMorning" type="Bool">
+            <label>A desktop notification in the morning, at morningTime, with a summary of the day.</label>
+            <default>false</default>
+        </entry>
+        <entry name="morningTime" type="String">
+            <label>When the summary of the day comes, as HH:MM.</label>
+            <default>07:30</default>
+        </entry>
+        <entry name="morningParts" type="StringList">
+            <label>What the summary leaves out: temperatures, rain, uv, alerts, pollen, yesterday; empty for all of it.</label>
+            <default></default>
+        </entry>
+        <entry name="morningTold" type="String">
+            <label>The day the summary was last sent, so that a restart does not send it again.</label>
+            <default></default>
         </entry>
         <entry name="showNowcasting" type="Bool">
             <label>The immediate warnings of ANM, from its own website; nothing is asked of that website while this is off.</label>
             <default>false</default>
         </entry>
         <entry name="language" type="String">
-            <label>auto, ro or en</label>
+            <label>auto, or one of the languages of code/strings: ro, en, de, es, fr, it, pl</label>
             <default>auto</default>
         </entry>
         <entry name="firstDayOfWeek" type="Int">
@@ -42,18 +78,22 @@
             <default>110</default>
         </entry>
         <entry name="fontFamily" type="String">
-            <label>Empty for the font of the Plasma theme.</label>
+            <label>Empty for Inter, the font that comes with the widget.</label>
             <default></default>
         </entry>
         <entry name="background" type="String">
             <label>black, theme or none (transparent)</label>
-            <default>theme</default>
+            <default>none</default>
         </entry>
         <entry name="backgroundTransparency" type="Int">
             <label>How transparent the transparent background is, in percent: 0 is the background of the Plasma theme, 100 is none at all.</label>
-            <default>100</default>
+            <default>80</default>
             <min>0</min>
             <max>100</max>
+        </entry>
+        <entry name="showRainInPanel" type="Bool">
+            <label>In a panel, show beside the temperature when the next rain starts, within half a day.</label>
+            <default>true</default>
         </entry>
         <entry name="iconSet" type="String">
             <label>meteocons or breeze (the icons of the Plasma theme)</label>
@@ -62,6 +102,42 @@
         <entry name="animations" type="String">
             <label>full, reduced or off</label>
             <default>full</default>
+        </entry>
+        <entry name="todayParts" type="StringList">
+            <label>What the Today tab shows besides the weather now: clock (the time of the place, under the date), hours, conditions (wind, humidity and precipitation), insights, rain, yesterday.</label>
+            <default>hours,insights,rain,yesterday</default>
+        </entry>
+        <entry name="todayGlass" type="Int">
+            <label>How transparent the dark glass of the Today tab is, under the hours and the wind, humidity and precipitation, in percent: 0 is opaque, 100 is none at all.</label>
+            <default>62</default>
+            <min>0</min>
+            <max>100</max>
+        </entry>
+        <entry name="landscape" type="String">
+            <label>The land drawn under the sky of the Today tab: one of KINDS in code/land.mjs, none, hills, city, sea, poppies, lake or village.</label>
+            <default>none</default>
+        </entry>
+        <entry name="landscapeHeight" type="Int">
+            <label>How much of the height of the Today tab the landscape takes, in percent.</label>
+            <default>55</default>
+            <min>25</min>
+            <max>85</max>
+        </entry>
+        <entry name="activities" type="StringList">
+            <label>The activities of the Activities tile, see code/activities.mjs; empty for those of a new widget.</label>
+            <default></default>
+        </entry>
+        <entry name="detailsOrder" type="StringList">
+            <label>The tiles of the Details tab, in the order they were dragged into; empty for the order of a new widget. See code/details.mjs.</label>
+            <default></default>
+        </entry>
+        <entry name="hiddenTiles" type="StringList">
+            <label>The tiles of the Details tab that are turned off, by id; at least one stays.</label>
+            <default></default>
+        </entry>
+        <entry name="frostTold" type="String">
+            <label>The day the frost of the night was last told, so that a restart in the evening does not tell it again.</label>
+            <default></default>
         </entry>
         <entry name="hiddenTabs" type="StringList">
             <label>Ids of the tabs that are turned off: today, hours, rain, days, details.</label>
@@ -75,6 +151,7 @@
             <default>mm</default>
         </entry>
         <entry name="windUnit" type="String">
+            <label>kmh, ms, mph, or knots written kn or kt</label>
             <default>kmh</default>
         </entry>
         <entry name="refreshMinutes" type="Int">

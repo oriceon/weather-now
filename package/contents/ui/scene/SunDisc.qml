@@ -1,10 +1,15 @@
 import QtQuick
 
-/** The sun: a disc, a halo that breathes and rays that turn slowly. */
+/**
+ * The sun: a bright disc in a soft corona, inside a wide bloom of light that breathes. A cloud in
+ * front of it, `cover`, dims the bloom more than the disc, as a thin cloud does.
+ */
 Item {
     id: sun
 
     property bool running: false
+    /** How much a cloud hides it, 0 to 1. */
+    property real cover: 0
 
     function radial(context, size, stops): void {
         const centre = size / 2;
@@ -19,14 +24,14 @@ Item {
         context.fillRect(0, 0, size, size);
     }
 
+    // The bloom: the light of the sun spread over the sky around it.
     Canvas {
-        id: halo
-
         anchors.centerIn: parent
-        width: sun.width * 2.4
+        width: sun.width * 3.4
         height: width
+        opacity: 1 - 0.8 * sun.cover
 
-        onPaint: sun.radial(getContext("2d"), width, [[0, "rgba(255, 244, 196, 0.6)"], [0.35, "rgba(255, 226, 140, 0.28)"], [1, "rgba(255, 226, 140, 0)"]])
+        onPaint: sun.radial(getContext("2d"), width, [[0, "rgba(255, 248, 220, 0.55)"], [0.12, "rgba(255, 240, 200, 0.38)"], [0.35, "rgba(255, 228, 170, 0.14)"], [1, "rgba(255, 228, 170, 0)"]])
         onWidthChanged: requestPaint()
 
         SequentialAnimation on scale {
@@ -34,67 +39,37 @@ Item {
             loops: Animation.Infinite
 
             NumberAnimation {
-                to: 1.1
-                duration: 2600
+                to: 1.06
+                duration: 3400
                 easing.type: Easing.InOutSine
             }
 
             NumberAnimation {
                 to: 1
-                duration: 2600
+                duration: 3400
                 easing.type: Easing.InOutSine
             }
         }
     }
 
+    // The corona, close around the disc.
     Canvas {
-        id: rays
-
-        readonly property int count: 12
-
         anchors.centerIn: parent
-        width: sun.width * 1.7
+        width: sun.width * 1.15
         height: width
+        opacity: 1 - 0.6 * sun.cover
 
-        onPaint: {
-            const context = getContext("2d");
-            const centre = width / 2;
-            const inner = sun.width * 0.36;
-
-            context.clearRect(0, 0, width, height);
-            context.fillStyle = "rgba(255, 236, 160, 0.5)";
-
-            for (let ray = 0; ray < count; ray++) {
-                const angle = ray * 2 * Math.PI / count;
-                const spread = Math.PI / count * 0.42;
-                // Every other ray is shorter.
-                const outer = centre * (ray % 2 === 0 ? 1 : 0.8);
-
-                context.beginPath();
-                context.moveTo(centre + Math.cos(angle - spread) * inner, centre + Math.sin(angle - spread) * inner);
-                context.lineTo(centre + Math.cos(angle) * outer, centre + Math.sin(angle) * outer);
-                context.lineTo(centre + Math.cos(angle + spread) * inner, centre + Math.sin(angle + spread) * inner);
-                context.closePath();
-                context.fill();
-            }
-        }
+        onPaint: sun.radial(getContext("2d"), width, [[0, "rgba(255, 252, 235, 0.9)"], [0.42, "rgba(255, 246, 210, 0.55)"], [1, "rgba(255, 236, 180, 0)"]])
         onWidthChanged: requestPaint()
-
-        RotationAnimation on rotation {
-            running: sun.running
-            from: 0
-            to: 360
-            duration: 90000
-            loops: Animation.Infinite
-        }
     }
 
     Canvas {
         anchors.centerIn: parent
-        width: sun.width * 0.62
+        width: sun.width * 0.5
         height: width
+        opacity: 1 - 0.35 * sun.cover
 
-        onPaint: sun.radial(getContext("2d"), width, [[0, "rgba(255, 253, 235, 1)"], [0.7, "rgba(255, 224, 120, 1)"], [0.92, "rgba(255, 205, 80, 0.95)"], [1, "rgba(255, 205, 80, 0)"]])
+        onPaint: sun.radial(getContext("2d"), width, [[0, "rgba(255, 255, 250, 1)"], [0.75, "rgba(255, 250, 225, 1)"], [0.9, "rgba(255, 238, 180, 0.9)"], [1, "rgba(255, 230, 160, 0)"]])
         onWidthChanged: requestPaint()
     }
 }

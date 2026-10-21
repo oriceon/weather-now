@@ -1,5 +1,5 @@
 import { hourCode, representativeCode } from './conditions.mjs';
-import { dateOf } from './dates.mjs';
+import { addMinutes, dateOf } from './dates.mjs';
 
 const FORECAST_ENDPOINT = 'https://api.open-meteo.com/v1/forecast';
 const GEOCODE_ENDPOINT = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -7,9 +7,10 @@ const GEOCODE_ENDPOINT = 'https://geocoding-api.open-meteo.com/v1/search';
 const FORECAST_DAYS = 16;
 /** Enough to fill a calendar week that began up to six days ago. */
 const PAST_DAYS = 6;
+/** The hours the Hours tab and everything about the coming hours goes by. */
 const FORECAST_HOURS = 48;
-/** Two hours of quarter hours. */
-const FORECAST_QUARTERS = 8;
+/** Two hours of quarter hours, and the one that has just ended, which is let go: see quartersFrom(). */
+const FORECAST_QUARTERS = 9;
 const GEOCODE_RESULTS = 8;
 
 /** Name used by the widget => name of the field in the Open-Meteo response. */
@@ -26,6 +27,8 @@ const CURRENT_FIELDS = {
     windSpeed: 'wind_speed_10m',
     windDirection: 'wind_direction_10m',
     windGusts: 'wind_gusts_10m',
+    visibility: 'visibility',
+    dewPoint: 'dew_point_2m',
 };
 
 const HOURLY_FIELDS = {
@@ -40,8 +43,10 @@ const HOURLY_FIELDS = {
     cloudCover: 'cloud_cover',
     windSpeed: 'wind_speed_10m',
     windDirection: 'wind_direction_10m',
+    windGusts: 'wind_gusts_10m',
     uvIndex: 'uv_index',
     sunshineDuration: 'sunshine_duration',
+    pressure: 'pressure_msl',
 };
 
 const MINUTELY_FIELDS = {
@@ -95,6 +100,18 @@ function mapped(fields, read) {
     return result;
 }
 
+/**
+ * The quarter hours of precipitation, each at the time it starts, from the one under way on.
+ * Open-Meteo gives the sum of a quarter at its end: "17:15" for what falls from 17:00 to 17:15.
+ */
+function quartersFrom(block, now) {
+    const start = String(now).slice(0, 16);
+
+    return rows(block, MINUTELY_FIELDS)
+        .map((quarter) => Object.assign({}, quarter, { time: addMinutes(quarter.time, -15) }))
+        .filter((quarter) => addMinutes(quarter.time, 15) > start);
+}
+
 /** The API sends one array per field; this turns a block of them into one object per moment. */
 function rows(block, fields) {
     if (!block || !Array.isArray(block.time)) {
@@ -103,6 +120,9 @@ function rows(block, fields) {
 
     return block.time.map((time, index) => mapped(fields, (field) => (block[field] || [])[index]));
 }
+
+/** Knots, however the settings write them: kn or kt only changes what is shown after the number. */
+const KNOTS = ['kn', 'kt'];
 
 export function forecastUrl({ latitude, longitude, temperatureUnit, windUnit }) {
     return `${FORECAST_ENDPOINT}?${queryString({
@@ -113,13 +133,31 @@ export function forecastUrl({ latitude, longitude, temperatureUnit, windUnit }) 
         minutely_15: requestable(MINUTELY_FIELDS),
         daily: requestable(DAILY_FIELDS),
         timezone: 'auto',
+        // The hours of every day, the past ones too, so that a day of the calendar opens on its hours.
         past_days: PAST_DAYS,
         forecast_days: FORECAST_DAYS,
-        forecast_hours: FORECAST_HOURS,
         forecast_minutely_15: FORECAST_QUARTERS,
         temperature_unit: temperatureUnit,
-        wind_speed_unit: windUnit,
+        wind_speed_unit: KNOTS.includes(windUnit) ? 'kn' : windUnit,
         // The amounts stay in mm, which the conditions and the sky count in; inches are only shown (format.mjs).
+        precipitation_unit: 'mm',
+    })}`;
+}
+
+/**
+ * The little the animated wallpaper needs, asked for every quarter of an hour: the conditions now
+ * and the days of today and tomorrow, with their sun; of the hours, only what tells sunshine from
+ * cloud. In °C and km/h, which the picture goes by.
+ */
+export function sceneUrl({ latitude, longitude }) {
+    return `${FORECAST_ENDPOINT}?${queryString({
+        latitude,
+        longitude,
+        current: requestable(CURRENT_FIELDS),
+        hourly: 'weather_code,is_day,cloud_cover,sunshine_duration',
+        daily: requestable(DAILY_FIELDS),
+        timezone: 'auto',
+        forecast_days: 2,
         precipitation_unit: 'mm',
     })}`;
 }
@@ -139,7 +177,7 @@ export function parseForecast(response) {
 
     const current = mapped(CURRENT_FIELDS, (field) => response.current[field]);
     const daily = rows(response.daily, DAILY_FIELDS);
-    const hourly = rows(response.hourly, HOURLY_FIELDS);
+    const allHours = rows(response.hourly, HOURLY_FIELDS);
     const today = daily.find((day) => day.date === dateOf(current.time));
 
     if (!today) {
@@ -150,10 +188,15 @@ export function parseForecast(response) {
         day.conditionCode = representativeCode(day);
     }
 
-    for (const hour of hourly) {
+    for (const hour of allHours) {
         hour.isDay = hour.isDay === 1;
         hour.conditionCode = hourCode(hour);
     }
+
+    // From the current hour on: "2026-10-21T14" for 14:15.
+    const thisHour = current.time.slice(0, 13);
+    const first = allHours.findIndex((hour) => hour.time.slice(0, 13) >= thisHour);
+    const hourly = allHours.slice(Math.max(0, first), Math.max(0, first) + FORECAST_HOURS);
 
     current.isDay = current.isDay === 1;
     current.conditionCode = hourCode({
@@ -171,27 +214,58 @@ export function parseForecast(response) {
         today,
         /** Past days first; `today` is one of the entries. */
         daily,
-        /** From the current hour on. */
+        /** 48 hours, from the current hour on. */
         hourly,
-        /** Quarter hours of precipitation, from the current one on. */
-        minutely: rows(response.minutely_15, MINUTELY_FIELDS),
+        /** Every hour of the days in `daily`, past ones included. */
+        allHours,
+        /** Quarter hours of precipitation, each at its start, from the one under way on. */
+        minutely: quartersFrom(response.minutely_15, current.time),
     };
 }
 
-export function geocodeUrl(name, language) {
-    return `${GEOCODE_ENDPOINT}?${queryString({ name, count: GEOCODE_RESULTS, language, format: 'json' })}`;
+/**
+ * Only the quarter hours of precipitation, asked for in between forecasts while the notification of
+ * rain is on: a small request, for a warning that comes in time.
+ */
+export function quartersUrl({ latitude, longitude }) {
+    return `${FORECAST_ENDPOINT}?${queryString({
+        latitude,
+        longitude,
+        current: 'precipitation',
+        minutely_15: requestable(MINUTELY_FIELDS),
+        timezone: 'auto',
+        forecast_minutely_15: FORECAST_QUARTERS,
+        precipitation_unit: 'mm',
+    })}`;
+}
+
+/** `{ now, minutely }`: the time at the place, and the quarter hours from the current one on. */
+export function parseQuarters(response) {
+    if (!response || !response.current || !response.minutely_15) {
+        throw new Error('Incomplete answer for the quarter hours');
+    }
+
+    return { now: response.current.time, minutely: quartersFrom(response.minutely_15, response.current.time) };
+}
+
+export function geocodeUrl(name, language, count = GEOCODE_RESULTS) {
+    return `${GEOCODE_ENDPOINT}?${queryString({ name, count, language, format: 'json' })}`;
 }
 
 export function parseGeocode(response) {
     const places = (response && response.results) || [];
 
+    // The names are GeoNames', which anyone may edit: markup in one broke the buttons that showed it.
+    const named = (text) => String(text || '').replace(/[<>]/g, '');
+
     return places.map((place) => ({
-        name: place.name,
-        label: [place.name, place.admin1, place.country].filter(Boolean).join(', '),
+        name: named(place.name),
+        label: [place.name, place.admin1, place.country].map(named).filter(Boolean).join(', '),
         latitude: place.latitude,
         longitude: place.longitude,
         /** First-level administrative area; in Romania, the county. */
-        region: place.admin1 || '',
+        region: named(place.admin1),
+        country: named(place.country),
         countryCode: place.country_code || '',
     }));
 }

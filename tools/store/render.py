@@ -9,6 +9,11 @@ and each is saved as OUT-0000.png…, with OUT-times.txt, for animate.py.
 import argparse
 from pathlib import Path
 
+import os
+
+# Without a screen, as in a container: the default platform aborts there, and the crash reached the desktop.
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+
 from PySide6.QtCore import QTimer, QUrl, Qt
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQuick import QQuickView

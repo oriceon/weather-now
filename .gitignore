@@ -5,3 +5,10 @@ tests/qml/out/
 __pycache__/
 # Built packages are attached to the GitHub releases instead.
 *.plasmoid
+weather-now-wallpaper-*.zip
+# What the wallpaper shares with the widget, copied by wallpaper/sync.sh.
+wallpaper/package/LICENSE
+wallpaper/package/contents/code/
+wallpaper/package/contents/icons/
+wallpaper/package/contents/ui/scene/
+wallpaper/package/contents/ui/PlaceSearch.qml

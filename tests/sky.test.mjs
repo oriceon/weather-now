@@ -52,3 +52,27 @@ test('twilight barely shows through a storm', () => {
 
     assert.ok(stormShift < clearShift / 2);
 });
+
+test('every sky has a middle colour between its top and its horizon', () => {
+    assert.match(skyGradient('clear', true).middle, HEX);
+    assert.match(skyGradient('storm', false).middle, HEX);
+});
+
+const blue = (hex) => parseInt(hex.slice(5, 7), 16);
+
+// Partly cloudy was the grey of an overcast sky: its clouds are painted on a blue one now.
+test('a partly cloudy sky stays blue, and an overcast one is grey', () => {
+    const partly = skyGradient('cloudy', true, 0, { weatherCode: 2 });
+    const overcast = skyGradient('cloudy', true, 0, { weatherCode: 3 });
+
+    assert.ok(blue(partly.top) - red(partly.top) > 120, partly.top);
+    assert.ok(blue(overcast.top) - red(overcast.top) < 40, overcast.top);
+});
+
+test('a clear sky deepens to a full blue as the sun climbs, and is warm at the horizon with the sun low', () => {
+    const low = skyGradient('clear', true, 0, { sunHeight: 0.1 });
+    const high = skyGradient('clear', true, 0, { sunHeight: 1 });
+
+    assert.ok(red(low.bottom) > red(high.bottom));
+    assert.ok(red(high.top) < red(low.top));
+});

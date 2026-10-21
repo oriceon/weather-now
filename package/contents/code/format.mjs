@@ -1,7 +1,9 @@
 const MISSING = '–';
 
-const DECIMAL_SEPARATOR = { ro: ',' };
+/** Where the decimal point is a comma; elsewhere it stays a point. */
+const DECIMAL_SEPARATOR = { ro: ',', de: ',', fr: ',', es: ',', it: ',', pl: ',' };
 const MM_PER_INCH = 25.4;
+const METRES_PER_MILE = 1609.344;
 
 function isMissing(value) {
     return value === null || value === undefined || Number.isNaN(value);
@@ -32,7 +34,7 @@ export function wind(value, unit, language) {
         return `${number(value, 1, language)} m/s`;
     }
 
-    return `${rounded(value)} ${unit === 'mph' ? 'mph' : 'km/h'}`;
+    return `${rounded(value)} ${{ mph: 'mph', kn: 'kn', kt: 'kt' }[unit] || 'km/h'}`;
 }
 
 export function percent(value) {
@@ -83,6 +85,35 @@ export function precipitation(value, unit, language) {
     }
 
     return isMissing(value) ? MISSING : `${precipitationNumber(value, unit, language)} in`;
+}
+
+/** A span of minutes as hours and minutes: "1 h 25 min", "11 h", "25 min". */
+export function duration(minutes) {
+    // Whole minutes first: 659.6 is 11 h, not 10 h 60 min.
+    const total = Math.round(minutes);
+    const hours = Math.floor(total / 60);
+    const rest = total - hours * 60;
+
+    if (hours === 0) {
+        return `${rest} min`;
+    }
+
+    return rest === 0 ? `${hours} h` : `${hours} h ${rest} min`;
+}
+
+/**
+ * How far one can see, which the forecast gives in metres: in km, or in miles beside inches of
+ * rain, to a tenth while it is short and whole beyond 10.
+ */
+export function distance(metres, unit, language) {
+    if (isMissing(metres)) {
+        return MISSING;
+    }
+
+    const length = unit === 'inch' ? metres / METRES_PER_MILE : metres / 1000;
+    const shown = length < 10 ? number(Math.round(length * 10) / 10, 1, language).replace(/[.,]0$/, '') : rounded(length);
+
+    return `${shown} ${unit === 'inch' ? 'mi' : 'km'}`;
 }
 
 export function pressure(value) {

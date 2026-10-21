@@ -1,15 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { rainSentence, rainSummary } from '../package/contents/code/rain.mjs';
+import { readFileSync } from 'node:fs';
+import { parseForecast } from '../package/contents/code/openmeteo.mjs';
+import { rainSentence, rainSummary, upcomingStart } from '../package/contents/code/rain.mjs';
 
 const NOW = '2026-10-13T17:00';
 const RAIN = 61;
 const SNOW = 73;
 const DRY = 3;
 
-/** One entry per hour starting at NOW (a Tuesday), the way parseForecast returns them. */
+/**
+ * The hours as parseForecast returns them, from the rain that falls in each hour from NOW (a
+ * Tuesday) on. Open-Meteo gives an hour's rain at its end, so the entries are one hour later: the
+ * entry of NOW holds the hour gone by, dry here, and the rain of 17:00 to 18:00 is in that of 18:00.
+ */
 function hours(amounts, wetCode = RAIN) {
-    return amounts.map((precipitation, index) => {
+    return [0, ...amounts].map((precipitation, index) => {
         const moment = new Date(Date.UTC(2026, 9, 13, 17 + index));
 
         return {
@@ -23,6 +29,15 @@ function hours(amounts, wetCode = RAIN) {
 function repeated(amount, count) {
     return new Array(count).fill(amount);
 }
+
+// In the recorded forecast the quarters show rain from 17:00, and the hour of 18:00 holds 1 mm.
+test('rainSummary starts the rain in the hour before the first wet entry', () => {
+    const { hourly } = parseForecast(JSON.parse(readFileSync(new URL('./fixtures/forecast-constanta.json', import.meta.url), 'utf8')));
+
+    assert.deepEqual(rainSummary(hourly), { kind: 'now', snow: false, start: '2026-10-13T17:00', end: '2026-10-13T20:00' });
+    // Rain in the hour gone by only, which the entry of the current hour holds, is over.
+    assert.equal(rainSummary([{ time: NOW, precipitation: 2, weatherCode: RAIN }, { time: '2026-10-13T18:00', precipitation: 0, weatherCode: DRY }]).kind, 'none');
+});
 
 test('rainSummary reports a dry period', () => {
     assert.deepEqual(rainSummary(hours([0, 0, 0, 0])), { kind: 'none', snow: false, start: null, end: null });
@@ -114,3 +129,15 @@ test('rainSentence speaks of snow when it snows', () => {
     assert.equal(rainSentence(rainSummary(hours([1, 0], SNOW)), NOW, 'ro'), 'Ninge acum, până în jurul orei 18:00');
     assert.equal(rainSentence(rainSummary(hours([1, 0], SNOW)), NOW, 'en'), 'Snowing now, until around 18:00');
 });
+
+test('the panel tells when the rain starts, within half a day', () => {
+    assert.equal(upcomingStart(rainSummary(hours([0, 0, 0.5, 1])), NOW), '19:00');
+    assert.equal(upcomingStart(rainSummary(hours([...repeated(0, 13), 1])), NOW), '');
+});
+
+// While it rains, the icon in the panel says so; with nothing coming, there is nothing to tell.
+test('the panel tells nothing while it rains or when no rain comes', () => {
+    assert.equal(upcomingStart(rainSummary(hours([1, 1, 0])), NOW), '');
+    assert.equal(upcomingStart(rainSummary(hours([0, 0, 0])), NOW), '');
+});
+

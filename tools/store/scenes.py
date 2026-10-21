@@ -5,7 +5,8 @@ changed together, so that the sky, the words and the numbers agree.
 
     scenes.py RECORDED.json OUT_FOLDER
 
-Writes storm.json, sunny.json, snow.json and night.json (partly cloudy, so that something moves).
+Writes storm.json, sunny.json, snow.json and night.json (partly cloudy, so that something moves), and
+tour.json, the recorded answer with what it lacks for the tiles of Details.
 """
 import copy
 import json
@@ -128,12 +129,20 @@ def night(recorded, hours_later=4):
     return answer
 
 
+def tour(recorded):
+    """The recorded answer, with the dew point and how far one sees, which it was recorded without."""
+    answer = copy.deepcopy(recorded)
+    answer["current"].update(dew_point_2m=8.9, visibility=24000)
+
+    return answer
+
+
 def main():
     recorded = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
     out = Path(sys.argv[2])
     out.mkdir(parents=True, exist_ok=True)
 
-    for name, make in {"storm": storm, "sunny": sunny, "snow": snow, "night": night}.items():
+    for name, make in {"storm": storm, "sunny": sunny, "snow": snow, "night": night, "tour": tour}.items():
         (out / f"{name}.json").write_text(json.dumps(make(recorded)), encoding="utf-8")
 
 

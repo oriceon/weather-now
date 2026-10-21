@@ -73,6 +73,12 @@ ColumnLayout {
             placeholderText: I18n.t(prompt.language, "config.searchPlaceholder")
 
             onAccepted: prompt.search()
+            // Emptied, the field lets go of the places it found.
+            onTextChanged: {
+                if (text.trim() === "") {
+                    prompt.lookup.clear();
+                }
+            }
         }
 
         PlasmaComponents.Button {

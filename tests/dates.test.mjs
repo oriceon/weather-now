@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { addDays, calendarWeeks, dateOf, dateRange, dayOfMonth, dayWord, fullDate, resolveFirstDay, timeLabel, weekStart, weekTitle, weekday, weekdayOrder } from '../package/contents/code/dates.mjs';
+import { addDays, addMinutes, calendarWeeks, clockText, dateOf, dateRange, dayOfMonth, dayWord, firstOfMonth, fullDate, localNow, resolveFirstDay, timeLabel, weekStart, weekTitle, weekday, weekdayOrder } from '../package/contents/code/dates.mjs';
 
 test('weekday returns the Date#getDay index of an ISO date', () => {
     assert.equal(weekday('2026-10-13'), 2);
@@ -35,6 +35,9 @@ test('fullDate writes the date the way each language does', () => {
     assert.equal(fullDate('2026-10-13', 'ro'), 'marți, 13 octombrie');
     assert.equal(fullDate('2026-10-13', 'en'), 'Tuesday, 13 October');
     assert.equal(fullDate('2026-01-05T09:00', 'ro'), 'luni, 5 ianuarie');
+    assert.equal(fullDate('2026-10-13', 'de'), 'Dienstag, 13. Oktober');
+    assert.equal(fullDate('2026-10-13', 'es'), 'martes, 13 de octubre');
+    assert.equal(fullDate('2026-10-13', 'pl'), 'wtorek, 13 października');
 });
 
 const MONDAY = 1;
@@ -145,6 +148,7 @@ test('dayWord says today and tomorrow in words and names the other days', () => 
 test('dateRange names the month once when both ends are in it', () => {
     assert.equal(dateRange('2026-10-12', '2026-10-18', 'ro'), '12–18 octombrie');
     assert.equal(dateRange('2026-10-12', '2026-10-18', 'en'), '12–18 October');
+    assert.equal(dateRange('2026-10-12', '2026-10-18', 'de'), '12.–18. Oktober');
 });
 
 test('dateRange names both months when it crosses from one into the next', () => {
@@ -160,4 +164,30 @@ test('weekTitle says which week a row of the calendar is', () => {
     assert.equal(weekTitle(weeks[2], 2, 'ro'), '26 octombrie – 1 noiembrie');
     assert.equal(weekTitle(weeks[0], 0, 'en'), 'This week · 12–18 October');
     assert.equal(weekTitle(weeks[1], 1, 'en'), 'Next week · 19–25 October');
+});
+
+test('firstOfMonth writes the first day of a month as each language does', () => {
+    assert.equal(firstOfMonth('2026-11-01', 'ro'), '1 nov.');
+    assert.equal(firstOfMonth('2026-11-01', 'fr'), '1er nov.');
+    assert.equal(firstOfMonth('2026-11-01', 'de'), '1. Nov.');
+});
+
+test('localNow is the clock of the place, from the offset of the forecast', () => {
+    assert.equal(localNow(10800, Date.UTC(2026, 9, 21, 21, 5)), '2026-10-22T00:05');
+    assert.equal(localNow(-14400, Date.UTC(2026, 9, 21, 2, 30)), '2026-10-20T22:30');
+});
+
+test('addMinutes moves a time of the day, across midnight and back', () => {
+    assert.equal(addMinutes('2026-10-13T17:15', -15), '2026-10-13T17:00');
+    assert.equal(addMinutes('2026-10-13T23:30', 60), '2026-10-14T00:30');
+    assert.equal(addMinutes('2026-10-14T00:00', -60), '2026-10-13T23:00');
+});
+
+test('the clock tells the time of the place, to the second, in 24 or 12 hours', () => {
+    const now = Date.UTC(2026, 9, 21, 13, 45, 9);
+
+    assert.equal(clockText(10800, false, ['AM', 'PM'], now), '16:45:09');
+    assert.equal(clockText(10800, true, ['AM', 'PM'], now), '4:45:09 PM');
+    assert.equal(clockText(-13 * 3600, true, ['a.m.', 'p.m.'], now), '12:45:09 a.m.');
+    assert.equal(clockText(-13 * 3600 - 2700, false, ['AM', 'PM'], now), '00:00:09');
 });

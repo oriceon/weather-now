@@ -13,11 +13,15 @@ trap 'rm -rf "$WORK"' EXIT
 
 : "${PY:?the python of the viewer}"
 
+"$PY" "$HERE/scenes.py" "$ROOT/tests/fixtures/forecast-constanta.json" "$WORK/scenes"
+
 cd "$ROOT/tests/qml"
 mkdir -p "$ROOT/store"
 for shot in 0:1-today 1:2-hours 2:3-rain 3:4-days 4:5-details; do
     tab="${shot%%:*}" name="${shot#*:}"
-    "$PY" viewer.py stage "$WORK/$name.png" --tab "$tab" --alerts --lang en --size 1040x520 > /dev/null
+    extra=()
+    [ "$tab" = 4 ] && extra=(--air --pollen --aurora horizon)
+    "$PY" viewer.py stage "$WORK/$name.png" --forecast "$WORK/scenes/tour.json" --tab "$tab" --alerts --landscape poppies --lang en --size 1040x520 "${extra[@]}" > /dev/null
     # The viewer leaves 10 px of desktop around the widget and the Plasma frame has 6 px corners.
     "$PY" "$HERE/finish.py" "$WORK/$name.png" "$ROOT/store/weather-now-$name.png" 10 6
 done

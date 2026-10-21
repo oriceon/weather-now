@@ -11,7 +11,7 @@ ConfigPage {
     readonly property string language: I18n.resolveLanguage(Plasmoid.configuration.language, Qt.locale().uiLanguages)
 
     readonly property var temperatureValues: ["celsius", "fahrenheit"]
-    readonly property var windValues: ["kmh", "ms", "mph"]
+    readonly property var windValues: ["kmh", "ms", "mph", "kn", "kt"]
     readonly property var precipitationValues: ["mm", "inch"]
     readonly property var refreshValues: [15, 30, 60]
 
@@ -26,7 +26,8 @@ ConfigPage {
 
         QQC2.ComboBox {
             Kirigami.FormData.label: I18n.t(page.language, "config.wind")
-            model: ["km/h", "m/s", "mph"]
+            // Knots two ways: kn as sailors and the SI write them, kt as weather reports for pilots.
+            model: ["km/h", "m/s", "mph", "kn", "kt"]
             currentIndex: page.windValues.indexOf(page.cfg_windUnit)
 
             onActivated: index => page.cfg_windUnit = page.windValues[index]

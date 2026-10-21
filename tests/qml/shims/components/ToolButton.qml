@@ -6,6 +6,15 @@ Basic.ToolButton {
     id: button
 
     readonly property bool iconOnly: display === Basic.AbstractButton.IconOnly
+    /** A glyph in place of the icons of the theme, which the viewer does not have, for the icons the widget uses. */
+    readonly property string glyph: ({
+        "zoom-in": "+",
+        "zoom-out": "−",
+        "media-playback-pause": "‖",
+        "media-playback-start": "▶",
+        "list-add": "+",
+        "edit-delete-remove": "✕",
+    })[icon.name] || "⟳"
 
     implicitWidth: iconOnly ? 28 : label.implicitWidth + 16
     implicitHeight: 28
@@ -15,10 +24,10 @@ Basic.ToolButton {
 
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        color: Kirigami.Theme.textColor
+        color: button.icon.color.a > 0 ? button.icon.color : Kirigami.Theme.textColor
         opacity: button.enabled ? 1 : 0.4
         font: button.font
-        text: button.iconOnly ? "⟳" : button.text
+        text: button.iconOnly ? button.glyph : button.text
     }
 
     background: Rectangle {

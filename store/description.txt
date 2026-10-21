@@ -1,27 +1,42 @@
-Weather Now is a weather widget for Plasma 6 with an animated sky that follows the current weather: rain, snow, fog, thunder, drifting clouds, the sun and the moon.
+Weather Now is a weather widget for Plasma 6 with an animated sky that follows the current weather and the hour: a blue that deepens as the sun climbs and warms at sunset, clouds with volume in layers of depth, a sun that dims as a cloud passes, rain, snow, fog, thunder, and hundreds of stars at night. Under it, a landscape of your choice, as tall as you like: hills with fields and woods in the colours of the season, a city, the sea, a plain of poppies, a mountain lake or a village. Around them, what the weather brings besides: a rainbow after showers, the Milky Way and shooting stars on a clear night, the aurora when it can be seen from your place, wind you can see, frost on the glass, heat haze, and snow that settles.
 
 Tabs
-- Today: the weather now, under the animated sky, with the warnings in force
-- Hours: the coming hours
-- Rain: when and how hard it will rain, over 48 hours or the next 2 hours
-- Days: 16 days ahead, grouped by week, starting with the first day of the week you choose
-- Details: wind and gusts, humidity, pressure, cloud cover, UV, sunrise and sunset, moon phase
+- Today: the temperature large over the animated sky, and on request the clock of the place, to the second; the warnings, what stands out in the hours ahead, the rain of the next two hours, and the next six hours on frosted glass
+- Hours: the coming hours, along a curve in the colours of the temperature, with sunrise and sunset to the minute; an hour under the mouse tells how it feels, the wind and the humidity
+- Rain: when and how hard it will rain, over 48 hours or the next 2 hours, or the radar of the last two hours around your place
+- Days: 16 days ahead, grouped by week, starting with the first day of the week you choose, each with a bar from its low to its high; a click on a day opens its hours
+- Details: wind (with Beaufort), pressure, UV (with when to protect your skin), air quality, dew point, the Kp index and the aurora, how far you see, the sun and the moon (with moonrise and moonset), the pollen of the next days, a forecast for running, cycling, hiking, gardening or stargazing, humidity and cloud cover. Drag the tiles into your order, close the ones you do not need, and the others grow to fill the room
+
+Everything lights up under the mouse, and the instruments play again.
 
 Also
-- English or Romanian interface; follows the language of Plasma by default
-- First day of the week, units (°C or °F; km/h, m/s or mph; mm or inches), font, text size, background (black, the Plasma theme's or transparent, as much as you like), icons, animation level and visible tabs are configurable
-- Asks for your place on first start; search any place in the world
-- Official weather warnings through MeteoAlarm, with the full warning text, the service that issued it and the time of issue; for now only for Romania
+- In English, German, Spanish, French, Italian, Polish or Romanian; follows the language of Plasma by default
+- Inter as its font, included, or any other one; first day of the week, units (°C or °F; km/h, m/s, mph or knots as kn or kt; mm or inches), font, text size, background (black, the Plasma theme's or transparent, as much as you like), icons, animation level and visible tabs are configurable
+- Asks for your place on first start; search any place in the world, as you would write it
+- Official weather warnings with the full text, the service that issued them and the time of issue: in Romania through MeteoAlarm, elsewhere through KDE's public alert server (alerts.kde.org)
+- Desktop notifications, each to turn on: a new warning, rain or snow about to start, frost tonight
+- Several places, to switch between from the title or with the mouse wheel
+- Small on the desktop, it shows less: the temperature and a line, a band of the next hours, or today and three days
+- A summary of the day in the morning, as a notification
+- In a panel: the weather, the temperature and, when rain is coming within 12 hours, when it starts; its tooltip shows the next hours and days
+- Keyboard and screen readers: Ctrl+Tab between the tabs, Enter on a day, Ctrl and the arrows to move a tile
+- Stands still when the Plasma animation speed is set to "Instant"
+- An animated wallpaper with the same sky and landscapes, in a package of its own (see the source code)
 
 Privacy
-The widget asks Open-Meteo for the forecast of your place and, for Romania, MeteoAlarm for the warnings. The place search sends what you type to the Open-Meteo geocoding service. No key or account is needed, and nothing is sent anywhere else.
+The widget asks Open-Meteo for the forecast of your place and for its air quality, the latter rounded to about a kilometre, and for the warnings MeteoAlarm in Romania or KDE's public alert server elsewhere, about an area of some 10 km around it. The place search sends what you type to the Open-Meteo geocoding service. The Kp index comes from NOAA, the same file for everyone. Only once you open the radar, its images come from RainViewer and its map from NASA GIBS. No key or account is needed, and nothing is sent anywhere else. It asks as little as it can: answers are kept for a few minutes, a place passed over with the wheel is not asked for, and after a failure it waits longer each time.
 
-Tested on Plasma 6.7.
+Requires Plasma 6.1 or later; tested on Plasma 6.7.
 Source code and issues: https://github.com/oriceon/weather-now
 
 Forecast: Open-Meteo (open-meteo.com), CC BY 4.0.
 Icons: Meteocons by Bas Milius (MIT).
-Warnings: Administrația Națională de Meteorologie (ANM), via EUMETNET – MeteoAlarm (www.meteoalarm.org), CC BY 4.0.
+Font: Inter, included (SIL Open Font License 1.1).
+Places: GeoNames (www.geonames.org), CC BY 4.0, through the Open-Meteo geocoding API.
+Warnings: Administrația Națională de Meteorologie (ANM), via EUMETNET – MeteoAlarm (www.meteoalarm.org), CC BY 4.0; elsewhere the official service named with each warning, via KDE's FOSS Public Alert Server (alerts.kde.org).
+Air quality and pollen: CAMS European air quality forecasts (Copernicus Atmosphere Monitoring Service), via Open-Meteo.
+Kp index: NOAA Space Weather Prediction Center (www.swpc.noaa.gov), public domain.
+Radar: RainViewer (www.rainviewer.com). Map: NASA Global Imagery Browse Services (GIBS), part of NASA's ESDIS, with borders and names from OpenStreetMap contributors.
 Licence: GPL-2.0-or-later.
 
 Time delays between this website and the www.meteoalarm.org website are possible. For the most up-to-date awareness information as published by the participating National Meteorological and Hydrological Services, please refer to www.meteoalarm.org.

@@ -95,6 +95,7 @@ class PlasmoidItem(QQuickItem):
     switchHeightChanged = Signal()
     toolTipMainTextChanged = Signal()
     toolTipSubTextChanged = Signal()
+    toolTipItemChanged = Signal()
     expandedChanged = Signal()
 
     def __init__(self, parent=None):
@@ -106,6 +107,7 @@ class PlasmoidItem(QQuickItem):
         self._switchHeight = 0.0
         self._toolTipMainText = ""
         self._toolTipSubText = ""
+        self._toolTipItem = None
         self._expanded = False
 
     compactRepresentation = Property(QQmlComponent, *accessors("compactRepresentation", "compactRepresentationChanged"), notify=compactRepresentationChanged)
@@ -115,4 +117,27 @@ class PlasmoidItem(QQuickItem):
     switchHeight = Property(float, *accessors("switchHeight", "switchHeightChanged"), notify=switchHeightChanged)
     toolTipMainText = Property(str, *accessors("toolTipMainText", "toolTipMainTextChanged"), notify=toolTipMainTextChanged)
     toolTipSubText = Property(str, *accessors("toolTipSubText", "toolTipSubTextChanged"), notify=toolTipSubTextChanged)
+    toolTipItem = Property(QQuickItem, *accessors("toolTipItem", "toolTipItemChanged"), notify=toolTipItemChanged)
     expanded = Property(bool, *accessors("expanded", "expandedChanged"), notify=expandedChanged)
+
+
+_wallpaper_configuration = None
+
+
+def wallpaper_configuration():
+    """The settings of the wallpaper, shared like those of the applet; created on first use."""
+    global _wallpaper_configuration
+
+    if _wallpaper_configuration is None:
+        _wallpaper_configuration = QQmlPropertyMap()
+
+    return _wallpaper_configuration
+
+
+@QmlElement
+class WallpaperItem(QQuickItem):
+    """The root of a wallpaper, with its settings in `configuration`."""
+
+    @Property(QObject, constant=True)
+    def configuration(self):
+        return wallpaper_configuration()

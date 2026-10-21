@@ -49,17 +49,17 @@ PALETTES = {
     "dark": {
         "textColor": "#fcfcfc", "disabledTextColor": "#a1a9b1", "backgroundColor": "#2a2738", "alternateBackgroundColor": "#322f43",
         "highlightColor": "#c217c9", "highlightedTextColor": "#ffffff", "linkColor": "#5cb7f0",
-        "positiveTextColor": "#27ae60", "neutralTextColor": "#f67400", "negativeTextColor": "#da4453",
+        "positiveTextColor": "#27ae60", "neutralTextColor": "#f67400", "negativeTextColor": "#da4453", "focusColor": "#3daee9",
     },
     "light": {
         "textColor": "#232629", "disabledTextColor": "#707d8a", "backgroundColor": "#eff0f1", "alternateBackgroundColor": "#e3e5e7",
         "highlightColor": "#3daee9", "highlightedTextColor": "#ffffff", "linkColor": "#2980b9",
-        "positiveTextColor": "#27ae60", "neutralTextColor": "#f67400", "negativeTextColor": "#da4453",
+        "positiveTextColor": "#27ae60", "neutralTextColor": "#f67400", "negativeTextColor": "#da4453", "focusColor": "#3daee9",
     },
     "complementary": {
         "textColor": "#fcfcfc", "disabledTextColor": "#a1a9b1", "backgroundColor": "#2a2e32", "alternateBackgroundColor": "#1b1e20",
         "highlightColor": "#3daee9", "highlightedTextColor": "#fcfcfc", "linkColor": "#1d99f3",
-        "positiveTextColor": "#27ae60", "neutralTextColor": "#f67400", "negativeTextColor": "#da4453",
+        "positiveTextColor": "#27ae60", "neutralTextColor": "#f67400", "negativeTextColor": "#da4453", "focusColor": "#3daee9",
     },
 }
 
@@ -173,6 +173,7 @@ class ThemeAttached(QObject):
     positiveTextColor = colour_property("positiveTextColor", changed)
     neutralTextColor = colour_property("neutralTextColor", changed)
     negativeTextColor = colour_property("negativeTextColor", changed)
+    focusColor = colour_property("focusColor", changed)
 
     defaultFont = Property(QFont, lambda self: QFont(QFont().family(), 10), constant=True)
     smallFont = Property(QFont, lambda self: QFont(QFont().family(), 8), constant=True)

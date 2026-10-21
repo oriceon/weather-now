@@ -1,5 +1,10 @@
 """Crops the desktop stand-in off a viewer screenshot and makes the corners outside the widget transparent."""
+import os
 import sys
+
+# Without a screen, as in a container: the default platform aborts there, and the crash reached the desktop.
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+
 from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QGuiApplication, QImage, QPainter, QPainterPath
 

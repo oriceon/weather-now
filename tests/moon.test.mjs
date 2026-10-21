@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { STRINGS } from '../package/contents/code/i18n.mjs';
-import { PHASE_KEYS, moonPhase } from '../package/contents/code/moon.mjs';
+import { PHASE_KEYS, moonPhase, moonTimes, moonWay } from '../package/contents/code/moon.mjs';
 
 test('moonPhase names the phase on the dates of known new, quarter and full moons', () => {
     const cases = [
@@ -45,4 +45,30 @@ test('every phase has a name in every language', () => {
             assert.ok(STRINGS[language][key], `${key} in ${language}`);
         }
     }
+});
+
+// Checked against astral 3.2 for Bucharest: within a few minutes, which is all the widget tells.
+test('moonTimes gives when the moon rises and sets, as the clock of the place', () => {
+    const near = (actual, expected) => Math.abs(Number(actual.slice(0, 2)) * 60 + Number(actual.slice(3)) - Number(expected.slice(0, 2)) * 60 - Number(expected.slice(3))) <= 5;
+    const bucharest = [44.4268, 26.1025, 10800];
+
+    const day = moonTimes('2026-10-23', ...bucharest);
+    assert.ok(near(day.rise, '16:49'), day.rise);
+    assert.ok(near(day.set, '04:18'), day.set);
+
+    const later = moonTimes('2026-10-26', ...bucharest);
+    assert.ok(near(later.rise, '17:58'), later.rise);
+    assert.ok(near(later.set, '08:03'), later.set);
+});
+
+test('a day the moon does not set gives no time for it', () => {
+    assert.equal(moonTimes('2026-10-19', 44.4268, 26.1025, 10800).set, '');
+});
+
+test('moonWay says whether the moon is up, and how far along its way', () => {
+    const evening = moonWay('2026-10-21T20:00', 44.4268, 26.1025, 10800);
+
+    assert.equal(evening.up, true);
+    assert.ok(evening.progress > 0.2 && evening.progress < 0.5);
+    assert.deepEqual(moonWay('2026-10-21T10:00', 44.4268, 26.1025, 10800), { up: false, progress: 0 });
 });

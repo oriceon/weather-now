@@ -1,4 +1,4 @@
-import { dayLong, monthLong, t } from './i18n.mjs';
+import { dayLong, monthLong, monthShort, t } from './i18n.mjs';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MONDAY = 1;
@@ -46,6 +46,11 @@ export function weekday(iso) {
 
 export function addDays(iso, count) {
     return new Date(toUtc(iso) + count * DAY_MS).toISOString().slice(0, 10);
+}
+
+/** "2026-10-13T17:00" moved by `count` minutes, in the same form. */
+export function addMinutes(iso, count) {
+    return new Date(Date.parse(`${String(iso).slice(0, 16)}:00Z`) + count * 60000).toISOString().slice(0, 16);
 }
 
 export function weekStart(iso, firstDayOfWeek) {
@@ -111,10 +116,16 @@ export function dayWord(iso, nowIso, language) {
     return date === addDays(today, 1) ? t(language, 'day.tomorrow') : dayLong(language, weekday(date));
 }
 
+/** "marți, 21 octombrie", as each language writes it. */
 export function fullDate(iso, language) {
     const { month, day } = parts(iso);
 
-    return `${dayLong(language, weekday(iso))}, ${day} ${monthLong(language, month)}`;
+    return t(language, 'date.full', { weekday: dayLong(language, weekday(iso)), day, month: monthLong(language, month) });
+}
+
+/** "1 nov.", "1er nov." in French: the first day of the month of `iso`, with the short name of the month. */
+export function firstOfMonth(iso, language) {
+    return t(language, 'date.firstOfMonth', { month: monthShort(language, parts(iso).month) });
 }
 
 /** "12–18 octombrie", or "26 octombrie – 1 noiembrie" when the days are in two months. */
@@ -123,10 +134,10 @@ export function dateRange(firstIso, lastIso, language) {
     const last = parts(lastIso);
 
     if (first.month === last.month) {
-        return `${first.day}–${last.day} ${monthLong(language, last.month)}`;
+        return t(language, 'date.rangeOneMonth', { first: first.day, last: last.day, month: monthLong(language, last.month) });
     }
 
-    return `${first.day} ${monthLong(language, first.month)} – ${last.day} ${monthLong(language, last.month)}`;
+    return t(language, 'date.range', { first: first.day, firstMonth: monthLong(language, first.month), last: last.day, lastMonth: monthLong(language, last.month) });
 }
 
 /** The heading of a week of calendarWeeks(), `index` being its place among them: the week of today is 0. */
@@ -135,4 +146,25 @@ export function weekTitle(week, index, language) {
     const names = ['week.this', 'week.next'];
 
     return index < names.length ? `${t(language, names[index])} · ${range}` : range;
+}
+
+/**
+ * The clock of the place, "16:45:09", or "4:45:09 PM" where the regional settings keep twelve hours,
+ * `dayHalves` naming the two halves of the day, from the clock of the computer and the offset of the place.
+ */
+export function clockText(utcOffsetSeconds, twelveHour, dayHalves = ['AM', 'PM'], now = Date.now()) {
+    const time = new Date(now + utcOffsetSeconds * 1000).toISOString().slice(11, 19);
+
+    if (!twelveHour) {
+        return time;
+    }
+
+    const hours = Number(time.slice(0, 2));
+
+    return `${hours % 12 || 12}${time.slice(2)} ${dayHalves[hours < 12 ? 0 : 1]}`;
+}
+
+/** The wall-clock time at the place now, "2026-10-21T18:05", from the clock of the computer and the offset of the place. */
+export function localNow(utcOffsetSeconds, now = Date.now()) {
+    return new Date(now + utcOffsetSeconds * 1000).toISOString().slice(0, 16);
 }

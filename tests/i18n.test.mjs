@@ -14,19 +14,21 @@ test('auto follows the language of the interface, not the regional formats', () 
     assert.equal(resolveLanguage('auto', ['ro_RO']), 'ro');
 });
 
-test('auto takes the first language of the interface the widget speaks', () => {
-    assert.equal(resolveLanguage('auto', ['de-DE', 'de', 'ro-RO']), 'ro');
+test('auto takes the first language of the interface the widget has', () => {
+    assert.equal(resolveLanguage('auto', ['sv-SE', 'sv', 'ro-RO']), 'ro');
+    assert.equal(resolveLanguage('auto', ['de-DE', 'de', 'ro-RO']), 'de');
+    assert.equal(resolveLanguage('auto', ['pl_PL']), 'pl');
 });
 
-test('auto falls back to English when the interface speaks nothing the widget does', () => {
-    assert.equal(resolveLanguage('auto', ['de-DE', 'fr']), 'en');
+test('auto falls back to English when the interface is in a language the widget does not have', () => {
+    assert.equal(resolveLanguage('auto', ['sv-SE', 'fi']), 'en');
     assert.equal(resolveLanguage('auto', []), 'en');
     assert.equal(resolveLanguage('auto', undefined), 'en');
 });
 
 test('an unsupported setting behaves like auto', () => {
     assert.equal(resolveLanguage('', ['ro-RO']), 'ro');
-    assert.equal(resolveLanguage('de', ['en-US']), 'en');
+    assert.equal(resolveLanguage('sv', ['en-US']), 'en');
 });
 
 test('no text names a national weather service: the name depends on the country', () => {
@@ -57,11 +59,42 @@ test('t returns the key itself when the key does not exist', () => {
 });
 
 test('t falls back to English for an unsupported language', () => {
-    assert.equal(t('de', 'tab.today'), 'Today');
+    assert.equal(t('sv', 'tab.today'), 'Today');
 });
 
-test('both languages define exactly the same keys', () => {
-    assert.deepEqual(Object.keys(STRINGS.ro).sort(), Object.keys(STRINGS.en).sort());
+test('every language defines exactly the keys of English', () => {
+    assert.deepEqual(Object.keys(STRINGS).sort(), ['de', 'en', 'es', 'fr', 'it', 'pl', 'ro']);
+
+    for (const language of Object.keys(STRINGS)) {
+        assert.deepEqual(Object.keys(STRINGS[language]).sort(), Object.keys(STRINGS.en).sort(), language);
+    }
+});
+
+test('every text keeps the placeholders of the English one', () => {
+    const placeholders = (text) => (text.match(/\{\w+\}/g) || []).sort();
+
+    for (const language of Object.keys(STRINGS)) {
+        for (const [key, text] of Object.entries(STRINGS[language])) {
+            // The disclaimer of MeteoAlarm is empty in English: its original wording is used.
+            if (key !== 'alert.disclaimer') {
+                assert.deepEqual(placeholders(text), placeholders(STRINGS.en[key]), `${language}.${key}`);
+            }
+        }
+    }
+});
+
+test('every language has its names of days, months and directions', () => {
+    for (const language of Object.keys(STRINGS)) {
+        for (let day = 0; day < 7; day++) {
+            assert.ok(dayShort(language, day) && dayLong(language, day), `${language} day ${day}`);
+        }
+
+        for (let month = 1; month <= 12; month++) {
+            assert.ok(monthLong(language, month) && monthShort(language, month), `${language} month ${month}`);
+        }
+
+        assert.equal(compass(0, language), 'N', language);
+    }
 });
 
 test('weekday names are indexed like Date#getDay, Sunday first', () => {

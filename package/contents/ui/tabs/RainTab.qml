@@ -11,24 +11,38 @@ import "../../code/i18n.mjs" as I18n
 import "../../code/rain.mjs" as Rain
 import "../components" as Components
 
-/** When it rains and how much: a sentence, a chart of the amounts and the totals of the coming days. */
+/**
+ * When it rains and how much: a sentence, a chart of the amounts and the totals of the coming days;
+ * or the radar, with the rain of the last two hours around the place.
+ */
 Item {
     id: tab
 
     /** The parsed forecast, see parseForecast() in code/openmeteo.mjs. */
     required property var forecast
+    /** The quarter hours of precipitation, fresher than those of the forecast while the notification of rain is on. */
+    required property var minutely
     required property string language
     /** mm | inch */
     required property string precipitationUnit
     required property var typography
+    /** The place, for the radar. */
+    required property real latitude
+    required property real longitude
 
-    /** False: the next 48 hours, hour by hour. True: the next 2 hours, in quarters of an hour. */
-    property bool quarters: false
+    /** hours: the next 48 hours, hour by hour; quarters: the next 2 hours, in quarters of an hour; radar. */
+    property string view: "hours"
 
-    /** What the chart shows: `{ time, amount, chance }`; a quarter of an hour has no chance, -1. */
+    readonly property bool quarters: view === "quarters"
+
+    /**
+     * What the chart shows: `{ time, amount, chance }`, each bar at the time it starts; a quarter of an
+     * hour has no chance, -1. An hour of Open-Meteo holds what falls in the hour before it, and the
+     * first, the current hour, the hour gone by: the chart starts with the hour under way.
+     */
     readonly property var points: quarters
-        ? forecast.minutely.map(quarter => ({ time: quarter.time, amount: quarter.precipitation, chance: -1 }))
-        : forecast.hourly.map(hour => ({ time: hour.time, amount: hour.precipitation, chance: hour.precipitationProbability }))
+        ? minutely.map(quarter => ({ time: quarter.time, amount: quarter.precipitation, chance: -1 }))
+        : forecast.hourly.slice(1).map(hour => ({ time: Dates.addMinutes(hour.time, -60), amount: hour.precipitation, chance: hour.precipitationProbability }))
     readonly property real peak: Math.max(0, ...points.map(point => point.amount))
     /** The top of the scale, in mm. It has a floor, so that a drizzle does not fill the chart. */
     readonly property real scaleTop: Math.max(peak, quarters ? 0.5 : 2)
@@ -69,25 +83,49 @@ Item {
             PlasmaComponents.ToolButton {
                 autoExclusive: true
                 checkable: true
-                checked: !tab.quarters
+                checked: tab.view === "hours"
                 font.family: tab.typography.family
                 font.pointSize: tab.typography.size
                 text: I18n.t(tab.language, "rain.next48")
 
-                onClicked: tab.quarters = false
+                onClicked: tab.view = "hours"
             }
 
             PlasmaComponents.ToolButton {
                 autoExclusive: true
                 checkable: true
                 checked: tab.quarters
-                visible: tab.forecast.minutely.length > 0
+                visible: tab.minutely.length > 0
                 font.family: tab.typography.family
                 font.pointSize: tab.typography.size
                 text: I18n.t(tab.language, "rain.next2")
 
-                onClicked: tab.quarters = true
+                onClicked: tab.view = "quarters"
             }
+
+            PlasmaComponents.ToolButton {
+                autoExclusive: true
+                checkable: true
+                checked: tab.view === "radar"
+                font.family: tab.typography.family
+                font.pointSize: tab.typography.size
+                text: I18n.t(tab.language, "rain.radar")
+
+                onClicked: tab.view = "radar"
+            }
+        }
+
+        Components.RadarMap {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            visible: tab.view === "radar"
+            // Nothing is asked of the radar until it is opened, and nothing while it is not on screen.
+            active: visible && tab.Window.window !== null && tab.Window.window.visible
+            latitude: tab.latitude
+            longitude: tab.longitude
+            utcOffsetSeconds: tab.forecast.utcOffsetSeconds
+            language: tab.language
+            typography: tab.typography
         }
 
         Item {
@@ -100,11 +138,19 @@ Item {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
+            visible: tab.view !== "radar"
+
+            /** The point under the mouse, -1 for none. */
+            readonly property int hovered: chartHover.hovered && step > 0 ? Math.min(tab.points.length - 1, Math.floor(chartHover.point.position.x / step)) : -1
+
+            HoverHandler {
+                id: chartHover
+            }
 
             Components.Label {
                 typography: tab.typography
                 relativeSize: 0.9
-                opacity: 0.75
+                opacity: chart.hovered >= 0 ? 0 : 0.75
                 visible: tab.peak > 0
                 text: I18n.t(tab.language, tab.quarters ? "rain.peakQuarter" : "rain.peak", { amount: Format.precipitation(tab.peak, tab.precipitationUnit, tab.language) })
             }
@@ -145,6 +191,21 @@ Item {
                     width: chart.step
                     height: chart.height
 
+                    // The hour or the quarter under the mouse lights up.
+                    Rectangle {
+                        y: chart.plotTop
+                        width: parent.width
+                        height: chart.plotHeight
+                        radius: Math.min(2, width / 2)
+                        color: Qt.alpha(Kirigami.Theme.textColor, point.index === chart.hovered ? 0.1 : 0)
+
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: Kirigami.Units.shortDuration
+                            }
+                        }
+                    }
+
                     // Midnight: the next day begins.
                     Rectangle {
                         y: chart.plotTop
@@ -173,7 +234,7 @@ Item {
                         height: point.modelData.amount > 0 ? Math.max(2, point.modelData.amount / tab.scaleTop * chart.plotHeight) : 0
                         y: chart.plotBottom - height
                         radius: Math.min(2, width / 2)
-                        color: Kirigami.Theme.linkColor
+                        color: point.index === chart.hovered ? Qt.lighter(Kirigami.Theme.linkColor, 1.35) : Kirigami.Theme.linkColor
                     }
 
                     Components.Label {
@@ -193,6 +254,21 @@ Item {
                 width: parent.width
                 height: 1
                 color: Qt.alpha(Kirigami.Theme.textColor, 0.35)
+            }
+
+            // What the point under the mouse holds, in place of the peak: its time, its amount and its chance.
+            Components.Label {
+                readonly property var point: chart.hovered >= 0 ? tab.points[chart.hovered] : null
+
+                typography: tab.typography
+                relativeSize: 0.9
+                visible: point !== null
+                font.weight: Font.DemiBold
+                text: point === null ? "" : [
+                    `${I18n.dayShort(tab.language, Dates.weekday(point.time))} ${Dates.timeLabel(point.time)}`,
+                    Format.precipitation(point.amount, tab.precipitationUnit, tab.language),
+                    point.chance >= 0 ? `${Format.percent(point.chance)} ${I18n.t(tab.language, "rain.probability")}` : "",
+                ].filter(part => part !== "").join(" · ")
             }
 
             // The chance of precipitation, from 0 % on the baseline to 100 % at the top of the chart.
@@ -247,6 +323,7 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             elide: Text.ElideRight
             opacity: 0.85
+            visible: tab.view !== "radar"
             text: tab.comingDays
                 .map(day => `${I18n.dayShort(tab.language, Dates.weekday(day.date))} ${Format.precipitation(day.precipitationSum, tab.precipitationUnit, tab.language)}`)
                 .join("   ·   ")

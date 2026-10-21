@@ -1,0 +1,19 @@
+{
+    "KPackageStructure": "Plasma/Wallpaper",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Valentin Ivașcu",
+                "Email": "oriceon@gmail.com"
+            }
+        ],
+        "Description": "The animated sky of Weather Now across the screen, with the weather of your place",
+        "Description[ro]": "Cerul animat din Weather Now pe tot ecranul, cu vremea din localitatea ta",
+        "Icon": "/icons/weather-now.png",
+        "Id": "ro.oriceon.weather.wallpaper",
+        "License": "GPL-2.0-or-later",
+        "Name": "Weather Now",
+        "Version": "1.0.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

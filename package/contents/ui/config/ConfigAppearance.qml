@@ -6,7 +6,10 @@ import QtQuick.Dialogs as QtDialogs
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 
+import "../../code/activities.mjs" as Activities
+import "../../code/details.mjs" as Details
 import "../../code/i18n.mjs" as I18n
+import "../../code/land.mjs" as Land
 
 ConfigPage {
     id: page
@@ -18,9 +21,32 @@ ConfigPage {
      * The options of the ComboBoxes read the same in every language on purpose: a model
      * that changed with the language would make a ComboBox drop its selection.
      */
-    readonly property var languageValues: ["auto", "ro", "en"]
+    readonly property var languageValues: ["auto", "ro", "en", "de", "es", "fr", "it", "pl"]
     readonly property var fontScaleValues: [90, 100, 110, 125, 140, 160]
     readonly property var tabIds: ["today", "hours", "rain", "days", "details"]
+
+    /** What the Today tab shows besides the weather now, as an array. */
+    function todayParts(): var {
+        const parts = [];
+
+        for (let index = 0; index < cfg_todayParts.length; index++) {
+            parts.push(String(cfg_todayParts[index]));
+        }
+
+        return parts;
+    }
+
+    /** The activities chosen, as an array; none chosen is those of a new widget. */
+    function chosenActivities(): var {
+        const chosen = Activities.ACTIVITIES.filter(activity => cfg_activities.indexOf(activity) !== -1);
+
+        return chosen.length > 0 ? chosen : Activities.DEFAULT_ACTIVITIES;
+    }
+
+    /** The tiles turned off, as an array of ids. */
+    function hiddenTiles(): var {
+        return Details.TILES.filter(tile => cfg_hiddenTiles.indexOf(tile) !== -1);
+    }
 
     function hiddenTabs(): var {
         const hidden = [];
@@ -35,7 +61,8 @@ ConfigPage {
     Kirigami.FormLayout {
         QQC2.ComboBox {
             Kirigami.FormData.label: I18n.t(page.language, "config.language")
-            model: ["Auto", "Română", "English"]
+            // Each language by its own name.
+            model: ["Auto", "Română", "English", "Deutsch", "Español", "Français", "Italiano", "Polski"]
             currentIndex: page.languageValues.indexOf(page.cfg_language)
 
             onActivated: index => page.cfg_language = page.languageValues[index]
@@ -93,8 +120,8 @@ ConfigPage {
             spacing: Kirigami.Units.smallSpacing
 
             QQC2.Label {
-                // Empty is the font of the Plasma theme.
-                text: page.cfg_fontFamily !== "" ? page.cfg_fontFamily : I18n.t(page.language, "config.fontTheme")
+                // Empty is Inter, which comes with the widget.
+                text: page.cfg_fontFamily !== "" ? page.cfg_fontFamily : I18n.t(page.language, "config.fontWidget")
             }
 
             QQC2.Button {
@@ -102,7 +129,7 @@ ConfigPage {
                 text: I18n.t(page.language, "config.fontChoose")
 
                 onClicked: {
-                    fontDialog.selectedFont = Qt.font({ family: page.cfg_fontFamily !== "" ? page.cfg_fontFamily : Kirigami.Theme.defaultFont.family });
+                    fontDialog.selectedFont = Qt.font({ family: page.cfg_fontFamily !== "" ? page.cfg_fontFamily : "Weather Now Inter" });
                     fontDialog.open();
                 }
             }
@@ -180,6 +207,124 @@ ConfigPage {
             }
         }
 
+        // Room between the slider above and the choices below, which otherwise nearly touch.
+        Item {
+            Kirigami.FormData.isSection: true
+        }
+
+        ColumnLayout {
+            Kirigami.FormData.label: I18n.t(page.language, "config.today")
+            spacing: Kirigami.Units.smallSpacing
+
+            Repeater {
+                model: ["clock", "hours", "conditions", "insights", "rain", "yesterday"]
+
+                delegate: QQC2.CheckBox {
+                    id: todayChoice
+
+                    required property string modelData
+
+                    checked: page.todayParts().indexOf(modelData) !== -1
+                    text: I18n.t(page.language, `config.today${modelData.charAt(0).toUpperCase()}${modelData.slice(1)}`)
+
+                    onToggled: {
+                        const others = page.todayParts().filter(part => part !== todayChoice.modelData);
+
+                        page.cfg_todayParts = checked ? others.concat([todayChoice.modelData]) : others;
+                    }
+                }
+            }
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: I18n.t(page.language, "config.todayGlass")
+            spacing: Kirigami.Units.smallSpacing
+
+            QQC2.Slider {
+                id: glass
+
+                Layout.preferredWidth: Kirigami.Units.gridUnit * 10
+                from: 0
+                to: 100
+                stepSize: 5
+                snapMode: QQC2.Slider.SnapAlways
+                value: page.cfg_todayGlass
+
+                onMoved: page.cfg_todayGlass = Math.round(value)
+            }
+
+            QQC2.Label {
+                // As wide as the widest value, so that the slider does not move under the mouse.
+                Layout.minimumWidth: widestGlass.advanceWidth
+                text: `${Math.round(glass.value)}%`
+
+                TextMetrics {
+                    id: widestGlass
+
+                    text: "100%"
+                }
+            }
+        }
+
+        Item {
+            Kirigami.FormData.isSection: true
+        }
+
+        ColumnLayout {
+            Kirigami.FormData.label: I18n.t(page.language, "config.landscape")
+            Kirigami.FormData.buddyFor: landscapeNone
+            spacing: Kirigami.Units.smallSpacing
+
+            // Only so that the label of the group has something to point at: Kirigami puts the label
+            // level with it, and at the end it stood by the last button.
+            Item {
+                id: landscapeNone
+            }
+
+            Repeater {
+                model: Land.KINDS
+
+                delegate: QQC2.RadioButton {
+                    required property string modelData
+                    required property int index
+
+                    checked: page.cfg_landscape === modelData
+                    text: I18n.t(page.language, `config.landscape${modelData.charAt(0).toUpperCase()}${modelData.slice(1)}`)
+
+                    onToggled: page.cfg_landscape = modelData
+                }
+            }
+
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: I18n.t(page.language, "config.landscapeHeight")
+            enabled: page.cfg_landscape !== "none"
+            spacing: Kirigami.Units.smallSpacing
+
+            QQC2.Slider {
+                id: landscapeHeight
+
+                Layout.preferredWidth: Kirigami.Units.gridUnit * 10
+                from: 25
+                to: 85
+                stepSize: 5
+                snapMode: QQC2.Slider.SnapAlways
+                value: page.cfg_landscapeHeight
+
+                onMoved: page.cfg_landscapeHeight = Math.round(value)
+            }
+
+            QQC2.Label {
+                Layout.minimumWidth: widestGlass.advanceWidth
+                text: `${Math.round(landscapeHeight.value)}%`
+            }
+        }
+
+        Item {
+            Kirigami.FormData.isSection: true
+        }
+
         ColumnLayout {
             Kirigami.FormData.label: I18n.t(page.language, "config.icons")
             Kirigami.FormData.buddyFor: iconsMeteocons
@@ -228,6 +373,115 @@ ConfigPage {
                 text: I18n.t(page.language, "config.animationsOff")
 
                 onToggled: page.cfg_animations = "off"
+            }
+
+            // Plasma's own speed of animations, at "Instant", stops the widget whatever is chosen here.
+            QQC2.Label {
+                Layout.fillWidth: true
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 22
+                visible: Kirigami.Units.longDuration === 0
+                wrapMode: Text.WordWrap
+                font: Kirigami.Theme.smallFont
+                opacity: 0.7
+                text: I18n.t(page.language, "config.animationsSystem")
+            }
+        }
+
+        Item {
+            Kirigami.FormData.isSection: true
+        }
+
+        QQC2.CheckBox {
+            Kirigami.FormData.label: I18n.t(page.language, "config.panel")
+            checked: page.cfg_showRainInPanel
+            text: I18n.t(page.language, "config.panelRain")
+
+            onToggled: page.cfg_showRainInPanel = checked
+        }
+
+        Item {
+            Kirigami.FormData.isSection: true
+        }
+
+        ColumnLayout {
+            Kirigami.FormData.label: I18n.t(page.language, "config.detailsOrder")
+            spacing: Kirigami.Units.smallSpacing
+
+            // A box for each tile, in the order the tiles are in; the last one left cannot be turned off.
+            Repeater {
+                model: Details.tileOrder(page.cfg_detailsOrder)
+
+                delegate: QQC2.CheckBox {
+                    id: tileChoice
+
+                    required property string modelData
+
+                    enabled: !checked || page.hiddenTiles().length < Details.TILES.length - 1
+                    checked: page.hiddenTiles().indexOf(modelData) === -1
+                    text: I18n.t(page.language, Details.TILE_NAMES[modelData])
+
+                    onToggled: {
+                        const others = page.hiddenTiles().filter(tile => tile !== tileChoice.modelData);
+
+                        page.cfg_hiddenTiles = checked ? others : others.concat([tileChoice.modelData]);
+                    }
+                }
+            }
+
+            QQC2.Button {
+                enabled: page.cfg_detailsOrder.length > 0
+                icon.name: "edit-undo"
+                text: I18n.t(page.language, "config.detailsOrderReset")
+
+                onClicked: page.cfg_detailsOrder = []
+            }
+
+            QQC2.Label {
+                Layout.fillWidth: true
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 22
+                wrapMode: Text.WordWrap
+                font: Kirigami.Theme.smallFont
+                opacity: 0.7
+                text: I18n.t(page.language, "config.detailsOrderHint")
+            }
+        }
+
+        Item {
+            Kirigami.FormData.isSection: true
+        }
+
+        ColumnLayout {
+            Kirigami.FormData.label: I18n.t(page.language, "config.activities")
+            spacing: Kirigami.Units.smallSpacing
+
+            Repeater {
+                model: Activities.ACTIVITIES
+
+                delegate: QQC2.CheckBox {
+                    id: activityChoice
+
+                    required property string modelData
+
+                    // The last one left cannot be turned off.
+                    enabled: !checked || page.chosenActivities().length > 1
+                    checked: page.chosenActivities().indexOf(modelData) !== -1
+                    text: I18n.t(page.language, `activity.${modelData}`)
+
+                    onToggled: {
+                        const others = page.chosenActivities().filter(activity => activity !== activityChoice.modelData);
+
+                        page.cfg_activities = checked ? others.concat([activityChoice.modelData]) : others;
+                    }
+                }
+            }
+
+            QQC2.Label {
+                Layout.fillWidth: true
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 22
+                wrapMode: Text.WordWrap
+                font: Kirigami.Theme.smallFont
+                opacity: 0.7
+                text: I18n.t(page.language, "config.activitiesHint")
             }
         }
 
