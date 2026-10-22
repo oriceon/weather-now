@@ -31,6 +31,10 @@ KCM.SimpleKCM {
             // Without the settings of the widget at hand, the page writes back what it was given, as before.
             console.warn("Weather Now: the settings could not be taken afresh:", String(error.message || error));
         }
+
+        // What is written now is what the next Apply, the dialog left open, compares with: else a setting
+        // put back as it was when the dialog opened looked unchanged, and the one applied stayed.
+        remember();
     }
 
     function remember(): void {
@@ -106,6 +110,8 @@ KCM.SimpleKCM {
     property var cfg_todayPartsDefault: []
     property int cfg_todayGlass
     property int cfg_todayGlassDefault
+    property string cfg_todayBackground
+    property string cfg_todayBackgroundDefault
     property string cfg_landscape
     property string cfg_landscapeDefault
     property int cfg_landscapeHeight

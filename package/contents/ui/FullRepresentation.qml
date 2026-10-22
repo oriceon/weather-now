@@ -75,6 +75,8 @@ Item {
     required property var todayParts
     /** How transparent the dark glass of the Today tab is, in percent. */
     required property int todayGlass
+    /** What is behind the text of the Today tab: sky, glass or text, see todayBackground in config/main.xml. */
+    required property string todayBackground
     /** The place, for the rising and setting of the moon, and the season of the land. */
     required property real latitude
     required property real longitude
@@ -289,6 +291,8 @@ Item {
             landscapeHeight: full.landscapeHeight
             latitude: full.latitude
             aurora: full.aurora
+            backdrop: full.todayBackground
+            glassTransparency: full.todayGlass
         }
     }
 
@@ -605,6 +609,7 @@ Item {
             latitude: full.latitude
             parts: full.todayParts
             glassTransparency: full.todayGlass
+            backdrop: full.todayBackground
             temperatureUnit: full.temperatureUnit
             forecast: full.forecast
             alerts: full.activeAlerts

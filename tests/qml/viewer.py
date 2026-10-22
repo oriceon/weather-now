@@ -191,6 +191,7 @@ def build_stage(engine, arguments, configuration):
         "landscapeHeight": arguments.landscape_height,
         "todayParts": arguments.today.split(","),
         "todayGlass": arguments.glass,
+        "todayBackground": arguments.backdrop,
         "backgroundTransparency": arguments.transparency,
         "region": arguments.region,
         "locality": arguments.locality,
@@ -232,6 +233,19 @@ def build_applet(engine, arguments, configuration):
     QTimer.singleShot(max(0, arguments.wait - 100), report)
 
     return item
+
+
+def setting_value(given, value):
+    """`value`, as written on the command line, of the type of the setting, whose value is now `given`."""
+    # bool("false") is True.
+    if isinstance(given, bool):
+        return value == "true"
+
+    # A list is given as words separated by commas, or as JSON when its items hold commas themselves.
+    if isinstance(given, list):
+        return json.loads(value) if value.startswith("[") else value.split(",")
+
+    return type(given)(value)
 
 
 def hand_settings(page, source, configuration, defaults):
@@ -359,6 +373,7 @@ def main():
     parser.add_argument("--aurora", default="none", choices=["none", "overhead", "horizon", "camera"], help="stage: how the aurora can be seen tonight, with a Kp of 6.33")
     parser.add_argument("--details-order", default="", metavar="TILES", help="stage: the tiles of the Details tab, by id, separated by commas")
     parser.add_argument("--glass", type=int, default=62, help="stage: percent of transparency of the glass of the Today tab")
+    parser.add_argument("--backdrop", choices=["sky", "glass", "text"], default="sky", help="stage: what is behind the text of the Today tab")
     parser.add_argument("--today", default="hours,insights,rain,yesterday", metavar="PARTS", help="stage: what the Today tab shows, separated by commas")
     parser.add_argument("--landscape", default="none", choices=["none", "hills", "city", "sea", "poppies", "lake", "village"], help="stage: the land under the sky of the Today tab")
     parser.add_argument("--landscape-height", type=int, default=55, help="stage: percent of the height of the Today tab the land takes")
@@ -375,6 +390,7 @@ def main():
     parser.add_argument("--drop", action="store_true", help="with --drag, let go at the end")
     parser.add_argument("--item-set", action="append", default=[], metavar="NAME=VALUE", help="set a property on every item that has it, halfway through --wait")
     parser.add_argument("--set", action="append", default=[], metavar="KEY=VALUE", help="override a setting of the widget")
+    parser.add_argument("--apply", action="append", default=[], metavar="KEY=VALUE", help="config: choose this on the page and press Apply, as Plasma does it, the dialog left open; each in turn, and each must be saved")
     parser.add_argument("--lang", default="ro")
     parser.add_argument("--wind", default="kmh")
     parser.add_argument("--precipitation", default="mm", choices=["mm", "inch"], help="stage: the unit of rain and snow")
@@ -419,17 +435,7 @@ def main():
 
     for assignment in arguments.set:
         key, value = assignment.split("=", 1)
-        given = configuration[key]
-
-        # bool("false") is True.
-        if isinstance(given, bool):
-            configuration[key] = value == "true"
-        else:
-            # A list is given as words separated by commas, or as JSON when its items hold commas themselves.
-            if isinstance(given, list):
-                configuration[key] = json.loads(value) if value.startswith("[") else value.split(",")
-            else:
-                configuration[key] = type(given)(value)
+        configuration[key] = setting_value(configuration[key], value)
 
     settings = shim_plasmoid.wallpaper_configuration() if wallpaper else shim_plasmoid.applet().property("configuration")
 
@@ -555,6 +561,30 @@ def main():
             print(f"item-set: {name}={value!r} on {len(touched)} items")
 
     item_root = [item]
+
+    # Each choice made on the page and applied, the dialog staying open: Plasma calls saveConfig(), then
+    # writes every setting back from the page.
+    def apply_choices():
+        for assignment in arguments.apply:
+            key, value = assignment.split("=", 1)
+            chosen = setting_value(configuration[key], value)
+
+            item.setProperty(f"cfg_{key}", chosen)
+            QMetaObject.invokeMethod(item, "saveConfig")
+
+            for name in configuration:
+                written = item.property(f"cfg_{name}")
+                settings.insert(name, written.toVariant() if hasattr(written, "toVariant") else written)
+
+            saved = settings.value(key)
+            print(f"apply: {key}={chosen!r} saved {saved!r}")
+
+            if saved != chosen:
+                problems.append(f"Apply saved {key} as {saved!r}, not {chosen!r}")
+                print(f"[qml] {problems[-1]}", file=sys.stderr)
+
+    if arguments.apply:
+        QTimer.singleShot(max(0, arguments.wait // 2), apply_choices)
 
     if arguments.item_set:
         QTimer.singleShot(max(0, arguments.wait // 2), poke)

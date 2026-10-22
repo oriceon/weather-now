@@ -113,6 +113,10 @@
             <min>0</min>
             <max>100</max>
         </entry>
+        <entry name="todayBackground" type="String">
+            <label>What is behind the text of the Today tab: sky (the animated sky, with the landscape), glass (only the boxes, over the desktop) or text (nothing, only the text over the desktop).</label>
+            <default>sky</default>
+        </entry>
         <entry name="landscape" type="String">
             <label>The land drawn under the sky of the Today tab: one of KINDS in code/land.mjs, none, hills, city, sea, poppies, lake or village.</label>
             <default>none</default>

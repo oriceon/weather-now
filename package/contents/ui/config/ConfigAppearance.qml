@@ -238,6 +238,8 @@ ConfigPage {
 
         RowLayout {
             Kirigami.FormData.label: I18n.t(page.language, "config.todayGlass")
+            // With only the text, there is no glass to make transparent.
+            enabled: page.cfg_todayBackground !== "text"
             spacing: Kirigami.Units.smallSpacing
 
             QQC2.Slider {
@@ -271,8 +273,54 @@ ConfigPage {
         }
 
         ColumnLayout {
+            Kirigami.FormData.label: I18n.t(page.language, "config.todayBackground")
+            Kirigami.FormData.buddyFor: todayBackgroundSky
+            spacing: Kirigami.Units.smallSpacing
+
+            QQC2.RadioButton {
+                id: todayBackgroundSky
+
+                checked: page.cfg_todayBackground === "sky"
+                text: I18n.t(page.language, "config.todayBackgroundSky")
+
+                onToggled: page.cfg_todayBackground = "sky"
+            }
+
+            QQC2.RadioButton {
+                checked: page.cfg_todayBackground === "glass"
+                text: I18n.t(page.language, "config.todayBackgroundGlass")
+
+                onToggled: page.cfg_todayBackground = "glass"
+            }
+
+            QQC2.RadioButton {
+                checked: page.cfg_todayBackground === "text"
+                text: I18n.t(page.language, "config.todayBackgroundText")
+
+                onToggled: page.cfg_todayBackground = "text"
+            }
+
+            QQC2.Label {
+                Layout.fillWidth: true
+                Layout.maximumWidth: Kirigami.Units.gridUnit * 22
+                // Only while the rest of the widget still has a background of its own.
+                visible: page.cfg_todayBackground !== "sky" && (page.cfg_background !== "none" || page.cfg_backgroundTransparency < 100)
+                wrapMode: Text.WordWrap
+                font: Kirigami.Theme.smallFont
+                opacity: 0.7
+                text: I18n.t(page.language, "config.todayBackgroundHint")
+            }
+        }
+
+        Item {
+            Kirigami.FormData.isSection: true
+        }
+
+        ColumnLayout {
             Kirigami.FormData.label: I18n.t(page.language, "config.landscape")
             Kirigami.FormData.buddyFor: landscapeNone
+            // The land is drawn under the sky only.
+            enabled: page.cfg_todayBackground === "sky"
             spacing: Kirigami.Units.smallSpacing
 
             // Only so that the label of the group has something to point at: Kirigami puts the label
@@ -299,7 +347,7 @@ ConfigPage {
 
         RowLayout {
             Kirigami.FormData.label: I18n.t(page.language, "config.landscapeHeight")
-            enabled: page.cfg_landscape !== "none"
+            enabled: page.cfg_todayBackground === "sky" && page.cfg_landscape !== "none"
             spacing: Kirigami.Units.smallSpacing
 
             QQC2.Slider {

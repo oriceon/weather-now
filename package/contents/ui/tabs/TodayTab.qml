@@ -52,6 +52,8 @@ Item {
     required property var parts
     /** How transparent the dark glass is, in percent: 0 opaque, 100 none at all. */
     required property int glassTransparency
+    /** What is behind the text: sky (the animated sky, with its land), glass (the boxes alone) or text (nothing). */
+    required property string backdrop
     /** Whether the tab is the one on show; behind another, it stays drawn but stands still. */
     property bool shown: true
     /** A window fills the screen over the widget: nothing moves, as nobody sees it. */
@@ -59,10 +61,18 @@ Item {
 
     readonly property var current: forecast.current
     readonly property var today: forecast.today
-    /** The sky is painted by the widget, so the text on it does not follow the Plasma theme. */
-    readonly property color ink: "#ffffff"
-    /** A soft shadow keeps the text readable on a bright sky. */
+    readonly property bool skyShown: backdrop === "sky"
+    readonly property bool glassShown: backdrop !== "text"
+    /**
+     * The sky is painted by the widget, so the text on it does not follow the Plasma theme. Over the
+     * desktop it does, as on the other tabs: white, even with a shadow, read poorly on a light one.
+     */
+    readonly property color ink: skyShown ? "#ffffff" : Kirigami.Theme.textColor
+    /** On the dark glass, white, wherever there is glass. */
+    readonly property color glassInk: glassShown ? "#ffffff" : ink
+    /** A soft shadow keeps the text readable on a bright sky; over the desktop there is none, as on the other tabs. */
     readonly property color inkShadow: "#73000000"
+    readonly property int inkStyle: skyShown ? Text.Raised : Text.Normal
     /** How much bigger than the theme font the text is; the layout needs that much more room. */
     readonly property real fontFactor: typography.size / Kirigami.Theme.defaultFont.pointSize
     readonly property real gridUnit: Kirigami.Units.gridUnit * fontFactor
@@ -90,7 +100,8 @@ Item {
     readonly property var nextHours: forecast.hourly.slice(1, 7)
     readonly property bool moving: animations !== "off"
     /** The dark glass under the hours and the conditions, as transparent as chosen. */
-    readonly property real glassAlpha: (100 - glassTransparency) / 100 * 0.9
+    readonly property real glassAlpha: glassShown ? (100 - glassTransparency) / 100 * 0.9 : 0
+    readonly property color glassEdge: Qt.rgba(1, 1, 1, glassShown ? 0.22 : 0)
 
     function shows(part: string): bool {
         return parts.indexOf(part) !== -1;
@@ -110,7 +121,7 @@ Item {
         // Dark glass: white text reads on it over the whitest cloud passing behind.
         color: Qt.rgba(0.04, 0.08, 0.16, tab.glassAlpha)
         border.width: 1
-        border.color: Qt.rgba(1, 1, 1, 0.22)
+        border.color: tab.glassEdge
         Accessible.role: Accessible.StaticText
         Accessible.name: `${label}: ${value}`
 
@@ -122,7 +133,7 @@ Item {
         Rectangle {
             anchors.fill: parent
             radius: parent.radius
-            color: Qt.rgba(1, 1, 1, chipHover.hovered ? 0.14 : 0)
+            color: Qt.alpha(tab.glassInk, chipHover.hovered ? 0.14 : 0)
 
             Behavior on color {
                 ColorAnimation {
@@ -144,7 +155,7 @@ Item {
                 relativeSize: 0.9
                 horizontalAlignment: Text.AlignHCenter
                 elide: Text.ElideRight
-                color: tab.ink
+                color: tab.glassInk
                 opacity: 0.85
                 text: chip.label
             }
@@ -155,7 +166,7 @@ Item {
                 relativeSize: 1.1
                 horizontalAlignment: Text.AlignHCenter
                 elide: Text.ElideRight
-                color: tab.ink
+                color: tab.glassInk
                 font.weight: Font.DemiBold
                 text: chip.value
             }
@@ -166,6 +177,7 @@ Item {
         id: sky
 
         anchors.fill: parent
+        visible: tab.skyShown
         temperatureUnit: tab.temperatureUnit
         radius: Kirigami.Units.cornerRadius
         current: tab.current
@@ -179,7 +191,7 @@ Item {
         // Nothing moves while the widget is not on screen. `Window.window` is the window the tab is in, null before
         // it is placed in one; the attached `Window` itself has no `visible`.
         // Kept while another tab is shown, it stands still meanwhile.
-        running: tab.shown && tab.visible && !tab.covered && tab.Window.window !== null && tab.Window.window.visible
+        running: visible && tab.shown && tab.visible && !tab.covered && tab.Window.window !== null && tab.Window.window.visible
         // The mouse tilts the sky: each layer shifts by its depth.
         tiltX: pointer.hovered && tab.moving ? (pointer.point.position.x / Math.max(1, tab.width) - 0.5) * 2 : 0
         tiltY: pointer.hovered && tab.moving ? (pointer.point.position.y / Math.max(1, tab.height) - 0.5) * 2 : 0
@@ -205,6 +217,8 @@ Item {
         }
 
         x: area.x - area.width * 0.18
+        // Over the desktop it was a smudge, not a shade.
+        visible: tab.skyShown
         y: area.y - area.height * 0.25
         width: area.width * 1.36
         height: area.height * 1.5
@@ -233,19 +247,20 @@ Item {
         id: column
 
         /**
-         * The room the column has left over, apart from its spacers and `balance`: measured from the
-         * heights the rows ask for, not from those they got, which depend on it.
+         * The room the column has besides the rows it always shows: measured from the heights the
+         * rows ask for, not from those they got, which depend on it. The spacers ask for none, but
+         * each takes the spacing around it. The top row counts by its day alone, the clock being
+         * placed by this very room, as are `balance`, the insights and the rain bars.
          */
-        readonly property real spare: {
+        readonly property real room: {
             let asked = dayLine.implicitHeight;
             let rows = 1;
 
             for (let index = 0; index < children.length; index++) {
                 const row = children[index];
 
-                // These first, before anything of them is read: they are laid out by this very room. The
-                // spacers by name: a layout, as the block of the temperature, fills the height as well.
-                if (row !== balance && row !== topRow && row !== roomAbove && row !== roomBelow && row.visible) {
+                // These first, before anything of them is read.
+                if (row !== topRow && row !== balance && row !== insightsRow && row !== rainBars && row.visible) {
                     asked += row.implicitHeight;
                     rows++;
                 }
@@ -253,6 +268,16 @@ Item {
 
             return height - asked - spacing * Math.max(0, rows - 1);
         }
+        /**
+         * The rain bars and the insights show only with room for them, the rain first: short of it,
+         * they ran onto the glass below. Their heights are known while they are hidden as well.
+         */
+        readonly property real rainNeeds: rainBars.implicitHeight + spacing
+        readonly property real insightsNeed: insightsRow.implicitHeight + spacing
+        readonly property bool rainFits: room >= rainNeeds
+        readonly property bool insightsFit: room - (rainBars.visible ? rainNeeds : 0) >= insightsNeed
+        /** What is left of `room` once they are shown. */
+        readonly property real spare: room - (rainBars.visible ? rainNeeds : 0) - (insightsRow.visible ? insightsNeed : 0)
         /**
          * Under the day, the clock takes a line of its own, and as much room from below the
          * temperature, which so stays where it was; short of room for both, it goes beside the day.
@@ -295,7 +320,7 @@ Item {
                     relativeSize: 1.1
                     elide: Text.ElideRight
                     color: tab.ink
-                    style: Text.Raised
+                    style: tab.inkStyle
                     styleColor: tab.inkShadow
                     // With the clock, the day turns with it at midnight, not with the next forecast.
                     text: Format.sentenceCase(Dates.fullDate(clock.visible && clock.placeNow !== "" ? clock.placeNow : tab.current.time, tab.language))
@@ -329,7 +354,7 @@ Item {
                         // Figures of one width: the seconds do not shake the line as they change.
                         font.features: { "tnum": 1 }
                         color: tab.ink
-                        style: Text.Raised
+                        style: tab.inkStyle
                         styleColor: tab.inkShadow
                         text: clock.time
                     }
@@ -340,7 +365,7 @@ Item {
                         typography: tab.typography
                         relativeSize: 0.85
                         color: tab.ink
-                        style: Text.Raised
+                        style: tab.inkStyle
                         styleColor: tab.inkShadow
                         opacity: 0.8
                         text: I18n.t(tab.language, "today.placeTime")
@@ -363,6 +388,9 @@ Item {
             }
 
             Components.Label {
+                // Free to narrow, down to nothing: not filling, a label keeps the width of its text, and beside
+                // the day and the clock it ran out of the widget instead of ending in "…".
+                Layout.fillWidth: true
                 // Measured against the tab: the width of the row itself depends on this label.
                 Layout.maximumWidth: tab.width * 0.58
                 // Level with the day, the clock shown under it or not.
@@ -371,7 +399,7 @@ Item {
                 horizontalAlignment: Text.AlignRight
                 elide: Text.ElideRight
                 color: tab.ink
-                style: Text.Raised
+                style: tab.inkStyle
                 styleColor: tab.inkShadow
                 opacity: 0.9
                 text: Rain.rainSentence(Rain.rainSummary(tab.forecast.hourly), tab.current.time, tab.language)
@@ -423,7 +451,7 @@ Item {
                 font.family: tab.typography.display
                 font.weight: Font.DemiBold
                 color: tab.ink
-                style: Text.Raised
+                style: tab.inkStyle
                 styleColor: tab.inkShadow
                 text: Format.temperature(tab.current.temperature)
             }
@@ -442,7 +470,7 @@ Item {
                     maximumLineCount: 2
                     elide: Text.ElideRight
                     color: tab.ink
-                    style: Text.Raised
+                    style: tab.inkStyle
                     styleColor: tab.inkShadow
                     font.weight: Font.DemiBold
                     text: I18n.t(tab.language, Wmo.conditionKey(tab.current.conditionCode))
@@ -455,7 +483,7 @@ Item {
                     horizontalAlignment: tab.textAlignment
                     elide: Text.ElideRight
                     color: tab.ink
-                    style: Text.Raised
+                    style: tab.inkStyle
                     styleColor: tab.inkShadow
                     opacity: 0.92
                     text: `${tab.feelsLikeText}  ·  ${tab.rangeText}`
@@ -470,7 +498,7 @@ Item {
                     visible: tab.shows("yesterday") && tab.yesterdayText !== "" && (!tab.narrow || tab.roomy)
                     elide: Text.ElideRight
                     color: tab.ink
-                    style: Text.Raised
+                    style: tab.inkStyle
                     styleColor: tab.inkShadow
                     opacity: 0.8
                     text: tab.yesterdayText
@@ -496,9 +524,14 @@ Item {
 
         // What stands out in the hours ahead, each on a pill of its own.
         Flow {
+            id: insightsRow
+
             Layout.fillWidth: true
+            // Given by the layout only while shown: hidden, the pills are laid out by it all the same,
+            // so that the room they need is known.
+            width: column.width
             spacing: Kirigami.Units.smallSpacing
-            visible: tab.shows("insights") && tab.insightTexts.length > 0 && tab.height >= tab.gridUnit * 12
+            visible: tab.shows("insights") && tab.insightTexts.length > 0 && tab.height >= tab.gridUnit * 12 && column.insightsFit
 
             Repeater {
                 model: tab.insightTexts
@@ -511,7 +544,7 @@ Item {
                     width: Math.min(pillText.implicitWidth + Kirigami.Units.largeSpacing * 2, tab.width - tab.margin * 2)
                     height: pillText.implicitHeight + Kirigami.Units.smallSpacing
                     radius: height / 2
-                    color: Qt.rgba(0.05, 0.1, 0.2, pillHover.hovered ? 0.42 : 0.3)
+                    color: Qt.rgba(0.05, 0.1, 0.2, tab.glassShown ? (pillHover.hovered ? 0.42 : 0.3) : 0)
 
                     Behavior on color {
                         ColorAnimation {
@@ -531,7 +564,7 @@ Item {
                         typography: tab.typography
                         relativeSize: 0.95
                         elide: Text.ElideRight
-                        color: tab.ink
+                        color: tab.glassInk
                         text: pill.modelData
                     }
                 }
@@ -539,8 +572,10 @@ Item {
         }
 
         Components.RainBars {
+            id: rainBars
+
             Layout.fillWidth: true
-            visible: tab.shows("rain") && tab.rainComing && tab.height >= tab.gridUnit * 11
+            visible: tab.shows("rain") && tab.rainComing && tab.height >= tab.gridUnit * 11 && column.rainFits
             quarters: tab.minutely
             typography: tab.typography
             ink: tab.ink
@@ -590,7 +625,7 @@ Item {
         // The blur needs the graphics card; drawn in software, the strip is only tinted.
         Loader {
             anchors.fill: parent
-            active: glassStrip.visible && GraphicsInfo.api !== GraphicsInfo.Software
+            active: glassStrip.visible && tab.skyShown && GraphicsInfo.api !== GraphicsInfo.Software
 
             sourceComponent: Item {
                 ShaderEffectSource {
@@ -630,7 +665,7 @@ Item {
             // Dark glass, for the same reason as the chips: white text over white clouds.
             color: Qt.rgba(0.04, 0.08, 0.16, tab.glassAlpha)
             border.width: 1
-            border.color: Qt.rgba(1, 1, 1, 0.22)
+            border.color: tab.glassEdge
         }
 
         RowLayout {
@@ -652,7 +687,7 @@ Item {
                     Layout.preferredWidth: 1
                     implicitHeight: hourColumn.implicitHeight + Kirigami.Units.smallSpacing
                     radius: Kirigami.Units.cornerRadius
-                    color: Qt.rgba(1, 1, 1, hourHover.hovered ? 0.14 : 0)
+                    color: Qt.alpha(tab.glassInk, hourHover.hovered ? 0.14 : 0)
                     Accessible.role: Accessible.StaticText
                     Accessible.name: I18n.t(tab.language, "a11y.hour", { time: Dates.timeShown(modelData.time), condition: I18n.t(tab.language, Wmo.conditionKey(modelData.conditionCode)), temperature: Format.temperature(modelData.temperature) })
 
@@ -676,7 +711,7 @@ Item {
                             Layout.alignment: Qt.AlignHCenter
                             typography: tab.typography
                             relativeSize: 0.9
-                            color: tab.ink
+                            color: tab.glassInk
                             opacity: 0.85
                             text: Dates.timeShown(hour.modelData.time)
                         }
@@ -695,7 +730,7 @@ Item {
                             Layout.alignment: Qt.AlignHCenter
                             typography: tab.typography
                             relativeSize: 1.05
-                            color: tab.ink
+                            color: tab.glassInk
                             font.weight: Font.DemiBold
                             text: Format.temperature(hour.modelData.temperature)
                         }

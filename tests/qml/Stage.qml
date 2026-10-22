@@ -45,6 +45,7 @@ Item {
     /** What the Today tab shows besides the weather now. */
     property var todayParts: ["hours", "insights", "rain", "yesterday"]
     property int todayGlass: 62
+    property string todayBackground: "sky"
     property int backgroundTransparency: 100
 
     /** Recorded warning feeds; empty ones stage a place without warnings. */
@@ -104,6 +105,7 @@ Item {
         landscapeHeight: stage.landscapeHeight
         todayParts: stage.todayParts
         todayGlass: stage.todayGlass
+        todayBackground: stage.todayBackground
         // Constanța, as the recorded answers are.
         latitude: 44.18073
         longitude: 28.63432

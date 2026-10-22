@@ -285,6 +285,7 @@ PlasmoidItem {
         landscape: Plasmoid.configuration.landscape
         landscapeHeight: Plasmoid.configuration.landscapeHeight
         todayGlass: Plasmoid.configuration.todayGlass
+        todayBackground: Plasmoid.configuration.todayBackground
         // As an array: the setting is a sequence of Qt.
         todayParts: ["clock", "hours", "conditions", "insights", "rain", "yesterday"].filter(part => Plasmoid.configuration.todayParts.indexOf(part) !== -1)
         latitude: Plasmoid.configuration.latitude

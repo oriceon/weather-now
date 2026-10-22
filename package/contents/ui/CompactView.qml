@@ -41,9 +41,18 @@ Item {
     required property real latitude
     /** auroraOutlook() of code/aurora.mjs; null without one. */
     required property var aurora
+    /** What is behind the text, as on the Today tab: sky, glass or text. */
+    required property string backdrop
+    /** How transparent the dark glass is, in percent, as on the Today tab. */
+    required property int glassTransparency
 
     readonly property var current: forecast.current
-    readonly property color ink: "#ffffff"
+    readonly property bool skyShown: backdrop === "sky"
+    readonly property bool glassShown: backdrop !== "text"
+    /** White on the sky; over the desktop, the colour of the Plasma theme, as on the tabs. */
+    readonly property color ink: skyShown ? "#ffffff" : Kirigami.Theme.textColor
+    /** On the dark glass, white, wherever there is glass. */
+    readonly property color glassInk: glassShown ? "#ffffff" : ink
     readonly property color inkShadow: "#73000000"
     readonly property real gridUnit: Kirigami.Units.gridUnit * typography.size / Kirigami.Theme.defaultFont.pointSize
     /** The days after today, for the middling view. */
@@ -56,6 +65,7 @@ Item {
 
     Scenery.WeatherScene {
         anchors.fill: parent
+        visible: view.skyShown
         radius: Kirigami.Units.cornerRadius
         current: view.current
         today: view.forecast.today
@@ -66,13 +76,13 @@ Item {
         landscapeHeight: view.landscapeHeight
         latitude: view.latitude
         aurora: view.aurora !== null ? view.aurora.sight : "none"
-        running: !view.covered && view.Window.window !== null && view.Window.window.visible
+        running: visible && !view.covered && view.Window.window !== null && view.Window.window.visible
     }
 
     component Ink: Components.Label {
         typography: view.typography
         color: view.ink
-        style: Text.Raised
+        style: view.skyShown ? Text.Raised : Text.Normal
         styleColor: view.inkShadow
     }
 
@@ -125,7 +135,8 @@ Item {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
         anchors.topMargin: Kirigami.Units.largeSpacing * 1.6
-        anchors.bottomMargin: Kirigami.Units.largeSpacing * 1.4
+        // Room for the source under the glass: in the corner, it stood on the edge of the glass.
+        anchors.bottomMargin: source.implicitHeight + Kirigami.Units.smallSpacing * 2
         visible: view.mode !== "small"
         columns: view.mode === "band" ? 2 : 1
         columnSpacing: Kirigami.Units.largeSpacing
@@ -170,9 +181,9 @@ Item {
             Layout.minimumHeight: strip.implicitHeight + Kirigami.Units.smallSpacing * 2
             radius: Kirigami.Units.cornerRadius * 2
             // Dark glass, so that white text reads over white clouds.
-            color: Qt.rgba(0.04, 0.08, 0.16, 0.34)
+            color: Qt.rgba(0.04, 0.08, 0.16, view.glassShown ? (100 - view.glassTransparency) / 100 * 0.9 : 0)
             border.width: 1
-            border.color: Qt.rgba(1, 1, 1, 0.22)
+            border.color: Qt.rgba(1, 1, 1, view.glassShown ? 0.22 : 0)
 
             RowLayout {
                 id: strip
@@ -196,6 +207,7 @@ Item {
                         Ink {
                             Layout.alignment: Qt.AlignHCenter
                             relativeSize: 0.85
+                            color: view.glassInk
                             opacity: 0.85
                             text: view.mode === "band" ? Dates.timeShown(entry.modelData.time) : I18n.dayShort(view.language, Dates.weekday(entry.modelData.date))
                         }
@@ -212,6 +224,7 @@ Item {
 
                         Ink {
                             Layout.alignment: Qt.AlignHCenter
+                            color: view.glassInk
                             font.weight: Font.DemiBold
                             text: view.mode === "band"
                                 ? Format.temperature(entry.modelData.temperature)
