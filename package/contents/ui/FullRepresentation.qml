@@ -460,7 +460,27 @@ Item {
         ColumnLayout {
             spacing: Kirigami.Units.smallSpacing
 
+            FontMetrics {
+                id: tabFont
+
+                font.family: full.typography.family
+                font.pointSize: full.typography.size
+            }
+
             PlasmaComponents.TabBar {
+                id: tabStrip
+
+                /**
+                 * The names of the tabs, all at one size: as large as lets the longest fit its button. In a
+                 * narrow widget, "Aujourd'hui" or "Szczegóły" ran past theirs.
+                 */
+                readonly property real labelScale: Math.max(0.75, Math.min(1, ...Array.from(contentChildren).map(button => button.fit || 1)))
+                /**
+                 * The share of the bar each button has when the names fit: not the width of a button, which,
+                 * with a name too long for its share, follows the name, and so the size it is given.
+                 */
+                readonly property real share: (availableWidth - spacing * Math.max(0, full.tabIds.length - 1)) / Math.max(1, full.tabIds.length)
+
                 Layout.fillWidth: true
                 currentIndex: Math.min(full.currentTab, full.tabIds.length - 1)
 
@@ -476,9 +496,11 @@ Item {
 
                     delegate: PlasmaComponents.TabButton {
                         required property string modelData
+                        /** How much smaller its name must be to fit, at the size of the text; a little to spare. */
+                        readonly property real fit: tabFont.font.pointSize > 0 ? (tabStrip.share - leftPadding - rightPadding) * 0.97 / Math.max(1, tabFont.advanceWidth(text)) : 1
 
                         font.family: full.typography.family
-                        font.pointSize: full.typography.size
+                        font.pointSize: full.typography.size * tabStrip.labelScale
                         text: I18n.t(full.language, `tab.${modelData}`)
                     }
                 }

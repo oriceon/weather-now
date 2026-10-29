@@ -175,11 +175,23 @@ Item {
 
         required property string label
         required property string value
+        /** The value on two lines, for when even at its smallest it is wider than the tile; "" for none. */
+        property string valueLines: ""
+        /** Cut at both ends otherwise, as the times of the sun in 12 hours in a narrow tile. */
+        readonly property bool valueSplit: valueLines !== "" && valueAtLeast.advanceWidth > valueText.width
+        /** The height under the value for the note, the margins taken. */
+        readonly property real noteRoom: height - Kirigami.Units.smallSpacing * 2 - labelText.implicitHeight - (valueText.visible ? valueText.implicitHeight : 0)
+        /** How wide the widest word of the note is, at the size of the note: it cannot be wrapped, only made smaller. */
+        readonly property real noteWidestWord: noteWords.font.pointSize > 0 ? Math.max(1, ...note.split(/[ \n]+/).map(word => noteWords.advanceWidth(word))) : 1
         property string note: ""
         /** A Meteocons icon, see DETAIL_ICONS and moonIcon() in code/meteocons.mjs. */
         required property string symbol
         /** An instrument drawn in place of the icon, whatever the icons of the widget. */
         property Component instrument: null
+        /** The instrument once made, for a tile that sizes it by what it holds. */
+        readonly property Item instrumentItem: instrumentLoader.item
+        /** A list is not made smaller to fit, as a drawing is: it keeps its width, and its height is capped. */
+        property bool scalesInstrument: true
         /** The instrument grows with its tile, when fewer tiles have more room. */
         property real instrumentWidth: Math.min(width * 0.7, height * 0.8, Kirigami.Units.gridUnit * 8)
         property real instrumentHeight: instrumentWidth * 0.55
@@ -192,7 +204,7 @@ Item {
         readonly property real roomAbove: height - Kirigami.Units.smallSpacing * 3 - labelText.implicitHeight
             - (valueText.visible ? valueText.implicitHeight : 0) - (noteText.visible ? noteText.implicitHeight : 0)
         /** The instrument as large as it asks, or smaller, to fit in that room. */
-        readonly property real instrumentScale: Math.min(1, roomAbove / Math.max(1, instrumentHeight))
+        readonly property real instrumentScale: scalesInstrument ? Math.min(1, roomAbove / Math.max(1, instrumentHeight)) : 1
         /** Under the mouse, or picked up. */
         property bool hovered: false
         property bool lifted: false
@@ -248,7 +260,7 @@ Item {
 
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: tile.instrumentWidth * tile.instrumentScale
-                Layout.preferredHeight: tile.instrumentHeight * tile.instrumentScale
+                Layout.preferredHeight: tile.scalesInstrument ? tile.instrumentHeight * tile.instrumentScale : Math.min(tile.instrumentHeight, tile.roomAbove)
                 Layout.bottomMargin: Kirigami.Units.smallSpacing
                 // Smaller than this, it would not read.
                 active: tile.instrument !== null && tile.roomy && tile.roomAbove >= Kirigami.Units.gridUnit * 2
@@ -311,14 +323,25 @@ Item {
 
                 Layout.fillWidth: true
                 typography: tab.typography
-                relativeSize: 1.3
+                // Smaller on two lines, so that the instrument keeps some room above.
+                relativeSize: tile.valueSplit ? 1.05 : 1.3
                 horizontalAlignment: Text.AlignHCenter
                 // A long value shrinks to fit rather than being cut.
                 fontSizeMode: Text.HorizontalFit
                 minimumPointSize: tab.typography.size * 0.75
                 font.weight: Font.DemiBold
                 visible: tile.value !== ""
-                text: tile.value
+                text: tile.valueSplit ? tile.valueLines : tile.value
+
+                // The value on one line, at the smallest size it may shrink to.
+                TextMetrics {
+                    id: valueAtLeast
+
+                    font.family: valueText.font.family
+                    font.weight: valueText.font.weight
+                    font.pointSize: valueText.minimumPointSize
+                    text: tile.value
+                }
             }
 
             Components.Label {
@@ -326,15 +349,32 @@ Item {
 
                 Layout.fillWidth: true
                 typography: tab.typography
-                relativeSize: 0.9
+                // A word wider than the tile, as some in Polish, makes the note smaller rather than cut; a little
+                // to spare, as the measure and the drawing differ by a pixel.
+                relativeSize: 0.9 * Math.max(0.7, Math.min(1, width * 0.97 / tile.noteWidestWord))
                 horizontalAlignment: Text.AlignHCenter
-                wrapMode: Text.WordWrap
-                // A tall tile has room for a third line, which the longer languages need.
-                maximumLineCount: tile.roomy ? 3 : 2
+                // Between words; inside one only if, even that small, it is wider than the tile.
+                wrapMode: Text.Wrap
+                // As many lines as the tile has room for: the icon or the instrument takes what is left, or stays
+                // out. With three at most, the Beaufort force and the moonset were cut.
+                maximumLineCount: Math.max(1, Math.floor(tile.noteRoom / Math.max(1, noteLine.lineSpacing)))
                 elide: Text.ElideRight
                 visible: tile.note !== ""
                 opacity: 0.85
                 text: tile.note
+
+                FontMetrics {
+                    id: noteWords
+
+                    font.family: noteText.font.family
+                    font.pointSize: tab.typography.size * 0.9
+                }
+
+                FontMetrics {
+                    id: noteLine
+
+                    font: noteText.font
+                }
             }
         }
     }
@@ -651,6 +691,11 @@ Item {
         }
     }
 
+    /** `text` kept on one line where it is wrapped: a time with its AM or PM, a number with its unit. */
+    function whole(text: string): string {
+        return text.replace(/ /g, "\u00a0");
+    }
+
     /** Scrolls the tiles by a turn of the wheel, as `angleDelta.y` gives it: 120 a notch, above 0 upwards. */
     function scrollBy(turn: real): void {
         grid.contentY = Math.max(0, Math.min(Math.max(0, grid.contentHeight - grid.height), grid.contentY - turn / 2));
@@ -671,7 +716,7 @@ Item {
             // With the air quality in their tile, the gusts go with the wind.
             note: [
                 tab.airQuality !== null
-                    ? `${I18n.compass(tab.current.windDirection, tab.language)} · ${I18n.t(tab.language, "details.gustsNote", { value: Format.wind(tab.current.windGusts, tab.windUnit, tab.language) })}`
+                    ? `${I18n.compass(tab.current.windDirection, tab.language)} · ${I18n.t(tab.language, "details.gustsNote", { value: tab.whole(Format.wind(tab.current.windGusts, tab.windUnit, tab.language)) })}`
                     : I18n.compass(tab.current.windDirection, tab.language),
                 I18n.t(tab.language, "wind.beaufort", { force: tab.beaufort, name: I18n.t(tab.language, `beaufort.${tab.beaufort}`) }),
             ].join("\n")
@@ -843,6 +888,7 @@ Item {
             symbol: "clear-day"
             label: I18n.t(tab.language, "details.sun")
             value: `↑ ${Dates.timeShown(tab.today.sunrise)}  ↓ ${Dates.timeShown(tab.today.sunset)}`
+            valueLines: `↑ ${Dates.timeShown(tab.today.sunrise)}\n↓ ${Dates.timeShown(tab.today.sunset)}`
             // By day, how long until sunset; by night, how long the day is.
             note: tab.daylightLeft > 0
                 ? I18n.t(tab.language, "details.daylightLeft", { time: Format.duration(tab.daylightLeft) })
@@ -867,7 +913,8 @@ Item {
             label: I18n.t(tab.language, "details.moon")
             value: Format.percent(tab.moon.illumination * 100)
             // The phase, and when the moon rises and sets today.
-            note: [I18n.t(tab.language, tab.moon.key), `↑ ${tab.moonTimes.rise ? Dates.clockShown(tab.moonTimes.rise) : "–"}  ↓ ${tab.moonTimes.set ? Dates.clockShown(tab.moonTimes.set) : "–"}`].join("\n")
+            // Each time whole, so that a narrow tile puts the setting under the rising, not "AM" alone.
+            note: [I18n.t(tab.language, tab.moon.key), `${tab.whole(`↑ ${tab.moonTimes.rise ? Dates.clockShown(tab.moonTimes.rise) : "–"}`)}  ${tab.whole(`↓ ${tab.moonTimes.set ? Dates.clockShown(tab.moonTimes.set) : "–"}`)}`].join("\n")
             instrumentWidth: Math.min(width * 0.8, height * 0.9, Kirigami.Units.gridUnit * 8)
             instrumentHeight: instrumentWidth * 0.5
 
@@ -946,7 +993,9 @@ Item {
             label: I18n.t(tab.language, "details.activities")
             value: ""
             instrumentWidth: width - Kirigami.Units.largeSpacing * 2
-            instrumentHeight: Math.min(height * 0.62, tab.activities.length * Kirigami.Units.gridUnit * 1.4)
+            // As tall as its rows need: a name on two lines ran onto the name of the tile.
+            instrumentHeight: instrumentItem !== null ? instrumentItem.implicitHeight : tab.activities.length * Kirigami.Units.gridUnit * 1.4
+            scalesInstrument: false
 
             instrument: Components.ActivityList {
                 activities: tab.activities

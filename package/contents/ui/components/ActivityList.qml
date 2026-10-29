@@ -47,7 +47,12 @@ Item {
         onFinished: list.wave = -1
     }
 
+    // As tall as its rows, a name on two lines included, for the tile to make room.
+    implicitHeight: rows.implicitHeight
+
     ColumnLayout {
+        id: rows
+
         anchors.fill: parent
         spacing: Kirigami.Units.smallSpacing / 2
 
@@ -77,9 +82,18 @@ Item {
                 }
 
                 Components.Label {
+                    id: name
+
+                    /** How wide its widest word is, at the size of the list: a word is not wrapped, only made smaller. */
+                    readonly property real widestWord: nameWords.font.pointSize > 0 ? Math.max(1, ...text.split(" ").map(word => nameWords.advanceWidth(word))) : 1
+
                     Layout.fillWidth: true
                     typography: list.typography
-                    relativeSize: 0.9
+                    relativeSize: 0.9 * Math.max(0.7, Math.min(1, width * 0.92 / widestWord))
+                    // On two lines beside the hours, if need be: the longer names in French, German or Polish ended
+                    // in "…", and made smaller to fit on one they were too small to read.
+                    wrapMode: Text.WordWrap
+                    maximumLineCount: 2
                     elide: Text.ElideRight
                     text: I18n.t(list.language, `activity.${row.modelData}`)
                 }
@@ -98,5 +112,12 @@ Item {
         Item {
             Layout.fillHeight: true
         }
+    }
+
+    FontMetrics {
+        id: nameWords
+
+        font.family: list.typography.family
+        font.pointSize: list.typography.size * 0.9
     }
 }

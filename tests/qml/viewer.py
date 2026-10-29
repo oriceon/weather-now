@@ -392,6 +392,7 @@ def main():
     parser.add_argument("--switch-via", type=int, default=1, metavar="TAB", help="with --switch-frames: the tab to go to before coming back to Today")
     parser.add_argument("--time-switch", action="store_true", help="stage: time switches from the Hours tab back to the Today tab")
     parser.add_argument("--drop", action="store_true", help="with --drag, let go at the end")
+    parser.add_argument("--report-cut", action="store_true", help="before the screenshot, print every text on show that ends in … or is wider than its room")
     parser.add_argument("--wheel", default="", metavar="X,Y:NOTCHES", help="turn the mouse wheel over that point of the window, down for more than 0, 1.2 s before the screenshot, and print where each view scrolled to")
     parser.add_argument("--item-set", action="append", default=[], metavar="NAME=VALUE", help="set a property on every item that has it, halfway through --wait")
     parser.add_argument("--set", action="append", default=[], metavar="KEY=VALUE", help="override a setting of the widget")
@@ -638,6 +639,28 @@ def main():
 
     if arguments.wheel:
         QTimer.singleShot(max(0, arguments.wait - 1200), wheel)
+
+    # Texts cut short: elided, past their last line, or wider than the item that holds them.
+    def report_cut():
+        def shown(candidate):
+            while candidate is not None:
+                if not candidate.isVisible() or candidate.opacity() == 0:
+                    return False
+                candidate = candidate.parentItem()
+            return True
+
+        for candidate in visual_tree(item_root[0]):
+            if not has_property(candidate, "truncated") or not has_property(candidate, "contentWidth") or not shown(candidate):
+                continue
+
+            text = str(candidate.property("text") or "").replace("\n", " / ")
+            wider = candidate.property("contentWidth") > candidate.property("width") + 1
+
+            if text and (candidate.property("truncated") or wider):
+                print(f"cut: {text!r} width={candidate.property('width'):.0f} needs={candidate.property('contentWidth'):.0f} elided={candidate.property('truncated')}")
+
+    if arguments.report_cut:
+        QTimer.singleShot(max(0, arguments.wait - 200), report_cut)
 
     # How long a switch from the Hours tab back to the Today tab takes, to the first frame shown.
     def time_switch():
