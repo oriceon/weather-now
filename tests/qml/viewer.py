@@ -192,6 +192,8 @@ def build_stage(engine, arguments, configuration):
         "todayParts": arguments.today.split(","),
         "todayGlass": arguments.glass,
         "todayBackground": arguments.backdrop,
+        "detailsBoxes": arguments.details_boxes,
+        "detailsGlass": arguments.details_glass,
         "backgroundTransparency": arguments.transparency,
         "region": arguments.region,
         "locality": arguments.locality,
@@ -374,6 +376,8 @@ def main():
     parser.add_argument("--details-order", default="", metavar="TILES", help="stage: the tiles of the Details tab, by id, separated by commas")
     parser.add_argument("--glass", type=int, default=62, help="stage: percent of transparency of the glass of the Today tab")
     parser.add_argument("--backdrop", choices=["sky", "glass", "text"], default="sky", help="stage: what is behind the text of the Today tab")
+    parser.add_argument("--details-boxes", choices=["theme", "glass"], default="theme", help="stage: the boxes of the Details tab")
+    parser.add_argument("--details-glass", type=int, default=62, help="stage: percent of transparency of the dark glass of the Details tab")
     parser.add_argument("--today", default="hours,insights,rain,yesterday", metavar="PARTS", help="stage: what the Today tab shows, separated by commas")
     parser.add_argument("--landscape", default="none", choices=["none", "hills", "city", "sea", "poppies", "lake", "village"], help="stage: the land under the sky of the Today tab")
     parser.add_argument("--landscape-height", type=int, default=55, help="stage: percent of the height of the Today tab the land takes")
@@ -388,6 +392,7 @@ def main():
     parser.add_argument("--switch-via", type=int, default=1, metavar="TAB", help="with --switch-frames: the tab to go to before coming back to Today")
     parser.add_argument("--time-switch", action="store_true", help="stage: time switches from the Hours tab back to the Today tab")
     parser.add_argument("--drop", action="store_true", help="with --drag, let go at the end")
+    parser.add_argument("--wheel", default="", metavar="X,Y:NOTCHES", help="turn the mouse wheel over that point of the window, down for more than 0, 1.2 s before the screenshot, and print where each view scrolled to")
     parser.add_argument("--item-set", action="append", default=[], metavar="NAME=VALUE", help="set a property on every item that has it, halfway through --wait")
     parser.add_argument("--set", action="append", default=[], metavar="KEY=VALUE", help="override a setting of the widget")
     parser.add_argument("--apply", action="append", default=[], metavar="KEY=VALUE", help="config: choose this on the page and press Apply, as Plasma does it, the dialog left open; each in turn, and each must be saved")
@@ -612,6 +617,27 @@ def main():
 
     if arguments.drag:
         QTimer.singleShot(max(0, arguments.wait - 1200), drag)
+
+    # Notch by notch, as a mouse wheel turns, over the point; then where every view stands.
+    def wheel():
+        from PySide6.QtCore import QPoint, QPointF, Qt
+        from PySide6.QtGui import QWheelEvent
+        from PySide6.QtTest import QTest
+
+        place, notches = arguments.wheel.split(":")
+        x, y = (int(value) for value in place.split(","))
+        QTest.mouseMove(view, QPoint(x, y))
+
+        for _ in range(abs(int(notches))):
+            turn = QPoint(0, -120 if int(notches) > 0 else 120)
+            event = QWheelEvent(QPointF(x, y), QPointF(view.mapToGlobal(QPoint(x, y))), QPoint(0, 0), turn, Qt.MouseButton.NoButton, Qt.KeyboardModifier.NoModifier, Qt.ScrollPhase.NoScrollPhase, False)
+            QGuiApplication.sendEvent(view, event)
+
+        views = [(round(candidate.property("contentY")), round(candidate.property("contentHeight") - candidate.property("height"))) for candidate in visual_tree(item_root[0]) if has_property(candidate, "contentY") and has_property(candidate, "flicking")]
+        print(f"wheel: {notches} notches at {x},{y}; each view at contentY, of most: {views}")
+
+    if arguments.wheel:
+        QTimer.singleShot(max(0, arguments.wait - 1200), wheel)
 
     # How long a switch from the Hours tab back to the Today tab takes, to the first frame shown.
     def time_switch():

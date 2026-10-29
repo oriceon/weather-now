@@ -499,6 +499,63 @@ ConfigPage {
         }
 
         ColumnLayout {
+            Kirigami.FormData.label: I18n.t(page.language, "config.detailsBoxes")
+            Kirigami.FormData.buddyFor: detailsBoxesTheme
+            spacing: Kirigami.Units.smallSpacing
+
+            QQC2.RadioButton {
+                id: detailsBoxesTheme
+
+                checked: page.cfg_detailsBoxes === "theme"
+                text: I18n.t(page.language, "config.detailsBoxesTheme")
+
+                onToggled: page.cfg_detailsBoxes = "theme"
+            }
+
+            QQC2.RadioButton {
+                checked: page.cfg_detailsBoxes === "glass"
+                text: I18n.t(page.language, "config.detailsBoxesGlass")
+
+                onToggled: page.cfg_detailsBoxes = "glass"
+            }
+        }
+
+        RowLayout {
+            Kirigami.FormData.label: I18n.t(page.language, "config.detailsGlass")
+            enabled: page.cfg_detailsBoxes === "glass"
+            spacing: Kirigami.Units.smallSpacing
+
+            QQC2.Slider {
+                id: detailsGlass
+
+                Layout.preferredWidth: Kirigami.Units.gridUnit * 10
+                from: 0
+                to: 100
+                stepSize: 5
+                snapMode: QQC2.Slider.SnapAlways
+                value: page.cfg_detailsGlass
+
+                onMoved: page.cfg_detailsGlass = Math.round(value)
+            }
+
+            QQC2.Label {
+                // As wide as the widest value, so that the slider does not move under the mouse.
+                Layout.minimumWidth: widestDetailsGlass.advanceWidth
+                text: `${Math.round(detailsGlass.value)}%`
+
+                TextMetrics {
+                    id: widestDetailsGlass
+
+                    text: "100%"
+                }
+            }
+        }
+
+        Item {
+            Kirigami.FormData.isSection: true
+        }
+
+        ColumnLayout {
             Kirigami.FormData.label: I18n.t(page.language, "config.activities")
             spacing: Kirigami.Units.smallSpacing
 

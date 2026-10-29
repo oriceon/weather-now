@@ -77,6 +77,10 @@ Item {
     required property int todayGlass
     /** What is behind the text of the Today tab: sky, glass or text, see todayBackground in config/main.xml. */
     required property string todayBackground
+    /** The boxes of the Details tab: theme or glass, see detailsBoxes in config/main.xml. */
+    required property string detailsBoxes
+    /** How transparent their dark glass is, in percent. */
+    required property int detailsGlass
     /** The place, for the rising and setting of the moon, and the season of the land. */
     required property real latitude
     required property real longitude
@@ -677,6 +681,8 @@ Item {
 
         Tabs.DetailsTab {
             animations: full.animations
+            boxes: full.detailsBoxes
+            glassTransparency: full.detailsGlass
             airQuality: full.airQuality
             aurora: full.aurora
             order: full.detailsOrder

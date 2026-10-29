@@ -19,7 +19,7 @@ Everything lights up under the mouse, and the instruments play again.
 ## Also
 
 - In English, German, Spanish, French, Italian, Polish or Romanian; follows the Plasma language by default
-- Inter as its font, included, or any other one; first day of the week, units (°C or °F; km/h, m/s, mph or knots as kn or kt; mm or inches), font, text size, background (black, the Plasma theme's or transparent, as much as you like), what is behind the text of Today (the animated sky, only the glass boxes, or only the text, in the colours of the Plasma theme), icons (Meteocons or the Plasma theme's), animation level and visible tabs are configurable
+- Inter as its font, included, or any other one; first day of the week, units (°C or °F; km/h, m/s, mph or knots as kn or kt; mm or inches), font, text size, background (black, the Plasma theme's or transparent, as much as you like), what is behind the text of Today (the animated sky, only the glass boxes, or only the text, in the colours of the Plasma theme), the boxes of Details (in the colours of the theme, or dark glass as on Today, as transparent as you like), icons (Meteocons or the Plasma theme's), animation level and visible tabs are configurable
 - Asks for your place on first start; search any place in the world, as you would write it: a letter off, without its diacritics, or with its county after it
 - Official weather warnings with the full text, the service that issued them and the time of issue: in Romania through MeteoAlarm, elsewhere through KDE's public alert server (alerts.kde.org)
 - Desktop notifications, each to turn on: a new warning, rain or snow about to start, frost tonight
@@ -39,7 +39,7 @@ Immediate warnings (nowcasting) are prepared in the code but switched off: their
 From a release, with the `.plasmoid` file from the [releases page](https://github.com/oriceon/weather-now/releases):
 
 ```bash
-kpackagetool6 --type Plasma/Applet --install weather-now-2.2.0.plasmoid
+kpackagetool6 --type Plasma/Applet --install weather-now-2.3.0.plasmoid
 ```
 
 From this repository:

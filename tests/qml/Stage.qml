@@ -46,6 +46,8 @@ Item {
     property var todayParts: ["hours", "insights", "rain", "yesterday"]
     property int todayGlass: 62
     property string todayBackground: "sky"
+    property string detailsBoxes: "theme"
+    property int detailsGlass: 62
     property int backgroundTransparency: 100
 
     /** Recorded warning feeds; empty ones stage a place without warnings. */
@@ -106,6 +108,8 @@ Item {
         todayParts: stage.todayParts
         todayGlass: stage.todayGlass
         todayBackground: stage.todayBackground
+        detailsBoxes: stage.detailsBoxes
+        detailsGlass: stage.detailsGlass
         // Constanța, as the recorded answers are.
         latitude: 44.18073
         longitude: 28.63432

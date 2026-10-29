@@ -118,6 +118,10 @@ KCM.SimpleKCM {
     property int cfg_landscapeHeightDefault
     property var cfg_activities: []
     property var cfg_activitiesDefault: []
+    property string cfg_detailsBoxes
+    property string cfg_detailsBoxesDefault
+    property int cfg_detailsGlass
+    property int cfg_detailsGlassDefault
     property var cfg_detailsOrder: []
     property var cfg_detailsOrderDefault: []
     property var cfg_hiddenTiles: []

@@ -65,10 +65,14 @@ Item {
     Canvas {
         id: path
 
+        /** Drawn in the colour of the text, and again when it changes: on the dark glass of Details, or with the theme. */
+        readonly property color ink: Kirigami.Theme.textColor
+
         anchors.fill: parent
 
         onWidthChanged: requestPaint()
         onHeightChanged: requestPaint()
+        onInkChanged: requestPaint()
 
         onPaint: {
             const context = getContext("2d");

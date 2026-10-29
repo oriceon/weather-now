@@ -53,6 +53,10 @@ Item {
     required property real longitude
     /** The activities of their tile, see ACTIVITIES in code/activities.mjs. */
     required property var activities
+    /** theme: tinted with the colours of the Plasma theme; glass: the dark glass of the Today tab. */
+    required property string boxes
+    /** How transparent the dark glass is, in percent: 0 opaque, 100 none at all. */
+    required property int glassTransparency
 
     /** The tiles were dragged, or moved by keyboard, into another order. */
     signal reordered(var order)
@@ -75,6 +79,9 @@ Item {
     readonly property var cloudsTurn: Instruments.cloudsTurn(forecast.hourly)
     readonly property int beaufort: Instruments.beaufort(Scene.toKmh(current.windSpeed, windUnit))
     readonly property var units: ({ windUnit: windUnit, temperatureUnit: temperatureUnit })
+    readonly property bool glassy: boxes === "glass"
+    /** As on the Today tab, whose glass reads over almost any wallpaper. */
+    readonly property real glassAlpha: (100 - glassTransparency) / 100 * 0.9
 
     /** How much bigger than the theme font the text is; the tiles need that much more room. */
     readonly property real fontFactor: typography.size / Kirigami.Theme.defaultFont.pointSize
@@ -178,6 +185,14 @@ Item {
         property real instrumentHeight: instrumentWidth * 0.55
         /** The icon or the instrument shows only where the tile is tall enough. */
         readonly property bool roomy: height >= tab.roomyHeight
+        /**
+         * The height its texts leave for the icon or the instrument, with the margins: the texts come
+         * first. Centred whole, a third line of the note pushed them out at the top and the bottom.
+         */
+        readonly property real roomAbove: height - Kirigami.Units.smallSpacing * 3 - labelText.implicitHeight
+            - (valueText.visible ? valueText.implicitHeight : 0) - (noteText.visible ? noteText.implicitHeight : 0)
+        /** The instrument as large as it asks, or smaller, to fit in that room. */
+        readonly property real instrumentScale: Math.min(1, roomAbove / Math.max(1, instrumentHeight))
         /** Under the mouse, or picked up. */
         property bool hovered: false
         property bool lifted: false
@@ -185,9 +200,9 @@ Item {
         radius: Kirigami.Units.cornerRadius
         // With large text, what does not fit stays within the tile instead of running over the next.
         clip: true
-        color: Qt.alpha(Kirigami.Theme.textColor, lifted ? 0.16 : hovered ? 0.12 : 0.07)
-        border.width: lifted ? 1 : 0
-        border.color: Qt.alpha(Kirigami.Theme.highlightColor, 0.8)
+        color: tab.glassy ? Qt.rgba(0.04, 0.08, 0.16, tab.glassAlpha) : Qt.alpha(Kirigami.Theme.textColor, lifted ? 0.16 : hovered ? 0.12 : 0.07)
+        border.width: lifted || tab.glassy ? 1 : 0
+        border.color: lifted ? Qt.alpha(Kirigami.Theme.highlightColor, 0.8) : Qt.rgba(1, 1, 1, 0.22)
 
         Behavior on color {
             ColorAnimation {
@@ -208,6 +223,21 @@ Item {
             }
         }
 
+        // On the glass, lit under the mouse as the boxes of Today are, however transparent: only a
+        // lighter glass hardly showed.
+        Rectangle {
+            anchors.fill: parent
+            radius: parent.radius
+            visible: tab.glassy
+            color: Qt.rgba(1, 1, 1, tile.lifted ? 0.2 : tile.hovered ? 0.14 : 0)
+
+            Behavior on color {
+                ColorAnimation {
+                    duration: Kirigami.Units.shortDuration
+                }
+            }
+        }
+
         ColumnLayout {
             anchors.centerIn: parent
             width: parent.width - Kirigami.Units.smallSpacing * 2
@@ -217,10 +247,11 @@ Item {
                 id: instrumentLoader
 
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: tile.instrumentWidth
-                Layout.preferredHeight: tile.instrumentHeight
+                Layout.preferredWidth: tile.instrumentWidth * tile.instrumentScale
+                Layout.preferredHeight: tile.instrumentHeight * tile.instrumentScale
                 Layout.bottomMargin: Kirigami.Units.smallSpacing
-                active: tile.instrument !== null && tile.roomy
+                // Smaller than this, it would not read.
+                active: tile.instrument !== null && tile.roomy && tile.roomAbove >= Kirigami.Units.gridUnit * 2
                 visible: active
                 sourceComponent: tile.instrument
             }
@@ -229,10 +260,10 @@ Item {
                 id: icon
 
                 Layout.alignment: Qt.AlignHCenter
-                Layout.preferredWidth: Kirigami.Units.iconSizes.large
-                Layout.preferredHeight: Kirigami.Units.iconSizes.large
+                Layout.preferredWidth: Math.min(Kirigami.Units.iconSizes.large, tile.roomAbove)
+                Layout.preferredHeight: Layout.preferredWidth
                 // Shown with the Meteocons icons, where there is no instrument.
-                visible: tile.instrument === null && tab.iconStyle.set === "meteocons" && tile.roomy
+                visible: tile.instrument === null && tab.iconStyle.set === "meteocons" && tile.roomy && tile.roomAbove >= Kirigami.Units.iconSizes.medium
                 name: tile.symbol
 
                 transform: Translate {
@@ -262,6 +293,8 @@ Item {
             }
 
             Components.Label {
+                id: labelText
+
                 Layout.fillWidth: true
                 typography: tab.typography
                 relativeSize: 0.9
@@ -274,6 +307,8 @@ Item {
             }
 
             Components.Label {
+                id: valueText
+
                 Layout.fillWidth: true
                 typography: tab.typography
                 relativeSize: 1.3
@@ -287,6 +322,8 @@ Item {
             }
 
             Components.Label {
+                id: noteText
+
                 Layout.fillWidth: true
                 typography: tab.typography
                 relativeSize: 0.9
@@ -330,6 +367,10 @@ Item {
                 /** Its row, and its place and width as shares of the width; see tileCells() in code/details.mjs. */
                 readonly property var cell: tab.cells[index] || ({ row: 0, x: 0, width: 0 })
 
+                // On the dark glass, the dark colours Plasma keeps for such places, whatever the theme, as on
+                // the black background: the tile, its instrument, its ring and its ×.
+                Kirigami.Theme.inherit: !tab.glassy
+                Kirigami.Theme.colorSet: Kirigami.Theme.Complementary
                 x: cell.x * grid.width
                 y: cell.row * tab.cellHeight
                 width: cell.width * grid.width
@@ -483,6 +524,8 @@ Item {
                         drag.target: holder
 
                         onPressed: holder.forceActiveFocus()
+                        // Here, not only by the handler of the tab: in Plasma, the wheel over a tile did not reach it.
+                        onWheel: wheel => tab.scrollBy(wheel.angleDelta.y)
                     }
 
                     // Picked up, the tile leaves its place for the tab, so that it stays under the mouse while
@@ -608,8 +651,14 @@ Item {
         }
     }
 
+    /** Scrolls the tiles by a turn of the wheel, as `angleDelta.y` gives it: 120 a notch, above 0 upwards. */
+    function scrollBy(turn: real): void {
+        grid.contentY = Math.max(0, Math.min(Math.max(0, grid.contentHeight - grid.height), grid.contentY - turn / 2));
+    }
+
+    // Between the tiles; over one, the tile itself takes the wheel.
     WheelHandler {
-        onWheel: event => grid.contentY = Math.max(0, Math.min(Math.max(0, grid.contentHeight - grid.height), grid.contentY - event.angleDelta.y / 2))
+        onWheel: event => tab.scrollBy(event.angleDelta.y)
     }
 
     Component {

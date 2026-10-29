@@ -131,6 +131,16 @@
             <label>The activities of the Activities tile, see code/activities.mjs; empty for those of a new widget.</label>
             <default></default>
         </entry>
+        <entry name="detailsBoxes" type="String">
+            <label>The boxes of the Details tab: theme (tinted with the colours of the Plasma theme) or glass (the dark glass of the Today tab, with light text).</label>
+            <default>theme</default>
+        </entry>
+        <entry name="detailsGlass" type="Int">
+            <label>How transparent the dark glass of the Details tab is, in percent: 0 is opaque, 100 is none at all.</label>
+            <default>62</default>
+            <min>0</min>
+            <max>100</max>
+        </entry>
         <entry name="detailsOrder" type="StringList">
             <label>The tiles of the Details tab, in the order they were dragged into; empty for the order of a new widget. See code/details.mjs.</label>
             <default></default>
