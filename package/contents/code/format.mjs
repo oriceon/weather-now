@@ -1,7 +1,7 @@
 const MISSING = '–';
 
 /** Where the decimal point is a comma; elsewhere it stays a point. */
-const DECIMAL_SEPARATOR = { ro: ',', de: ',', fr: ',', es: ',', it: ',', pl: ',' };
+const DECIMAL_SEPARATOR = { ro: ',', de: ',', fr: ',', es: ',', it: ',', pl: ',', pt: ',' };
 const MM_PER_INCH = 25.4;
 const METRES_PER_MILE = 1609.344;
 

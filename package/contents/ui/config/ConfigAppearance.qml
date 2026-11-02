@@ -21,7 +21,7 @@ ConfigPage {
      * The options of the ComboBoxes read the same in every language on purpose: a model
      * that changed with the language would make a ComboBox drop its selection.
      */
-    readonly property var languageValues: ["auto", "ro", "en", "de", "es", "fr", "it", "pl"]
+    readonly property var languageValues: ["auto", "ro", "en", "de", "es", "fr", "it", "pl", "pt"]
     readonly property var fontScaleValues: [90, 100, 110, 125, 140, 160]
     readonly property var tabIds: ["today", "hours", "rain", "days", "details"]
 
@@ -62,7 +62,7 @@ ConfigPage {
         QQC2.ComboBox {
             Kirigami.FormData.label: I18n.t(page.language, "config.language")
             // Each language by its own name.
-            model: ["Auto", "Română", "English", "Deutsch", "Español", "Français", "Italiano", "Polski"]
+            model: ["Auto", "Română", "English", "Deutsch", "Español", "Français", "Italiano", "Polski", "Português (Brasil)"]
             currentIndex: page.languageValues.indexOf(page.cfg_language)
 
             onActivated: index => page.cfg_language = page.languageValues[index]
