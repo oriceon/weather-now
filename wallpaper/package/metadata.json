@@ -9,7 +9,6 @@
         ],
         "Description": "The animated sky of Weather Now across the screen, with the weather of your place",
         "Description[pt]": "O céu animado do Weather Now em toda a tela, com o clima da sua localidade",
-        "Description[pt_BR]": "O céu animado do Weather Now em toda a tela, com o clima da sua localidade",
         "Description[ro]": "Cerul animat din Weather Now pe tot ecranul, cu vremea din localitatea ta",
         "Icon": "/icons/weather-now.png",
         "Id": "ro.oriceon.weather.wallpaper",

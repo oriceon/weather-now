@@ -10,7 +10,6 @@
         "Category": "Environment and Weather",
         "Description": "Weather with an animated sky, hourly rain, a calendar of the coming weeks and official warnings",
         "Description[pt]": "Previsão do tempo com céu animado, chuva por hora, calendário das próximas semanas e alertas oficiais",
-        "Description[pt_BR]": "Previsão do tempo com céu animado, chuva por hora, calendário das próximas semanas e alertas oficiais",
         "Description[ro]": "Vremea cu cer animat, ploaia pe ore, calendarul săptămânilor următoare și atenționările oficiale",
         "Icon": "/icons/weather-now.png",
         "Id": "ro.oriceon.weather",
