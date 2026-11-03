@@ -66,7 +66,7 @@
             <default>false</default>
         </entry>
         <entry name="language" type="String">
-            <label>auto, or one of the languages of code/strings: ro, en, de, es, fr, it, pl</label>
+            <label>auto, or one of the languages of code/strings: ro, en, de, es, fr, it, pl, pt</label>
             <default>auto</default>
         </entry>
         <entry name="firstDayOfWeek" type="Int">

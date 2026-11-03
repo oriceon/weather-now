@@ -4,10 +4,11 @@ import es from './strings/es.mjs';
 import fr from './strings/fr.mjs';
 import it from './strings/it.mjs';
 import pl from './strings/pl.mjs';
+import pt from './strings/pt.mjs';
 import ro from './strings/ro.mjs';
 
 /** Each language in a file of its own, under strings/. */
-const BY_LANGUAGE = { ro, en, de, es, fr, it, pl };
+const BY_LANGUAGE = { ro, en, de, es, fr, it, pl, pt };
 
 export const LANGUAGES = Object.keys(BY_LANGUAGE);
 

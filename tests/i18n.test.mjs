@@ -18,6 +18,7 @@ test('auto takes the first language of the interface the widget has', () => {
     assert.equal(resolveLanguage('auto', ['sv-SE', 'sv', 'ro-RO']), 'ro');
     assert.equal(resolveLanguage('auto', ['de-DE', 'de', 'ro-RO']), 'de');
     assert.equal(resolveLanguage('auto', ['pl_PL']), 'pl');
+    assert.equal(resolveLanguage('auto', ['pt-BR', 'pt']), 'pt');
 });
 
 test('auto falls back to English when the interface is in a language the widget does not have', () => {
@@ -63,7 +64,7 @@ test('t falls back to English for an unsupported language', () => {
 });
 
 test('every language defines exactly the keys of English', () => {
-    assert.deepEqual(Object.keys(STRINGS).sort(), ['de', 'en', 'es', 'fr', 'it', 'pl', 'ro']);
+    assert.deepEqual(Object.keys(STRINGS).sort(), ['de', 'en', 'es', 'fr', 'it', 'pl', 'pt', 'ro']);
 
     for (const language of Object.keys(STRINGS)) {
         assert.deepEqual(Object.keys(STRINGS[language]).sort(), Object.keys(STRINGS.en).sort(), language);
@@ -119,6 +120,7 @@ test('compass turns degrees into an 8-point direction in the requested language'
         [0, 'ro', 'N'], [356, 'ro', 'N'], [360, 'ro', 'N'], [22.4, 'ro', 'N'], [22.6, 'ro', 'NE'],
         [90, 'ro', 'E'], [225, 'ro', 'SV'], [270, 'ro', 'V'], [315, 'ro', 'NV'],
         [225, 'en', 'SW'], [270, 'en', 'W'], [315, 'en', 'NW'],
+        [90, 'pt', 'L'], [225, 'pt', 'SO'], [270, 'pt', 'O'], [315, 'pt', 'NO'],
     ];
 
     for (const [degrees, language, want] of cases) {
