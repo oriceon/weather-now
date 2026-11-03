@@ -16,7 +16,7 @@
         "Id": "ro.oriceon.weather",
         "License": "GPL-2.0-or-later",
         "Name": "Weather Now",
-        "Version": "2.3.1"
+        "Version": "2.4.0"
     },
     "X-Plasma-API-Minimum-Version": "6.0"
 }

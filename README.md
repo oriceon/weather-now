@@ -39,7 +39,7 @@ Immediate warnings (nowcasting) are prepared in the code but switched off: their
 From a release, with the `.plasmoid` file from the [releases page](https://github.com/oriceon/weather-now/releases):
 
 ```bash
-kpackagetool6 --type Plasma/Applet --install weather-now-2.3.1.plasmoid
+kpackagetool6 --type Plasma/Applet --install weather-now-2.4.0.plasmoid
 ```
 
 From this repository:
@@ -100,6 +100,7 @@ The landscapes are drawn in `package/contents/code/land/`, a module for each, in
 - Warnings: Administrația Națională de Meteorologie (ANM), via EUMETNET – [MeteoAlarm](https://www.meteoalarm.org), CC BY 4.0; elsewhere the official service named with each warning, via the [FOSS Public Alert Server](https://alerts.kde.org) of KDE
 - Air quality and pollen: CAMS European air quality forecasts, [Copernicus Atmosphere Monitoring Service](https://atmosphere.copernicus.eu/), via Open-Meteo
 - Kp index: [NOAA Space Weather Prediction Center](https://www.swpc.noaa.gov/), public domain
+- Brazilian Portuguese translation: [gi2k15](https://github.com/gi2k15)
 - Radar: [RainViewer](https://www.rainviewer.com/), free for personal and educational use; map: [NASA Global Imagery Browse Services (GIBS)](https://earthdata.nasa.gov/gibs), part of NASA's Earth Science Data and Information System (ESDIS), with borders and names from [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors
 
 Time delays between this website and the www.meteoalarm.org website are possible. For the most up-to-date awareness information as published by the participating National Meteorological and Hydrological Services, please refer to www.meteoalarm.org.
@@ -135,7 +136,7 @@ Um widget de previsão do tempo para o Plasma 6 com céu animado que acompanha o
 A partir de um arquivo `.plasmoid` da [página de lançamentos](https://github.com/oriceon/weather-now/releases):
 
 ```bash
-kpackagetool6 --type Plasma/Applet --install weather-now-2.3.1.plasmoid
+kpackagetool6 --type Plasma/Applet --install weather-now-2.4.0.plasmoid
 ```
 
 A partir deste repositório:

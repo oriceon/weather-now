@@ -34,6 +34,7 @@ Forecast: Open-Meteo (open-meteo.com), CC BY 4.0.
 Icons: Meteocons by Bas Milius (MIT).
 Font: Inter, included (SIL Open Font License 1.1).
 Places: GeoNames (www.geonames.org), CC BY 4.0, through the Open-Meteo geocoding API.
+Brazilian Portuguese translation: gi2k15.
 Warnings: Administrația Națională de Meteorologie (ANM), via EUMETNET – MeteoAlarm (www.meteoalarm.org), CC BY 4.0; elsewhere the official service named with each warning, via KDE's FOSS Public Alert Server (alerts.kde.org).
 Air quality and pollen: CAMS European air quality forecasts (Copernicus Atmosphere Monitoring Service), via Open-Meteo.
 Kp index: NOAA Space Weather Prediction Center (www.swpc.noaa.gov), public domain.

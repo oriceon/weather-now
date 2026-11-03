@@ -30,7 +30,8 @@ export default {
         'summary.between': '{noun} entre {start} e {end}',
         'summary.fromDay': '{noun} {day}, a partir das {start}',
         'summary.betweenDay': '{noun} {day}, entre {start} e {end}',
-        'summary.onDay': 'no(a) {day}',
+        // The day alone, as a headline puts it: "na" or "no" goes by the day, which one phrase cannot.
+        'summary.onDay': '{day}',
         'rain.next48': '48 horas',
         'rain.next2': '2 horas',
         'rain.radar': 'Radar',
